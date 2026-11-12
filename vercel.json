@@ -1,5 +1,8 @@
 {
-  "buildCommand": "node deploy-reference.mjs",
+  "buildCommand": "node build.mjs",
   "outputDirectory": "dist",
-  "framework": null
+  "framework": null,
+  "redirects": [
+    { "source": "/services/breakdown-recovery", "destination": "/services/emergency-recovery/", "permanent": true }
+  ]
 }

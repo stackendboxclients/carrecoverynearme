@@ -65,6 +65,13 @@ const form = document.querySelector('#booking');
 if (form) {
   const service = new URLSearchParams(location.search).get('service');
   const serviceField = form.elements.namedItem('service');
+  const timing = form.elements.namedItem('timing');
+  const date = form.elements.namedItem('datetime');
+  timing.addEventListener('change', () => {
+    const scheduled = timing.value === 'Scheduled pickup';
+    document.querySelector('#scheduled').hidden = !scheduled;
+    date.required = scheduled;
+  });
   if ([...serviceField.options].some(option => option.value === service)) serviceField.value = service;
   const status = document.querySelector('#location-status');
   document.querySelector('#location').addEventListener('click', () => {
@@ -91,6 +98,10 @@ if (form) {
       'Service: ' + serviceField.selectedOptions[0].textContent,
       'Pickup: ' + data.get('pickup'),
     ];
+    for (const [field, label] of [['vehicle', 'Vehicle'], ['destination', 'Drop-off'], ['timing', 'Timing'], ['datetime', 'Preferred time']]) {
+      const value = data.get(field).trim();
+      if (value && (field !== 'datetime' || date.required)) message.push(label + ': ' + value);
+    }
     if (data.get('details').trim()) message.push('Details: ' + data.get('details'));
     location.assign('https://wa.me/' + form.dataset.whatsapp + '?text=' + encodeURIComponent(message.join('\n')));
   });
