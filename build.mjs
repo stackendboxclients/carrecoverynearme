@@ -1,5 +1,7 @@
 import { readFile, mkdir, writeFile, cp, rm } from 'node:fs/promises';
 
+import { buildRecoveryHero } from './recovery-hero-build.mjs';
+
 const business = JSON.parse(await readFile('business.json', 'utf8'));
 const services = [
   ['car-towing', 'Car towing', 'Arrange transport to a garage, home, or another destination.', '01'],
@@ -75,7 +77,7 @@ ${business.whatsapp ? '' : '<p class="notice">Online booking is awaiting the bus
 <label>Anything else? <small>(optional)</small><textarea name="details" rows="4" maxlength="700" placeholder="Vehicle condition or pickup access"></textarea></label>
 <button class="button" type="submit" ${business.whatsapp ? '' : 'disabled'}>Continue on WhatsApp ↗</button>
 <p>Review the details in WhatsApp before sending. The team confirms pickup and price directly.</p></form></section>`;
-const home = `<section class="hero wrap"><div class="hero-content"><p class="eyebrow">Dubai towing & roadside assistance</p><h1>When the road<br>stops<span>.</span></h1><p class="hero-copy">From a flat tyre to a flatbed tow, find the right help for your vehicle and tell us exactly where to pick it up.</p><div class="actions">${actions}<a class="button outline" href="#services">Browse services</a></div></div><figure class="hero-scene"><img src="/assets/expressway.webp" alt="Illustration of a flatbed recovery truck transporting a car on a Dubai expressway" fetchpriority="high" width="1400" height="900"><div class="scene-light" aria-hidden="true"></div><span class="scene-caption">Dubai, UAE</span></figure></section>
+const home = `<!-- recovery-hero -->
 <section class="service-band" id="services"><div class="section wrap"><div class="section-title"><div><p class="eyebrow">Recovery services</p><h2>Find the right help.</h2></div><div class="carousel-controls"><button data-slide="-1" aria-label="Previous services">←</button><button data-slide="1" aria-label="Next services">→</button></div></div><div class="service-grid carousel" tabindex="0" aria-label="Recovery services">${cards}</div><a class="all-services" href="/services/">View all 13 services ↗</a>${serviceDialog}</div></section>
 <section class="process"><div class="section wrap"><h2>How to request recovery</h2><div class="steps"><article><span>01</span><h3>Tell us what happened</h3><p>Choose a service and describe your vehicle or the issue.</p></article><article><span>02</span><h3>Share your pickup point</h3><p>Enter a landmark, map link, or your device location.</p></article><article><span>03</span><h3>Confirm the details</h3><p>The team confirms availability, pickup, and pricing with you.</p></article></div></div></section>${faq}
 ${coverage}${pickupGuide}<section class="section wrap final-call"><h2>Need to move your vehicle?</h2><div class="actions">${actions}</div></section>`;
@@ -101,12 +103,13 @@ const pages = [
 await rm('dist', { recursive: true, force: true });
 await mkdir('dist', { recursive: true });
 await mkdir('dist/assets');
+const recoveryHero = await buildRecoveryHero();
 for (const asset of ['expressway.webp', 'design.css', 'site.js']) await cp(asset, 'dist/assets/' + asset);
 for (const [path, title, description, content] of pages) {
   const directory = `dist${path}`;
   await mkdir(directory, { recursive: true });
   const canonical = business.domain + path;
-  await writeFile(directory + 'index.html', `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${path === '/' ? title : title + ' | ' + name}</title><meta name="description" content="${description}"><meta name="robots" content="${indexable ? 'index,follow' : 'noindex,nofollow'}"><link rel="canonical" href="${canonical}"><link rel="stylesheet" href="/assets/design.css"><script src="/assets/site.js" defer></script></head><body><a class="skip" href="#main">Skip to content</a><header><div class="wrap header-inner">${brand}<nav aria-label="Main"><a href="/services/">Services</a><a href="/#faq">FAQs</a><a href="/about/">About</a><a href="/contact/">Contact</a></nav><a class="button header-action" href="/book/">Plan a pickup ↗</a></div></header><main id="main">${content}</main><footer class="wrap">${brand}<div><a href="/services/">Services</a><a href="/contact/">Contact</a><a href="/blogs/">Guides</a><a href="/privacy/">Privacy</a></div><small>Developed by <a href="https://www.stackendbox.com/">StackEndBox</a></small></footer><aside class="mobile-actions" aria-label="Recovery actions">${actions}</aside></body></html>`);
+  await writeFile(directory + 'index.html', `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${path === '/' ? title : title + ' | ' + name}</title><meta name="description" content="${description}"><meta name="robots" content="${indexable ? 'index,follow' : 'noindex,nofollow'}"><link rel="canonical" href="${canonical}"><link rel="stylesheet" href="/assets/design.css"><script src="/assets/site.js" defer></script>${path === '/' ? '<link rel="stylesheet" href="/assets/recovery-hero.css"><script type="module" src="/assets/recovery-hero.js"></script>' : ''}</head><body><a class="skip" href="#main">Skip to content</a><header><div class="wrap header-inner">${brand}<nav aria-label="Main"><a href="/services/">Services</a><a href="/#faq">FAQs</a><a href="/about/">About</a><a href="/contact/">Contact</a></nav><a class="button header-action" href="/book/">Plan a pickup ↗</a></div></header><main id="main">${path === '/' ? content.replace('<!-- recovery-hero -->', recoveryHero) : content}</main><footer class="wrap">${brand}<div><a href="/services/">Services</a><a href="/contact/">Contact</a><a href="/blogs/">Guides</a><a href="/privacy/">Privacy</a></div><small>Developed by <a href="https://www.stackendbox.com/">StackEndBox</a></small></footer><aside class="mobile-actions" aria-label="Recovery actions">${actions}</aside></body></html>`);
 }
 await writeFile('dist/robots.txt', indexable ? `User-agent: *\nAllow: /\nSitemap: ${business.domain}/sitemap.xml\n` : 'User-agent: *\nAllow: /\n');
 await writeFile('dist/sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${pages.map(([path]) => `<url><loc>${business.domain}${path}</loc></url>`).join('')}</urlset>`);
