@@ -14,7 +14,7 @@ const ramp = ([a, b, c, d]: Point[], t: number): Point => {
 };
 
 // Cross-sections share a vanishing point but widen at different rates.
-const ground: Point[] = [[804, 685], [365, 772], [920, 862], [1690, 1008]];
+const ground: Point[] = [[835, 646], [387, 752], [940, 761], [1660, 910]];
 const deck: Point[] = [[575, 607], [723, 443], [880, 189], [1660, -19]];
 const point = (bridge: boolean, t: number, lane = 0, drop = 0): Point => {
   const [x, y] = ramp(bridge ? deck : ground, t);

@@ -11,7 +11,7 @@
   font-display: swap;
 }
 .recovery-hero {
-  min-height: 100svh;
+  --hero-vertical-padding: clamp(22px, 4svh, 52px);
   color: #f6f0e8;
   font: 1rem/1.5 "Instrument Sans Variable", sans-serif;
   display: grid;
@@ -58,25 +58,25 @@
 }
 .highway-perspective svg { display: block; width: 100%; height: 100%; }
 .highway-overpass { mask-image: linear-gradient(110deg, transparent 24%, #000 68%); }
-.highway-foreground { mask-image: linear-gradient(105deg, transparent 29%, #000 64%); }
+.highway-foreground { mask-image: linear-gradient(105deg, transparent 29%, #000 61%); }
 .highway-traffic {
   fill: none;
   stroke: #ffa46a;
   stroke-linecap: round;
-  stroke-width: 2;
-  stroke-dasharray: 3.2 96.8;
+  stroke-width: 3;
+  stroke-dasharray: 5 95;
   stroke-dashoffset: 5;
   opacity: 0;
-  animation: highway-travel var(--traffic-time, 8.4s) cubic-bezier(.49,.19,.74,.83) var(--traffic-delay, -2.9s) infinite paused;
+  animation: highway-travel var(--traffic-time, 7s) linear var(--traffic-delay, -3.4s) infinite paused;
 }
-.highway-traffic-distant { --traffic-time: 12.8s; --traffic-delay: -7.5s; stroke-width: 1.2; }
-.highway-pass-white { --traffic-time: 10.1s; --traffic-delay: -6.2s; }
-.highway-pass-white .highway-traffic { stroke: #ffe3be; stroke-width: 1.5; }
+.highway-traffic-distant { --traffic-time: 9s; --traffic-delay: -5.4s; stroke-width: 2.2; }
+.highway-pass-white { --traffic-time: 7s; --traffic-delay: -.4s; }
+.highway-pass-white .highway-traffic { stroke: #ffe3be; stroke-width: 2.4; }
 .highway-pass .highway-traffic-reflection {
   stroke: #f49556;
   stroke-width: 11;
   filter: blur(3px);
-  --traffic-strength: .38;
+  --traffic-strength: .58;
 }
 [data-playing=true] .highway-background[data-document-visible=true] :is(.highway-haze,.highway-traffic) { animation-play-state: running; }
 @keyframes highway-haze {
@@ -85,8 +85,7 @@
 }
 @keyframes highway-travel {
   0% { stroke-dashoffset: 5; opacity: 0; }
-  32% { opacity: 0; }
-  48%, 78% { opacity: var(--traffic-strength, .87); }
+  15%, 86% { opacity: var(--traffic-strength, .94); }
   94%, 100% { stroke-dashoffset: -104; opacity: 0; }
 }
 @media (max-width: 850px) {
@@ -102,7 +101,7 @@
 .hero-shell {
   width: min(1320px, calc(100% - 88px));
   margin-inline: auto;
-  padding-block: clamp(48px, 9vw, 108px);
+  padding-block: var(--hero-vertical-padding);
   display: grid;
   grid-template-columns: minmax(0, .88fr) minmax(0, 1.12fr);
   align-items: center;
@@ -243,6 +242,19 @@
 .route-label-drop { right: 7%; top: calc(49px + 6%); }
 .route-label-drop[data-delivered=true] { border-color: #5ca477; }
 .route-label-drop[data-delivered=true] svg { color: #a9f3bc; }
+@media (min-width: 851px) {
+  .recovery-hero {
+    /* The production header takes 79px plus its border. */
+    --hero-available-height: calc(100svh - 80px);
+    min-height: var(--hero-available-height);
+  }
+  .recovery-hero .route-scene {
+    width: 100%;
+    justify-self: end;
+    /* Remove the caption, credit and padding, then apply the 660:430 map ratio. */
+    max-width: max(280px, calc((var(--hero-available-height) - 100px - 2 * var(--hero-vertical-padding)) * 660 / 430));
+  }
+}
 @media (max-width: 850px) {
   .hero-shell { width: min(670px, calc(100% - 40px)); grid-template-columns: 1fr; }
 }
