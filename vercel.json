@@ -1,5 +1,5 @@
 {
-  "buildCommand": "node build.mjs",
+  "buildCommand": "node deploy-reference.mjs",
   "outputDirectory": "dist",
   "framework": null
 }
