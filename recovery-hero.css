@@ -48,91 +48,27 @@
 .tape-play-icon, .service-tape-pause:checked + label .tape-pause-icon { display: none; }
 .service-tape-pause:checked + label .tape-play-icon { display: block; }
 @keyframes service-tape-scroll { to { transform: translateX(-50%); } }
+/* The road and flyover sit behind a separate contrast layer for the copy. */
 .highway-background {
   position: absolute;
   z-index: -1;
   inset: 0;
   overflow: hidden;
   pointer-events: none;
-  background: #0b1013;
+  background: #111516;
 }
+.highway-background canvas { display: block; width: 100%; height: 100%; }
 .highway-background::after {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, #0b1013 0%, #0b1013f5 27%, #0b101399 44%, transparent 70%),
-    linear-gradient(180deg, #0b10133d, transparent 25% 84%, #0b10132e);
-}
-.highway-atmosphere, .highway-perspective { position: absolute; inset: -2%; }
-.highway-atmosphere {
-  background: radial-gradient(ellipse at 86% 12%, #3e2b23 0%, transparent 46%),
-    radial-gradient(ellipse at 76% 81%, #2c211d 0%, transparent 43%),
-    linear-gradient(145deg, #0b1013 36%, #171c20 75%, #211a17);
-}
-.highway-haze {
-  position: absolute;
-  animation: highway-haze 21s ease-in-out infinite alternate paused;
-}
-.highway-haze-high {
-  inset: -8% -4% 26% 44%;
-  background: radial-gradient(ellipse at 72% 29%, #92583438, transparent 62%);
-}
-.highway-haze-low {
-  inset: 47% -10% -10% 32%;
-  background: radial-gradient(ellipse at 58% 74%, #a7673b3d, transparent 65%);
-  animation-duration: 17s;
-  animation-delay: -8s;
-}
-.highway-perspective svg { display: block; width: 100%; height: 100%; }
-.highway-overpass { mask-image: linear-gradient(110deg, transparent 24%, #000 68%); }
-.highway-foreground { mask-image: linear-gradient(108deg, transparent 28%, #000 62%); }
-.highway-pass { --traffic-color: #ff8849; --traffic-tip: #ffe2b8; }
-.highway-traffic {
-  fill: none;
-  stroke: var(--traffic-color);
-  stroke-linecap: round;
-  stroke-width: 2.4;
-  stroke-dasharray: var(--traffic-length, 14) 120;
-  stroke-dashoffset: 22px;
-  opacity: 0;
-  animation: highway-travel var(--traffic-time, 6.8s) cubic-bezier(.48,.13,.73,.77) var(--traffic-delay, -3.4s) infinite paused;
-}
-.highway-pass-distant { --traffic-time: 8.4s; --traffic-delay: -5.6s; --traffic-length: 10; }
-.highway-pass-distant .highway-traffic-core { stroke-width: 1.65; }
-.highway-pass-white { --traffic-time: 8.1s; --traffic-delay: -1s; --traffic-color: #ffe0b5; --traffic-tip: #fff7e9; }
-.highway-traffic-glow {
-  stroke-width: 7;
-  --traffic-strength: .16;
-}
-.highway-traffic-reflection {
-  stroke-width: 9;
-  --traffic-strength: .12;
-}
-.highway-traffic-tip {
-  stroke: var(--traffic-tip);
-  stroke-width: 2.7;
-  stroke-dasharray: 3 131;
-  --traffic-lead: -11px;
-}
-[data-playing=true] .highway-background[data-document-visible=true] :is(.highway-haze,.highway-traffic) { animation-play-state: running; }
-@keyframes highway-haze {
-  from { transform: translate3d(-4%, 1%, 0) scale(.98); opacity: .5; }
-  to { transform: translate3d(3%, -4%, 0) scale(1.06); opacity: .94; }
-}
-@keyframes highway-travel {
-  0% { stroke-dashoffset: calc(22px + var(--traffic-lead, 0px)); opacity: 0; }
-  14%, 84% { opacity: var(--traffic-strength, .93); }
-  100% { stroke-dashoffset: calc(-108px + var(--traffic-lead, 0px)); opacity: 0; }
+  background: linear-gradient(90deg, #0b1014e8, #0b10149c 35%, transparent 77%),
+    linear-gradient(180deg, #0b101432, transparent 50%, #0b101426);
 }
 @media (max-width: 850px) {
-  .highway-background::after { background: linear-gradient(180deg, #0b1013ed 0%, #0b101399 47%, #0b10131a 85%); }
-  .highway-overpass { inset: 20% -42% 15% -33%; }
-  .highway-foreground { inset: 25% -42% -5% -54%; }
-  .highway-pass-white { display: none; }
-}
-@media (max-width: 540px) {
-  .highway-overpass { inset: 32% -42% 16% -57%; }
-  .highway-foreground { inset: 40% -49% -4% -72%; }
+  .highway-background::after {
+    background: linear-gradient(180deg, #0b1014c9, #0b1014a8 38%, #0b101422 90%);
+  }
 }
 .hero-shell {
   width: min(1320px, calc(100% - 88px));
