@@ -1,4 +1,3 @@
-const carousel = document.querySelector('.carousel');
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
 const hero = document.querySelector('.hero');
 if (hero && !reducedMotion.matches) {
@@ -12,36 +11,6 @@ if (hero && !reducedMotion.matches) {
   });
   hero.append(motion);
 }
-const dialog = document.querySelector('#service-dialog');
-if (dialog && typeof dialog.showModal === 'function') {
-  const links = [...carousel.querySelectorAll('[data-service]')];
-  let active = 0;
-  function showService(index) {
-    active = (index + links.length) % links.length;
-    const link = links[active];
-    const card = link.closest('.service-card');
-    const slug = new URL(link.href).pathname.split('/')[2];
-    dialog.querySelector('.dialog-icon').replaceChildren(card.querySelector('.service-icon').cloneNode(true));
-    dialog.querySelector('h2').textContent = card.querySelector('h3').textContent;
-    dialog.querySelector('.dialog-description').textContent = card.querySelector('p').textContent;
-    dialog.querySelector('.dialog-advice').textContent = card.querySelector('template').content.textContent;
-    dialog.querySelector('.dialog-link').href = link.href;
-    dialog.querySelector('.dialog-book').href = '/book/?service=' + encodeURIComponent(slug);
-  }
-  links.forEach((link, index) => link.addEventListener('click', event => {
-    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-    event.preventDefault();
-    showService(index);
-    dialog.showModal();
-  }));
-  dialog.querySelector('.close-dialog').addEventListener('click', () => dialog.close());
-  dialog.addEventListener('click', event => {
-    if (event.target === dialog) dialog.close();
-  });
-  dialog.querySelectorAll('[data-dialog-step]').forEach(button => {
-    button.addEventListener('click', () => showService(active + Number(button.dataset.dialogStep)));
-  });
-}
 if (!reducedMotion.matches && 'IntersectionObserver' in window) {
   const observer = new IntersectionObserver(entries => {
     entries.forEach(entry => {
@@ -53,14 +22,13 @@ if (!reducedMotion.matches && 'IntersectionObserver' in window) {
   }, { threshold: 0.15 });
   document.querySelectorAll('.process article, .coverage, .pickup-guide article, .final-call').forEach(element => observer.observe(element));
 }
-document.querySelectorAll('[data-slide]').forEach(button => {
-  button.addEventListener('click', () => {
-    const card = carousel.querySelector('.service-card');
-    const gap = parseFloat(getComputedStyle(carousel).columnGap);
-    const left = (card.offsetWidth + gap) * Number(button.dataset.slide);
-    carousel.scrollBy({ left, behavior: reducedMotion.matches ? 'instant' : 'smooth' });
+const showcase = document.querySelector('.recovery-showcase');
+if (showcase && 'IntersectionObserver' in window) {
+  const observer = new IntersectionObserver(([entry]) => {
+    showcase.dataset.inView = String(entry.isIntersecting);
   });
-});
+  observer.observe(showcase);
+}
 const form = document.querySelector('#booking');
 if (form) {
   const section = form.closest('.recovery-contact');

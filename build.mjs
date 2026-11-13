@@ -58,8 +58,7 @@ const serviceAdvice = [
   'Provide the loaded weight, height, length, and whether cargo is still on board.',
   'Share your inspection centre, appointment time, and whether the vehicle can roll and steer.',
 ];
-const cards = services.map(([slug, title, description], index) => `<article class="service-card"><span class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${serviceIcons[index]}</svg></span><h3>${title}</h3><p>${description}</p><a href="/services/${slug}/" data-service="${index}">Explore service <span aria-hidden="true">↗</span></a><template class="service-advice">${serviceAdvice[index]}</template></article>`).join('');
-const serviceDialog = `<dialog id="service-dialog" aria-labelledby="service-dialog-title"><div class="dialog-panel"><button class="close-dialog" type="button" aria-label="Close service details">×</button><div class="dialog-icon"></div><h2 id="service-dialog-title"></h2><p class="dialog-description"></p><p class="dialog-advice"></p><div class="actions"><a class="button dialog-book">Request this service ↗</a><a class="button outline dialog-link">Service page</a></div><nav aria-label="Browse services"><button type="button" data-dialog-step="-1">← Previous</button><button type="button" data-dialog-step="1">Next →</button></nav></div></dialog>`;
+const cards = services.map(([slug, title, description], index) => `<article class="service-card"><span class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${serviceIcons[index]}</svg></span><h3>${title}</h3><p>${description}</p><a href="/services/${slug}/">Explore service <span aria-hidden="true">↗</span></a></article>`).join('');
 const faq = `<section class="section wrap" id="faq"><h2>Recovery questions</h2>
 <details><summary>What should I have ready for a recovery request?</summary><p>Share your pickup location, vehicle type, and what happened. Include your preferred destination if you already know it.</p></details>
 <details><summary>Can I enter my pickup location manually?</summary><p>Yes. Enter an area, nearby landmark, or a map link. You can also use your device location if you choose.</p></details>
@@ -144,9 +143,61 @@ const booking = (heading) => `<section class="recovery-contact" id="request-reco
   </aside>
 </div>
 </section>`;
+const showcaseServices = [
+  ['car-towing', 'Car towing'],
+  ['roadside-assistance', 'Roadside assistance'],
+  ['emergency-recovery', 'Breakdown recovery'],
+  ['accident-recovery', 'Accident recovery'],
+  ['flatbed-towing', 'Flatbed towing'],
+  ['desert-recovery', 'Desert & off-road'],
+  ['luxury-car-transport', 'Luxury & sports'],
+  ['motorcycle-towing', 'Motorcycle transport'],
+];
+
+const showcaseCards = showcaseServices.map(([slug, title], index) => {
+  const image = `<img class="showcase-photo" src="/assets/service-art/${slug}.webp" alt="" loading="lazy" decoding="async">`;
+  const heading = `<span class="showcase-number" aria-hidden="true">${String(index + 1).padStart(2, '0')} /</span><h3>${title}</h3>`;
+  return `<a class="showcase-card" href="/services/${slug}/">
+    ${image}
+    <div class="showcase-card-content">${heading}</div>
+    <svg class="showcase-frame" viewBox="0 0 300 240" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+      <rect class="showcase-frame-glow" x="2" y="2" width="296" height="236" rx="16" pathLength="100" vector-effect="non-scaling-stroke"/>
+      <rect class="showcase-frame-light" x="2" y="2" width="296" height="236" rx="16" pathLength="100" vector-effect="non-scaling-stroke"/>
+    </svg>
+  </a>`;
+});
+
+const serviceShowcase = `<section class="recovery-showcase" id="services" aria-labelledby="showcase-heading">
+  <svg class="showcase-road" viewBox="0 0 1440 700" preserveAspectRatio="xMidYMax slice" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="showcase-asphalt" x2="0" y2="1">
+        <stop stop-color="#17191b"/><stop offset="1" stop-color="#26201d"/>
+      </linearGradient>
+      <path id="showcase-road-center" d="M-100 731C187 721 205 555 501 542S1012 650 1530 332"/>
+      <path id="showcase-road-near-lane" d="M-100 749C187 739 205 573 501 560S1012 668 1530 350" pathLength="100"/>
+      <path id="showcase-road-far-lane" d="M-100 713C187 703 205 537 501 524S1012 632 1530 314" pathLength="100"/>
+    </defs>
+    <use href="#showcase-road-center" class="showcase-road-shoulder"/>
+    <use href="#showcase-road-center" class="showcase-road-asphalt"/>
+    <use href="#showcase-road-center" class="showcase-road-markings"/>
+    <use href="#showcase-road-near-lane" class="showcase-road-reflection"/>
+    <use href="#showcase-road-near-lane" class="showcase-road-light"/>
+    <use href="#showcase-road-far-lane" class="showcase-road-light showcase-road-light-return"/>
+  </svg>
+  <div class="showcase-inner">
+    <div class="showcase-intro">
+      <p class="showcase-eyebrow">${enquiryIcon('pin')} <span>Dubai Car Recovery <b>/ Our services</b></span></p>
+      <h2 id="showcase-heading">Recovery, <em>reengineered.</em></h2>
+      <p>Towing, vehicle transport, and roadside assistance across Dubai.</p>
+    </div>
+    <div class="showcase-grid">${showcaseCards.join('')}</div>
+    <a class="showcase-all" href="/services/">View all recovery services ${enquiryIcon('arrow')}</a>
+  </div>
+</section>`;
+
 const home = `<!-- recovery-hero -->
 ${booking('h2')}
-<section class="service-band" id="services"><div class="section wrap"><div class="section-title"><div><p class="eyebrow">Recovery services</p><h2>Find the right help.</h2></div><div class="carousel-controls"><button data-slide="-1" aria-label="Previous services">←</button><button data-slide="1" aria-label="Next services">→</button></div></div><div class="service-grid carousel" tabindex="0" aria-label="Recovery services">${cards}</div><a class="all-services" href="/services/">View all 13 services ↗</a>${serviceDialog}</div></section>
+${serviceShowcase}
 <section class="process"><div class="section wrap"><h2>How to request recovery</h2><div class="steps"><article><span>01</span><h3>Tell us what happened</h3><p>Choose a service and describe your vehicle or the issue.</p></article><article><span>02</span><h3>Share your pickup point</h3><p>Enter a landmark, map link, or your device location.</p></article><article><span>03</span><h3>Confirm the details</h3><p>The team confirms availability, pickup, and pricing with you.</p></article></div></div></section>${faq}
 ${coverage}${pickupGuide}<section class="section wrap final-call"><h2>Need to move your vehicle?</h2><div class="actions">${actions}</div></section>`;
 const guides = [
@@ -182,6 +233,10 @@ const serviceTape = `<div class="service-tape">
   </div></div>
 </div>`;
 await cp('expressway.webp', 'dist/assets/expressway.webp');
+await mkdir('dist/assets/service-art');
+for (const name of [...showcaseServices.map(([slug]) => slug), 'overpass', 'skyline']) {
+  await cp('service-' + name + '.webp', 'dist/assets/service-art/' + name + '.webp');
+}
 const assetUrls = {};
 for (const [name, extension] of [['design', 'css'], ['site', 'js']]) {
   const contents = await readFile(`${name}.${extension}`);
@@ -199,3 +254,4 @@ for (const [path, title, description, content] of pages) {
 await writeFile('dist/robots.txt', indexable ? `User-agent: *\nAllow: /\nSitemap: ${business.domain}/sitemap.xml\n` : 'User-agent: *\nAllow: /\n');
 await writeFile('dist/sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${pages.map(([path]) => `<url><loc>${business.domain}${path}</loc></url>`).join('')}</urlset>`);
 console.log(`Built ${pages.length} pages for ${business.domain}`);
+

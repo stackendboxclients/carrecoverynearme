@@ -294,3 +294,184 @@ a.pickup-channel:hover { border-color: #ff9d64; background: #28211c; }
   .pickup-traffic-light { display: none; }
   .pickup-expand { transition: none; }
 }
+
+.recovery-showcase {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  scroll-margin-top: 16px;
+  padding: clamp(32px, 4vw, 66px) 0;
+  color: #fff6ee;
+  background: radial-gradient(ellipse at 16% 30%, #362319 0, transparent 40%), #0c0e10;
+}
+.recovery-showcase::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0 auto auto 0;
+  width: min(42%, 570px);
+  height: 250px;
+  background: url("/assets/service-art/overpass.webp") left top / cover no-repeat;
+  mask-image: radial-gradient(ellipse at 0 0, #000 20%, transparent 75%);
+}
+.recovery-showcase::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0 0 auto auto;
+  width: min(25%, 400px);
+  height: 205px;
+  background: url("/assets/service-art/skyline.webp") right top / cover no-repeat;
+  mask-image: radial-gradient(ellipse at 100% 0, #000 30%, transparent 83%);
+}
+.showcase-road {
+  position: absolute;
+  z-index: -1;
+  inset: auto 0 0;
+  width: 100%;
+  height: min(92%, 760px);
+  pointer-events: none;
+  fill: none;
+  mask-image: linear-gradient(180deg, transparent, #000 37% 92%, transparent);
+}
+.showcase-road-shoulder { stroke: #554034; stroke-width: 82px; }
+.showcase-road-asphalt { stroke: url("#showcase-asphalt"); stroke-width: 78px; }
+.showcase-road-markings { stroke: #b49b86; stroke-opacity: .44; stroke-width: 1.5px; stroke-dasharray: 14 19; }
+.showcase-road-light,.showcase-road-reflection {
+  stroke: #ffa45e;
+  stroke-width: 3px;
+  stroke-linecap: round;
+  stroke-dasharray: 8 42;
+  animation: showcase-traffic 10s linear -3s infinite paused;
+}
+.showcase-road-reflection {
+  stroke-width: 16px;
+  opacity: .46;
+  filter: blur(6px);
+}
+.showcase-road-light-return {
+  stroke: #ffd4a3;
+  stroke-width: 2px;
+  stroke-dasharray: 4 46;
+  animation-direction: reverse;
+  animation-duration: 13s;
+  animation-delay: -8s;
+}
+.recovery-showcase[data-in-view="true"] :is(.showcase-road-light,.showcase-road-reflection) { animation-play-state: running; }
+@keyframes showcase-traffic {
+  from { stroke-dashoffset: 0; }
+  to { stroke-dashoffset: -50; }
+}
+.showcase-inner { width: min(1570px, calc(100% - 64px)); margin-inline: auto; }
+.showcase-intro { text-align: center; margin: 0 auto clamp(22px, 3vw, 42px); }
+.showcase-eyebrow {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 9px;
+  margin: 0 0 10px;
+  color: #ff9c5c;
+  font: italic 700 clamp(.72rem, 1.2vw, 1rem)/1.2 var(--display);
+  text-transform: uppercase;
+}
+.showcase-eyebrow b { color: #fff6ee; font-weight: 550; }
+.showcase-intro h2 {
+  margin: 0;
+  font: italic 700 clamp(1.8rem, 4.1vw, 4rem)/1.04 var(--display);
+  letter-spacing: -.05em;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+.showcase-intro h2 em { color: #ff9252; }
+.showcase-intro > p:last-child { margin: 10px 0 0; color: #d6cbc1; }
+.showcase-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  column-gap: 17px;
+  row-gap: 24px;
+}
+.showcase-card {
+  --card-skew: -9deg;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: block;
+  min-width: 0;
+  height: clamp(202px, 18vw, 282px);
+  padding: clamp(14px, 1.8vw, 27px);
+  border: 1px solid #ffffff3f;
+  border-radius: 17px;
+  background: #18191b;
+  color: #fff6ee;
+  text-decoration: none;
+  transform: skewX(var(--card-skew));
+  transition: border-color .25s ease, box-shadow .25s ease;
+}
+.showcase-photo {
+  position: absolute;
+  z-index: -2;
+  inset: auto -8% 0;
+  width: 116%;
+  height: 80%;
+  object-fit: cover;
+  object-position: center bottom;
+  transform: skewX(calc(0deg - var(--card-skew)));
+  transition: transform .55s cubic-bezier(.2,.75,.25,1);
+}
+.showcase-card::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: linear-gradient(180deg, #151719 5%, #151719eb 23%, transparent 58%, #0c0e125e);
+}
+.showcase-card-content { transform: skewX(calc(0deg - var(--card-skew))); }
+.showcase-card h3 {
+  margin: 2px 0 0;
+  font: italic 700 clamp(.94rem, 1.55vw, 1.45rem)/1.08 var(--display);
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+.showcase-number { display: block; color: #ff9853; font: italic 700 1.13rem/1 var(--display); }
+.showcase-card:is(:hover, :focus-within) { border-color: #ff9b65; box-shadow: 0 0 24px #fd7c313a; }
+.showcase-card:is(:hover, :focus-within) .showcase-photo { transform: skewX(calc(0deg - var(--card-skew))) scale(1.035); }
+.showcase-card:focus-visible,.showcase-all:focus-visible { outline: 2px solid #ffd3b6; outline-offset: 4px; }
+.showcase-frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  fill: none;
+  pointer-events: none;
+}
+.showcase-frame rect { animation: showcase-frame 7s linear infinite paused; }
+.showcase-frame-glow {
+  stroke: #ff8a42;
+  stroke-width: 4;
+  stroke-dasharray: 11 89;
+  filter: drop-shadow(0 0 4px #ff7b30);
+  opacity: .65;
+}
+.showcase-frame-light {
+  stroke: #ffe1b9;
+  stroke-width: 1.5;
+  stroke-dasharray: 5 95;
+}
+.showcase-card:nth-child(4n + 2) .showcase-frame rect { animation-delay: -1.75s; }
+.showcase-card:nth-child(4n + 3) .showcase-frame rect { animation-delay: -3.5s; }
+.showcase-card:nth-child(4n + 4) .showcase-frame rect { animation-delay: -5.25s; }
+.recovery-showcase[data-in-view="true"] .showcase-frame rect { animation-play-state: running; }
+@keyframes showcase-frame {
+  from { stroke-dashoffset: 0; }
+  to { stroke-dashoffset: -100; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .showcase-frame,.showcase-road-light,.showcase-road-reflection { display: none; }
+}
+.showcase-all { display: inline-flex; align-items: center; gap: 8px; margin-top: 24px; color: #ffc09a; text-underline-offset: 4px; }
+@media (max-width: 680px) {
+  .showcase-inner { width: calc(100% - 28px); }
+  .showcase-road { height: 70%; }
+  .showcase-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .showcase-card { --card-skew: 0deg; height: clamp(168px, 44vw, 250px); border-radius: 14px; }
+}
