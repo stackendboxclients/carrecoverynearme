@@ -63,6 +63,13 @@ document.querySelectorAll('[data-slide]').forEach(button => {
 });
 const form = document.querySelector('#booking');
 if (form) {
+  const section = form.closest('.recovery-contact');
+  if (section && 'IntersectionObserver' in window) {
+    const observer = new IntersectionObserver(([entry]) => {
+      section.dataset.inView = String(entry.isIntersecting);
+    });
+    observer.observe(section);
+  }
   const service = new URLSearchParams(location.search).get('service');
   const serviceField = form.elements.namedItem('service');
   const timing = form.elements.namedItem('timing');
@@ -74,35 +81,71 @@ if (form) {
   });
   if ([...serviceField.options].some(option => option.value === service)) serviceField.value = service;
   const status = document.querySelector('#location-status');
-  document.querySelector('#location').addEventListener('click', () => {
+  const pickup = form.elements.namedItem('pickup');
+  const locationButton = form.querySelector('#location');
+  const pickupMap = form.querySelector('#pickup-map');
+  pickup.addEventListener('input', () => {
+    pickupMap.hidden = true;
+    status.textContent = '';
+  });
+  locationButton.addEventListener('click', () => {
     if (!navigator.geolocation) {
       status.textContent = 'Enter a landmark or map link manually.';
       return;
     }
+    const previousPickup = pickup.value;
+    locationButton.disabled = true;
+    pickupMap.hidden = true;
     status.textContent = 'Looking for your location...';
     navigator.geolocation.getCurrentPosition(({coords}) => {
-      form.elements.namedItem('pickup').value = 'https://www.google.com/maps?q=' + coords.latitude.toFixed(6) + ',' + coords.longitude.toFixed(6);
+      locationButton.disabled = false;
+      if (pickup.value !== previousPickup) return;
+      pickup.value = 'https://www.google.com/maps?q=' + coords.latitude.toFixed(6) + ',' + coords.longitude.toFixed(6);
+      pickupMap.href = pickup.value;
+      pickupMap.hidden = false;
       status.textContent = 'Location added. Check the map pin before sending.';
     }, () => {
-      status.textContent = 'Could not get your location. Enter a landmark or map link manually.';
+      locationButton.disabled = false;
+      if (pickup.value === previousPickup) status.textContent = 'Could not get your location. Enter a landmark or map link manually.';
     }, { enableHighAccuracy: true, timeout: 10000 });
   });
-  form.addEventListener('submit', event => {
+  const sendStatus = form.querySelector('#pickup-send-status');
+  const preparedMessage = form.querySelector('#pickup-message');
+  form.addEventListener('invalid', event => {
+    const extra = event.target.closest('details');
+    if (extra) extra.open = true;
+  }, true);
+  form.addEventListener('submit', async event => {
     event.preventDefault();
-    if (!form.dataset.whatsapp || !form.reportValidity()) return;
     const data = new FormData(form);
     const message = [
       'Vehicle recovery enquiry',
-      'Name: ' + data.get('name'),
-      'Phone: ' + data.get('phone'),
+      'Name: ' + data.get('name').trim(),
+      'Phone: ' + data.get('phone').trim(),
       'Service: ' + serviceField.selectedOptions[0].textContent,
-      'Pickup: ' + data.get('pickup'),
+      'Pickup: ' + data.get('pickup').trim(),
     ];
     for (const [field, label] of [['vehicle', 'Vehicle'], ['destination', 'Drop-off'], ['timing', 'Timing'], ['datetime', 'Preferred time']]) {
       const value = data.get(field).trim();
       if (value && (field !== 'datetime' || date.required)) message.push(label + ': ' + value);
     }
     if (data.get('details').trim()) message.push('Details: ' + data.get('details'));
-    location.assign('https://wa.me/' + form.dataset.whatsapp + '?text=' + encodeURIComponent(message.join('\n')));
+    const text = message.join('\n');
+    if (form.dataset.whatsapp) {
+      location.assign('https://wa.me/' + form.dataset.whatsapp + '?text=' + encodeURIComponent(text));
+      return;
+    }
+    preparedMessage.hidden = true;
+    try {
+      await navigator.clipboard.writeText(text);
+      sendStatus.textContent = 'Enquiry copied.';
+    } catch {
+      preparedMessage.value = text;
+      preparedMessage.hidden = false;
+      preparedMessage.select();
+      sendStatus.textContent = 'Your enquiry is ready. Select and copy the text below.';
+    }
   });
+  locationButton.disabled = false;
+  form.querySelector('.pickup-submit').disabled = false;
 }

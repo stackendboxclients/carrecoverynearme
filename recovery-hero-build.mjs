@@ -31,7 +31,7 @@ export async function buildRecoveryHero() {
   const { renderToString } = require('react-dom/server');
   const { RecoveryHero } = require('./' + serverPath);
   const markup = renderToString(createElement(RecoveryHero, {
-    bookingHref: '/book/',
+    bookingHref: '#request-recovery',
     servicesHref: '/services/',
   }));
   await unlink(serverPath);

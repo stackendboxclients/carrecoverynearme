@@ -1,4 +1,5 @@
 import { readFile, mkdir, writeFile, cp, rm } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
 
 import { buildRecoveryHero } from './recovery-hero-build.mjs';
 
@@ -63,21 +64,88 @@ const faq = `<section class="section wrap" id="faq"><h2>Recovery questions</h2>
 <details><summary>What should I have ready for a recovery request?</summary><p>Share your pickup location, vehicle type, and what happened. Include your preferred destination if you already know it.</p></details>
 <details><summary>Can I enter my pickup location manually?</summary><p>Yes. Enter an area, nearby landmark, or a map link. You can also use your device location if you choose.</p></details>
 <details><summary>When is recovery confirmed?</summary><p>The recovery team confirms availability, price, and pickup arrangements directly with you.</p></details></section>`;
-const booking = `<section class="section wrap narrow"><h1>Request vehicle recovery</h1><p>Enter your pickup details so the recovery team can assess your request.</p>
-${business.whatsapp ? '' : '<p class="notice">Online booking is awaiting the business WhatsApp number.</p>'}
-<form id="booking" data-whatsapp="${business.whatsapp}"><label>Name<input name="name" autocomplete="name" maxlength="100" required></label>
-<label>Phone<input name="phone" type="tel" autocomplete="tel" maxlength="30" required></label>
-<label>Service<select name="service" required><option value="">Choose a service</option>${services.map(([slug, title]) => `<option value="${slug}">${title}</option>`).join('')}</select></label>
-<label>Pickup location<input name="pickup" maxlength="300" placeholder="Area, landmark, or map link" required></label>
-<button class="button outline" type="button" id="location">Use my location</button><p id="location-status" role="status"></p>
-<label>Vehicle <small>(optional)</small><input name="vehicle" maxlength="120" placeholder="Make and model"></label>
-<label>Drop-off <small>(optional)</small><input name="destination" maxlength="300" placeholder="Garage or address"></label>
-<label>Pickup timing <small>(optional)</small><select name="timing"><option>As soon as available</option><option>Scheduled pickup</option></select></label>
-<label id="scheduled" hidden>Preferred date and time<input type="datetime-local" name="datetime"></label>
-<label>Anything else? <small>(optional)</small><textarea name="details" rows="4" maxlength="700" placeholder="Vehicle condition or pickup access"></textarea></label>
-<button class="button" type="submit" ${business.whatsapp ? '' : 'disabled'}>Continue on WhatsApp ↗</button>
-<p>Review the details in WhatsApp before sending. The team confirms pickup and price directly.</p></form></section>`;
+const enquiryIcons = {
+  person: '<circle cx="12" cy="8" r="3"/><path d="M5 20v-2a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v2"/>',
+  phone: '<path d="M8 3H5a2 2 0 0 0-2 2 16 16 0 0 0 16 16 2 2 0 0 0 2-2v-3l-5-2-2 2a12 12 0 0 1-6-6l2-2z"/>',
+  truck: '<path d="M2 6h12v11H2zM14 10h4l4 4v3h-8"/><circle cx="6" cy="18" r="2"/><circle cx="18" cy="18" r="2"/>',
+  pin: '<path d="M19 10c0 5-7 10-7 10S5 15 5 10a7 7 0 1 1 14 0Z"/><circle cx="12" cy="10" r="2.5"/>',
+  locate: '<circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><path d="M12 2v4m0 12v4M2 12h4m12 0h4"/>',
+  whatsapp: '<path d="M4 19.8 5 16a8 8 0 1 1 3.1 3l-4.1.8Z"/><path d="M9 8c-1 1-.4 3.1 1.2 4.8 1.7 1.8 3.8 2.5 4.9 1.4l.6-.8-2.4-1.1-.8.7a5.5 5.5 0 0 1-2.1-2.2l.6-.8-.9-2.2z"/>',
+  sliders: '<path d="M4 7h16M4 17h16M8 4v6m8 4v6"/>',
+  arrow: '<path d="M5 12h14m-6-6 6 6-6 6"/>',
+  plus: '<path d="M5 12h14m-7-7v14"/>',
+  copy: '<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/>',
+};
+const enquiryIcon = (name) => `<svg class="enquiry-icon" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round">${enquiryIcons[name]}</svg>`;
+const pickupChannel = (icon, title, href) => {
+  const content = `${enquiryIcon(icon)}<span>${title}</span>`;
+  return href
+    ? `<a class="pickup-channel" href="${href}">${content}${enquiryIcon('arrow')}</a>`
+    : `<button type="button" class="pickup-channel" disabled>${content}</button>`;
+};
+
+const booking = (heading) => `<section class="recovery-contact" id="request-recovery" aria-labelledby="pickup-heading">
+<div class="wrap recovery-contact-layout">
+  <div class="pickup-intro">
+    <p class="eyebrow">${enquiryIcon('pin')} Dubai vehicle recovery</p>
+    <${heading} id="pickup-heading">Request a vehicle pickup</${heading}>
+    <p>Share your pickup point and choose a service. The recovery team confirms availability and pricing before dispatch.</p>
+  </div>
+  <div class="pickup-form-stage">
+    <div class="pickup-backdrop" aria-hidden="true">
+      <div class="pickup-road-surface">
+        <span class="pickup-lane-markings"></span>
+        <span class="pickup-traffic-light"></span>
+        <span class="pickup-traffic-light pickup-traffic-light-return"></span>
+      </div>
+    </div>
+    <form id="booking" class="pickup-form" method="post" data-whatsapp="${business.whatsapp}">
+    <div class="pickup-fields">
+      <label><span>${enquiryIcon('person')} Your name <span aria-hidden="true">*</span></span><input name="name" autocomplete="name" maxlength="100" placeholder="Full name" required></label>
+      <label><span>${enquiryIcon('phone')} Phone number <span aria-hidden="true">*</span></span><input name="phone" type="tel" autocomplete="tel" maxlength="30" minlength="7" placeholder="Include country code" required></label>
+      <label class="pickup-wide"><span>${enquiryIcon('truck')} Recovery service <span aria-hidden="true">*</span></span><select name="service" required><option value="">Choose a service</option>${services.map(([slug, title]) => `<option value="${slug}">${title}</option>`).join('')}</select></label>
+      <label class="pickup-wide"><span>${enquiryIcon('pin')} Pickup location <span aria-hidden="true">*</span></span><input name="pickup" maxlength="300" placeholder="Area, landmark, or map link" aria-describedby="pickup-location-help" required></label>
+    </div>
+    <div class="pickup-location">
+      <button type="button" id="location" disabled>${enquiryIcon('locate')} Use my current location</button>
+      <a id="pickup-map" target="_blank" rel="noopener noreferrer" hidden>Check map pin ↗</a>
+      <p id="pickup-location-help">A landmark or map link works too.</p>
+      <p id="location-status" role="status"></p>
+    </div>
+    <details class="pickup-extra">
+      <summary>${enquiryIcon('sliders')}<span>Vehicle, destination, and timing <small>Optional</small></span><span class="pickup-expand">${enquiryIcon('plus')}</span></summary>
+      <div class="pickup-fields">
+        <label>Vehicle<input name="vehicle" maxlength="120" placeholder="Make and model"></label>
+        <label>Drop-off<input name="destination" maxlength="300" placeholder="Garage or address"></label>
+        <label>Pickup timing<select name="timing"><option>As soon as available</option><option>Scheduled pickup</option></select></label>
+        <label id="scheduled" hidden>Preferred date and time<input type="datetime-local" name="datetime"></label>
+        <label class="pickup-wide">Anything else?<textarea name="details" rows="3" maxlength="700" placeholder="Vehicle condition or pickup access"></textarea></label>
+      </div>
+    </details>
+    <div class="pickup-send">
+      <button class="button pickup-submit" type="submit" disabled>${enquiryIcon(business.whatsapp ? 'whatsapp' : 'copy')}<span>${business.whatsapp ? 'Continue on WhatsApp' : 'Copy enquiry'}</span>${enquiryIcon('arrow')}</button>
+      <noscript><p>Enable JavaScript to prepare your enquiry.</p></noscript>
+      <div class="pickup-send-note">
+        <p>${business.whatsapp ? 'Review the message in WhatsApp and tap Send.' : 'Copy your pickup details to share later.'}</p>
+        <a class="pickup-privacy" href="/privacy/">Privacy information</a>
+      </div>
+      <p id="pickup-send-status" role="status"></p>
+      <textarea id="pickup-message" rows="5" readonly aria-label="Prepared recovery enquiry" hidden></textarea>
+    </div>
+    </form>
+  </div>
+  <aside class="pickup-channels" aria-labelledby="pickup-channels-heading">
+    <h3 id="pickup-channels-heading">Contact the recovery team</h3>
+    <div class="pickup-channel-list">
+      ${pickupChannel('phone', 'Call the team', business.phone && 'tel:' + business.phone)}
+      ${pickupChannel('whatsapp', 'Chat on WhatsApp', business.whatsapp && 'https://wa.me/' + business.whatsapp)}
+    </div>
+    ${business.phone && business.whatsapp ? '' : '<p>Direct contact options will be available once the business numbers are added.</p>'}
+  </aside>
+</div>
+</section>`;
 const home = `<!-- recovery-hero -->
+${booking('h2')}
 <section class="service-band" id="services"><div class="section wrap"><div class="section-title"><div><p class="eyebrow">Recovery services</p><h2>Find the right help.</h2></div><div class="carousel-controls"><button data-slide="-1" aria-label="Previous services">←</button><button data-slide="1" aria-label="Next services">→</button></div></div><div class="service-grid carousel" tabindex="0" aria-label="Recovery services">${cards}</div><a class="all-services" href="/services/">View all 13 services ↗</a>${serviceDialog}</div></section>
 <section class="process"><div class="section wrap"><h2>How to request recovery</h2><div class="steps"><article><span>01</span><h3>Tell us what happened</h3><p>Choose a service and describe your vehicle or the issue.</p></article><article><span>02</span><h3>Share your pickup point</h3><p>Enter a landmark, map link, or your device location.</p></article><article><span>03</span><h3>Confirm the details</h3><p>The team confirms availability, pickup, and pricing with you.</p></article></div></div></section>${faq}
 ${coverage}${pickupGuide}<section class="section wrap final-call"><h2>Need to move your vehicle?</h2><div class="actions">${actions}</div></section>`;
@@ -90,7 +158,7 @@ const pages = [
   ['/', name, 'Car towing, breakdown recovery, and roadside assistance in Dubai.', home],
   ['/services/', 'Recovery services', 'Explore vehicle recovery and roadside assistance in Dubai.', `<section class="section wrap"><h1>Recovery services</h1><div class="service-grid">${cards}</div></section>`],
   ...services.map(([slug, title, description], index) => [`/services/${slug}/`, title, description, `<section class="section wrap narrow"><a class="back-link" href="/services/">← All services</a><h1>${title}</h1><p>${description}</p><h2>Before you request a pickup</h2><p>${serviceAdvice[index]}</p><a class="button" href="/book/?service=${slug}">Request ${title.toLowerCase()} ↗</a></section>`]),
-  ['/book/', 'Request recovery', 'Share pickup and vehicle details with the recovery team.', booking],
+  ['/book/', 'Request recovery', 'Share pickup and vehicle details with the recovery team.', booking('h1')],
   ['/about/', 'About', 'How Dubai Car Recovery Near Me handles vehicle recovery enquiries.', `<section class="section wrap narrow"><h1>About Dubai Car Recovery Near Me</h1><p>Tell us what happened, where your vehicle is, and where it needs to go. The recovery team uses those details to confirm what help is available and what it will cost.</p><a class="button" href="/services/">Explore services ↗</a></section>`],
   ['/contact/', 'Contact', 'Contact Dubai Car Recovery Near Me.', `<section class="section wrap narrow"><h1>Contact</h1>${contactReady ? `<div class="actions">${phone}${whatsapp}</div>` : '<p>Business contact details will be added before launch.</p>'}</section>`],
   ['/privacy/', 'Privacy', 'How this website handles enquiry details.', '<section class="section wrap narrow"><h1>Privacy</h1><p>Pickup and contact details entered in the form stay in your browser until you choose to open WhatsApp. If you allow location access, the site uses your position to fill the pickup field. WhatsApp handles the message when you choose to send it.</p></section>'],
@@ -113,12 +181,20 @@ const serviceTape = `<div class="service-tape">
     <ul aria-hidden="true">${serviceTapeItems}</ul>
   </div></div>
 </div>`;
-for (const asset of ['expressway.webp', 'design.css', 'site.js']) await cp(asset, 'dist/assets/' + asset);
+await cp('expressway.webp', 'dist/assets/expressway.webp');
+const assetUrls = {};
+for (const [name, extension] of [['design', 'css'], ['site', 'js']]) {
+  const contents = await readFile(`${name}.${extension}`);
+  const version = createHash('sha256').update(contents).digest('hex').slice(0, 12);
+  const url = `/assets/${name}.${version}.${extension}`;
+  await writeFile('dist' + url, contents);
+  assetUrls[name] = url;
+}
 for (const [path, title, description, content] of pages) {
   const directory = `dist${path}`;
   await mkdir(directory, { recursive: true });
   const canonical = business.domain + path;
-  await writeFile(directory + 'index.html', `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${path === '/' ? title : title + ' | ' + name}</title><meta name="description" content="${description}"><meta name="robots" content="${indexable ? 'index,follow' : 'noindex,nofollow'}"><link rel="canonical" href="${canonical}"><link rel="stylesheet" href="/assets/design.css"><script src="/assets/site.js" defer></script>${path === '/' ? '<link rel="stylesheet" href="/assets/recovery-hero.css"><script type="module" src="/assets/recovery-hero.js"></script>' : ''}</head><body><a class="skip" href="#main">Skip to content</a><header><div class="wrap header-inner">${brand}<nav aria-label="Main"><a href="/services/">Services</a><a href="/#faq">FAQs</a><a href="/about/">About</a><a href="/contact/">Contact</a></nav><a class="button header-action" href="/book/">Plan a pickup ↗</a></div></header><main id="main">${path === '/' ? content.replace('<!-- recovery-hero -->', serviceTape + recoveryHero) : content}</main><footer class="wrap">${brand}<div><a href="/services/">Services</a><a href="/contact/">Contact</a><a href="/blogs/">Guides</a><a href="/privacy/">Privacy</a></div><small>Developed by <a href="https://www.stackendbox.com/">StackEndBox</a></small></footer><aside class="mobile-actions" aria-label="Recovery actions">${actions}</aside></body></html>`);
+  await writeFile(directory + 'index.html', `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${path === '/' ? title : title + ' | ' + name}</title><meta name="description" content="${description}"><meta name="robots" content="${indexable ? 'index,follow' : 'noindex,nofollow'}"><link rel="canonical" href="${canonical}"><link rel="stylesheet" href="${assetUrls.design}"><script src="${assetUrls.site}" defer></script>${path === '/' ? '<link rel="stylesheet" href="/assets/recovery-hero.css"><script type="module" src="/assets/recovery-hero.js"></script>' : ''}</head><body><a class="skip" href="#main">Skip to content</a><header><div class="wrap header-inner">${brand}<nav aria-label="Main"><a href="/services/">Services</a><a href="/#faq">FAQs</a><a href="/about/">About</a><a href="/contact/">Contact</a></nav><a class="button header-action" href="/book/">Plan a pickup ↗</a></div></header><main id="main">${path === '/' ? content.replace('<!-- recovery-hero -->', serviceTape + recoveryHero) : content}</main><footer class="wrap">${brand}<div><a href="/services/">Services</a><a href="/contact/">Contact</a><a href="/blogs/">Guides</a><a href="/privacy/">Privacy</a></div><small>Developed by <a href="https://www.stackendbox.com/">StackEndBox</a></small></footer><aside class="mobile-actions" aria-label="Recovery actions">${actions}</aside></body></html>`);
 }
 await writeFile('dist/robots.txt', indexable ? `User-agent: *\nAllow: /\nSitemap: ${business.domain}/sitemap.xml\n` : 'User-agent: *\nAllow: /\n');
 await writeFile('dist/sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${pages.map(([path]) => `<url><loc>${business.domain}${path}</loc></url>`).join('')}</urlset>`);
