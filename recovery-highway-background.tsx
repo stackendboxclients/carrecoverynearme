@@ -14,7 +14,7 @@ const ramp = ([a, b, c, d]: Point[], t: number): Point => {
 };
 
 // Cross-sections share a vanishing point but widen at different rates.
-const ground: Point[] = [[835, 646], [387, 752], [940, 761], [1660, 910]];
+const ground: Point[] = [[835, 608], [510, 685], [758, 766], [1660, 874]];
 const deck: Point[] = [[575, 607], [723, 443], [880, 189], [1660, -19]];
 const point = (bridge: boolean, t: number, lane = 0, drop = 0): Point => {
   const [x, y] = ramp(bridge ? deck : ground, t);
@@ -122,7 +122,11 @@ export function HighwayBackground({ playing }: { playing: boolean }) {
               <path stroke="#ffd4a2" strokeOpacity=".84" strokeLinecap="round" strokeWidth={1 + t} d={`M${x+10+h*.1} ${y-h-7}h${3+t*4}`} />
             </g>;
           })}
-          <path className="highway-traffic highway-traffic-distant" pathLength="100" d={line(true, -.44, -15)} />
+          <path fill="none" stroke="#e9975b" strokeOpacity=".21" strokeWidth="2" d={line(true, -.44, -15)} />
+          <g className="highway-pass highway-pass-distant">
+            <path className="highway-traffic highway-traffic-glow" pathLength="100" d={line(true, -.44, -15)} />
+            <path className="highway-traffic highway-traffic-core" pathLength="100" d={line(true, -.44, -15)} />
+          </g>
         </svg>
       </motion.div>
       <motion.div className="highway-perspective highway-foreground" style={{ x: pointerX, y: pointerY }}>
@@ -156,8 +160,10 @@ export function HighwayBackground({ playing }: { playing: boolean }) {
               <path d={mark(false, t, -.12, .005 + .018 * t)} /><path d={mark(false, t, .36, .005 + .018 * t)} />
             </g>)}
             {([[-.42, "amber"], [.21, "white"]] as const).map(([lane, tone]) => <g key={tone} className={`highway-pass highway-pass-${tone}`}>
-              <path className="highway-traffic highway-traffic-reflection" pathLength="100" d={line(false, lane + .045, 3)} />
+              <path className="highway-traffic highway-traffic-reflection" pathLength="100" d={line(false, lane + .08, 4)} />
+              <path className="highway-traffic highway-traffic-glow" pathLength="100" d={line(false, lane)} />
               <path className="highway-traffic highway-traffic-core" pathLength="100" d={line(false, lane)} />
+              <path className="highway-traffic highway-traffic-tip" pathLength="100" d={line(false, lane)} />
             </g>)}
           </g>
           <path fill={fill("barrier")} d={band(false, -.96, -.76, -8, 3)} />

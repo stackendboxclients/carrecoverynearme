@@ -104,12 +104,21 @@ await rm('dist', { recursive: true, force: true });
 await mkdir('dist', { recursive: true });
 await mkdir('dist/assets');
 const recoveryHero = await buildRecoveryHero();
+const serviceTapeItems = services.map(([, title]) => `<li>${title}</li>`).join('');
+const serviceTape = `<div class="service-tape">
+  <input class="service-tape-pause" type="checkbox" id="pause-service-tape" aria-label="Pause service ticker">
+  <label class="service-tape-control" for="pause-service-tape" title="Pause or resume service ticker"><svg viewBox="0 0 16 16" aria-hidden="true"><path class="tape-pause-icon" d="M5 3v10m6-10v10"/><path class="tape-play-icon" d="m5 3 7 5-7 5z"/></svg></label>
+  <div class="service-tape-window"><div class="service-tape-track">
+    <ul aria-label="Recovery services">${serviceTapeItems}</ul>
+    <ul aria-hidden="true">${serviceTapeItems}</ul>
+  </div></div>
+</div>`;
 for (const asset of ['expressway.webp', 'design.css', 'site.js']) await cp(asset, 'dist/assets/' + asset);
 for (const [path, title, description, content] of pages) {
   const directory = `dist${path}`;
   await mkdir(directory, { recursive: true });
   const canonical = business.domain + path;
-  await writeFile(directory + 'index.html', `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${path === '/' ? title : title + ' | ' + name}</title><meta name="description" content="${description}"><meta name="robots" content="${indexable ? 'index,follow' : 'noindex,nofollow'}"><link rel="canonical" href="${canonical}"><link rel="stylesheet" href="/assets/design.css"><script src="/assets/site.js" defer></script>${path === '/' ? '<link rel="stylesheet" href="/assets/recovery-hero.css"><script type="module" src="/assets/recovery-hero.js"></script>' : ''}</head><body><a class="skip" href="#main">Skip to content</a><header><div class="wrap header-inner">${brand}<nav aria-label="Main"><a href="/services/">Services</a><a href="/#faq">FAQs</a><a href="/about/">About</a><a href="/contact/">Contact</a></nav><a class="button header-action" href="/book/">Plan a pickup ↗</a></div></header><main id="main">${path === '/' ? content.replace('<!-- recovery-hero -->', recoveryHero) : content}</main><footer class="wrap">${brand}<div><a href="/services/">Services</a><a href="/contact/">Contact</a><a href="/blogs/">Guides</a><a href="/privacy/">Privacy</a></div><small>Developed by <a href="https://www.stackendbox.com/">StackEndBox</a></small></footer><aside class="mobile-actions" aria-label="Recovery actions">${actions}</aside></body></html>`);
+  await writeFile(directory + 'index.html', `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${path === '/' ? title : title + ' | ' + name}</title><meta name="description" content="${description}"><meta name="robots" content="${indexable ? 'index,follow' : 'noindex,nofollow'}"><link rel="canonical" href="${canonical}"><link rel="stylesheet" href="/assets/design.css"><script src="/assets/site.js" defer></script>${path === '/' ? '<link rel="stylesheet" href="/assets/recovery-hero.css"><script type="module" src="/assets/recovery-hero.js"></script>' : ''}</head><body><a class="skip" href="#main">Skip to content</a><header><div class="wrap header-inner">${brand}<nav aria-label="Main"><a href="/services/">Services</a><a href="/#faq">FAQs</a><a href="/about/">About</a><a href="/contact/">Contact</a></nav><a class="button header-action" href="/book/">Plan a pickup ↗</a></div></header><main id="main">${path === '/' ? content.replace('<!-- recovery-hero -->', serviceTape + recoveryHero) : content}</main><footer class="wrap">${brand}<div><a href="/services/">Services</a><a href="/contact/">Contact</a><a href="/blogs/">Guides</a><a href="/privacy/">Privacy</a></div><small>Developed by <a href="https://www.stackendbox.com/">StackEndBox</a></small></footer><aside class="mobile-actions" aria-label="Recovery actions">${actions}</aside></body></html>`);
 }
 await writeFile('dist/robots.txt', indexable ? `User-agent: *\nAllow: /\nSitemap: ${business.domain}/sitemap.xml\n` : 'User-agent: *\nAllow: /\n');
 await writeFile('dist/sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${pages.map(([path]) => `<url><loc>${business.domain}${path}</loc></url>`).join('')}</urlset>`);

@@ -138,16 +138,16 @@ export function RecoveryHero({ bookingHref, servicesHref }: { bookingHref: strin
       <HighwayBackground playing={playing} />
       <div className="hero-shell">
         <div className="hero-copy">
-          <p className="eyebrow"><MapPin size={15} /> Dubai, United Arab Emirates</p>
+          <p className="eyebrow"><span className="hero-icon"><MapPin size={15} /></span> Dubai, United Arab Emirates</p>
           <h1 id="recovery-title"><span><b className="hero-chrome">Car towing &amp;</b></span><em><strong>recovery in Dubai.</strong></em></h1>
-          <p className="hero-description">Need a tow or stuck after a breakdown? Share your pickup and destination for flatbed recovery across Dubai.</p>
+          <p className="hero-description">Stuck after a breakdown or need to move a vehicle? Share your pickup point and destination to arrange recovery across Dubai.</p>
           <div className="hero-actions">
             <Button asChild className="hero-request"><a href={bookingHref} data-cta="request-recovery">Request recovery <span><ArrowUpRight size={18} /></span></a></Button>
             <Button asChild variant="outline" className="hero-services"><a href={servicesHref}>Explore services <span><ArrowRight size={16} /></span></a></Button>
           </div>
           <ul className="hero-trust">
-            <li><Truck size={17} /> Breakdown recovery &amp; flatbed towing</li>
-            <li><ShieldCheck size={17} /> Luxury vehicle transport</li>
+            <li><span className="hero-icon"><Truck size={17} /></span> Breakdown recovery &amp; flatbed towing</li>
+            <li><span className="hero-icon"><ShieldCheck size={17} /></span> Luxury vehicle transport</li>
           </ul>
         </div>
         <RouteScene playing={playing} />
