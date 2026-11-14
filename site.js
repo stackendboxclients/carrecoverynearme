@@ -70,35 +70,49 @@ if (form) {
   const pickup = form.elements.namedItem('pickup');
   const locationButton = form.querySelector('#location');
   const pickupMap = form.querySelector('#pickup-map');
+  const maxPickupAccuracy = 100;
+  let pickupEditVersion = 0;
   pickup.addEventListener('input', () => {
+    pickupEditVersion += 1;
     pickupMap.hidden = true;
     status.textContent = '';
   });
   locationButton.addEventListener('click', () => {
     if (!navigator.geolocation) {
-      status.textContent = 'Enter a landmark or map link manually.';
+      status.textContent = 'Location is unavailable in this browser. Enter a landmark or map link.';
       return;
     }
-    const previousPickup = pickup.value;
+    const requestVersion = pickupEditVersion;
     locationButton.disabled = true;
-    pickupMap.hidden = true;
     status.textContent = 'Looking for your location...';
     navigator.geolocation.getCurrentPosition(({coords}) => {
       locationButton.disabled = false;
-      if (pickup.value !== previousPickup) return;
-      pickup.value = 'https://www.google.com/maps?q=' + coords.latitude.toFixed(6) + ',' + coords.longitude.toFixed(6);
-      pickupMap.href = pickup.value;
+      if (pickupEditVersion !== requestVersion) return;
+      const { latitude, longitude, accuracy } = coords;
+      if (!Number.isFinite(latitude) || Math.abs(latitude) > 90 ||
+          !Number.isFinite(longitude) || Math.abs(longitude) > 180 ||
+          !Number.isFinite(accuracy) || accuracy <= 0 || accuracy > maxPickupAccuracy) {
+        status.textContent = 'Could not get a precise location. Retry outdoors or enter a landmark or map link.';
+        return;
+      }
+      const mapUrl = 'https://www.google.com/maps/search/?api=1&query=' +
+        encodeURIComponent(latitude + ',' + longitude);
+      pickup.value = mapUrl;
+      pickupMap.href = mapUrl;
       pickupMap.hidden = false;
-      status.textContent = 'Location added. Check the map pin before sending.';
-    }, () => {
+      status.textContent = 'Location added. Estimated accuracy: ' + Math.ceil(accuracy) +
+        ' m. Check the map pin before sending.';
+    }, error => {
       locationButton.disabled = false;
-      if (pickup.value === previousPickup) status.textContent = 'Could not get your location. Enter a landmark or map link manually.';
-    }, { enableHighAccuracy: true, timeout: 10000 });
+      if (pickupEditVersion !== requestVersion) return;
+      status.textContent = error.code === 1
+        ? 'Location access was denied. Allow access and retry, or enter a landmark or map link.'
+        : 'Could not get your location. Retry or enter a landmark or map link.';
+    }, { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 });
   });
   document.querySelector('[data-use-pickup-location]')?.addEventListener('click', event => {
     if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
     locationButton.click();
-    pickup.focus({ preventScroll: true });
   });
   const sendStatus = form.querySelector('#pickup-send-status');
   const preparedMessage = form.querySelector('#pickup-message');
