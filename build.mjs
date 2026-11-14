@@ -157,7 +157,7 @@ const booking = (heading) => `<section class="recovery-contact" id="request-reco
       </div>
     </details>
     <div class="pickup-send">
-      <button class="button pickup-submit" type="submit" disabled>${enquiryIcon(business.whatsapp ? 'whatsapp' : 'copy')}<span>${business.whatsapp ? 'Continue on WhatsApp' : 'Copy enquiry'}</span>${enquiryIcon('arrow')}</button>
+      <button class="button pickup-submit"${whatsappHref ? ' data-whatsapp' : ''} type="submit" disabled>${enquiryIcon(business.whatsapp ? 'whatsapp' : 'copy')}<span>${business.whatsapp ? 'Continue on WhatsApp' : 'Copy enquiry'}</span>${enquiryIcon('arrow')}</button>
       <noscript><p>Enable JavaScript to prepare your enquiry.</p></noscript>
       <div class="pickup-send-note">
         <p>${business.whatsapp ? 'Review the message in WhatsApp and tap Send.' : 'Copy your pickup details to share later.'}</p>

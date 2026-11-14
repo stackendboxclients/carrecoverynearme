@@ -670,12 +670,21 @@ a.pickup-channel:hover { border-color: var(--orange-ink); background: var(--warm
   color: #fff;
   box-shadow: inset 0 1px 0 #ffffff60, inset 0 -1px 0 #0005, 0 3px 7px #290b172e;
 }
-.contact-cta--whatsapp {
-  --gloss-top: #882036;
-  --gloss-middle: #66142c;
-  --gloss-base: #340a20;
+a:is(.contact-cta, .button, .pickup-channel)[href^="https://wa.me/"],
+.pickup-submit[data-whatsapp] {
+  --gloss-edge: #0d6244;
+  --gloss-top: #137e54;
+  --gloss-middle: #0c6543;
+  --gloss-base: #073c2d;
 }
-:is(.contact-cta--book, .contact-cta--location, .mobile-menu summary, .pickup-extra summary) {
+:is(.contact-cta--location, #location, #pickup-map) {
+  --gloss-edge: #a94313;
+  --gloss-top: #f9a85e;
+  --gloss-middle: #ed8942;
+  --gloss-base: #cf5e21;
+  color: #291206;
+}
+.contact-cta--book {
   --gloss-top: #813246;
   --gloss-middle: #602034;
   --gloss-base: #361322;
@@ -692,7 +701,7 @@ a.pickup-channel:hover { border-color: var(--orange-ink); background: var(--warm
 :is(.pickup-channel, .pickup-extra summary) svg,
 .pickup-extra summary small { color: #ffe5ec; }
 .pickup-extra summary { padding-inline: 10px; border-radius: 7px; }
-.pickup-location #pickup-map { border-radius: 7px; color: #fff; }
+.pickup-location #pickup-map { border-radius: 7px; color: #291206; }
 .recovery-faq-item summary {
   background: linear-gradient(155deg, #fff 12%, #fff5f7 53%, #f5dce4);
 }
