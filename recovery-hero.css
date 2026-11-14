@@ -12,7 +12,8 @@
 .service-tape {
   --service-tape-height: 42px;
   min-height: var(--service-tape-height);
-  background: var(--metal-reflection), linear-gradient(107deg, var(--metal-satin), var(--metal-pearl) 57%, var(--metal-platinum));
+  --metal-angle: 111deg;
+  background: var(--metal-reflection), linear-gradient(var(--metal-angle), var(--metal-platinum), var(--metal-pearl) 47%, var(--metal-satin) 68%, var(--metal-platinum));
   color: var(--orange-ink);
   border-block: 1px solid var(--line);
   font: 650 .74rem/1 "Instrument Sans", sans-serif;
@@ -41,17 +42,17 @@
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse at 16% 38%, #fffffff2, #ffffff7d 33%, transparent 65%),
-    radial-gradient(ellipse 86% 49% at 101% 111%, #fff9 0%, #ffffffad 31%, #fff0 59%),
-    linear-gradient(131deg, #d7e0e777 8%, #ffffff8c 25%, #fff1 42%, #fff8 58%, transparent 74%),
-    linear-gradient(104deg, #f4f7fae8 7%, #f8fafbe0 28%, #edf2f679 47%, transparent 69%);
+    radial-gradient(ellipse 56% 79% at 13% 46%, #ffffffeb 0%, #f6faffbe 37%, #ffffff35 68%, #fff0 93%),
+    radial-gradient(ellipse 77% 42% at 107% 114%, #9aabba65 25%, #fbfdffce 52%, #d9e4ed75 59%, #fff0 75%),
+    linear-gradient(145deg, #a9b7c7b0 0%, #d8e2edc7 14%, #fafdffe8 27%, #ffffffdf 33%, #dce5ef83 47%, #a0b2c329 58%, #ffffff70 72%, #fff0 85%),
+    linear-gradient(100deg, #d7e1eceb 0%, #edf3f9b0 34%, #b3c2d35e 54%, #fff0 69%);
 }
 @media (max-width: 850px) {
   .highway-background::after {
     background:
-      radial-gradient(ellipse at 12% 12%, #fffffff2, #ffffff47 48%, transparent 74%),
-      linear-gradient(148deg, #d7e0e77d 10%, #fff9 36%, transparent 61%, #fff5 82%, transparent),
-      linear-gradient(166deg, #fdfefe 6%, #f8fafbf0 34%, #eef3f67d 60%, #eef3f61c 91%);
+      radial-gradient(ellipse 85% 55% at 19% 13%, #ffffffdb, #f8fbff7a 49%, #fff0 88%),
+      linear-gradient(144deg, #b5c3d1c2 0%, #e5edf6d4 16%, #ffffffed 28%, #dbe5efac 43%, #a8b9ca65 57%, #f9fcffc2 72%, #fff0 87%),
+      linear-gradient(169deg, #f4f7fa 0%, #f1f6f9c9 31%, #c6d3df64 54%, #fff0 89%);
   }
 }
 .hero-shell {

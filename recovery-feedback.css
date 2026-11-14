@@ -7,8 +7,9 @@
   scroll-margin-top: 20px;
   padding-block: clamp(42px,6.2vw,92px);
   border-block: 1px solid var(--line);
-  background: var(--metal-reflection), radial-gradient(ellipse at 88% 0%, var(--metal-ivory), transparent 52%),
-    linear-gradient(118deg, var(--metal-satin), var(--metal-pearl) 43%, var(--metal-platinum));
+  --metal-angle: 153deg;
+  --metal-light-x: 80%;
+  background: var(--metal-foundation);
 }
 .feedback-intro { margin-bottom: clamp(21px,3vw,35px); }
 .feedback-intro h2 { margin: 0; font-size: clamp(2.45rem,5.5vw,5rem); }

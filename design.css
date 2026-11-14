@@ -14,13 +14,15 @@
 :root{--paper:#f7f8fa;--ink:#1b242b;--muted:#52616b;--orange:#ff925d;--line:#cdd6dc;--surface:#fff;--platinum:#edf1f3;--warm:#fff1e7;--orange-ink:#a03914;--orange-hover:#ffaf86;--control-border:#77858d;--shadow:0 16px 38px #25333c18;--display:'Space Grotesk',Arial,sans-serif}
 /* Architectural surfaces use a shared satin finish. Component colors stay independent. */
 :root {
-  --metal-pearl: #fdfefe;
-  --metal-ivory: #fbf9f6;
-  --metal-satin: #f2f5f7;
-  --metal-platinum: #e1e7eb;
-  --metal-reflection: linear-gradient(128deg, transparent 15%, #fff0 27%, #fffd 44%, #fff5 58%, transparent 72%);
-  --metal-grazing-light: radial-gradient(ellipse at 18% -8%, #fff 0%, #fffd 26%, transparent 69%);
-  --metal-foundation: var(--metal-reflection), linear-gradient(115deg, var(--metal-platinum), var(--metal-pearl) 49%, #d9e0e6 76%, var(--metal-satin));
+  --metal-pearl: #fff;
+  --metal-satin: #eef3f7;
+  --metal-platinum: #c2ccd6;
+  --metal-silver: #aebbc9;
+  --metal-reflection: radial-gradient(ellipse 120% 105% at var(--metal-light-x, 24%) -24%, #fff 13%, #f9fcff 33%, #fff0 66%);
+  --metal-fold: linear-gradient(var(--metal-angle, 147deg),
+    #eaf0f5 0%, #b8c4d0 18%, #dbe4ec 30%, #fff 42%, #fff 46%,
+    #eef4f9 51%, var(--metal-silver) 66%, #c5d1dd 75%, #f9fcff 89%, #e1e9f0 100%);
+  --metal-foundation: var(--metal-reflection), var(--metal-fold);
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -30,7 +32,7 @@ a{color:inherit} button,input,select,textarea{font:inherit}
 .wrap{width:min(1280px,calc(100% - 80px));margin-inline:auto}
 .skip{position:absolute;top:-100px;left:10px;z-index:10;background:white;padding:8px}
 .skip:focus{top:10px}.narrow{max-width:760px}
-body>header{background:var(--metal-foundation);color:var(--ink);border-bottom:1px solid var(--line)}
+body>header{--metal-angle:132deg;--metal-light-x:12%;background:var(--metal-foundation);color:var(--ink);border-bottom:1px solid var(--line)}
 body>header nav a:hover{color:var(--orange-ink)}
 body>header :focus-visible{outline-color:var(--orange-ink)}
 .header-inner,footer{display:flex;align-items:center;justify-content:space-between;gap:24px;min-height:79px}
@@ -93,8 +95,9 @@ details{border-bottom:1px solid var(--line);padding:13px 0}summary{font-weight:7
   scroll-margin-top: 16px;
   padding-block: clamp(48px, 7.5vw, 104px);
   color: var(--ink);
-  background: var(--metal-reflection), radial-gradient(ellipse at 14% 22%, var(--metal-ivory), transparent 48%),
-    linear-gradient(114deg, var(--metal-pearl) 10%, var(--metal-satin) 60%, var(--metal-platinum));
+  --metal-angle: 136deg;
+  --metal-light-x: 22%;
+  background: var(--metal-foundation);
   border-bottom: 1px solid var(--line);
 }
 .recovery-faq-layout {
@@ -145,7 +148,7 @@ details{border-bottom:1px solid var(--line);padding:13px 0}summary{font-weight:7
 form{display:grid;gap:14px;padding:clamp(16px,4vw,30px);background:white;border:1px solid var(--line);border-radius:4px}
 label{display:grid;gap:5px;font-weight:700}[hidden]{display:none!important}input,select,textarea{width:100%;padding:10px;background:var(--paper);color:var(--ink);border:1px solid var(--control-border);border-radius:4px}
 form p{margin:0;color:var(--muted)}.notice{border-left:3px solid var(--orange);padding-left:12px}
-footer{background:var(--metal-foundation);box-shadow:0 0 0 100vmax var(--metal-platinum);clip-path:inset(0 -100vmax);border-top:1px solid var(--line);padding-block:20px;flex-wrap:wrap}.mobile-actions{display:none}
+footer{--metal-angle:113deg;--metal-light-x:36%;background:var(--metal-foundation);box-shadow:0 0 0 100vmax #e1e9f0;clip-path:inset(0 -100vmax);border-top:1px solid var(--line);padding-block:20px;flex-wrap:wrap}.mobile-actions{display:none}
 #service-dialog{width:min(540px,calc(100% - 32px));padding:0;border:1px solid var(--line);border-radius:4px;background:var(--paper);color:var(--ink);max-height:calc(100dvh - 32px)}
 #service-dialog[open],.revealed{animation:arrive .42s ease-out both}
 #service-dialog::backdrop{background:#15130fb5}
@@ -174,8 +177,9 @@ footer{background:var(--metal-foundation);box-shadow:0 0 0 100vmax var(--metal-p
   scroll-margin-top: 12px;
   padding-block: clamp(42px, 6vw, 88px);
   color: var(--ink);
-  background: var(--metal-reflection), var(--metal-grazing-light),
-    linear-gradient(122deg, var(--metal-satin) 12%, var(--metal-pearl) 49%, var(--metal-ivory) 66%, var(--metal-platinum));
+  --metal-angle: 137deg;
+  --metal-light-x: 10%;
+  background: var(--metal-foundation);
   border-top: 1px solid var(--line);
 }
 .pickup-form-stage { position: relative; min-width: 0; }
@@ -385,8 +389,9 @@ a.pickup-channel:hover { border-color: var(--orange-ink); background: var(--warm
   scroll-margin-top: 16px;
   padding: clamp(32px, 4vw, 66px) 0;
   color: var(--ink);
-  background: var(--metal-reflection), radial-gradient(ellipse at 24% 10%, #fff 0%, #fff8 40%, transparent 76%),
-    linear-gradient(121deg, var(--metal-satin), var(--metal-ivory) 38%, var(--metal-pearl) 54%, var(--metal-platinum));
+  --metal-angle: 151deg;
+  --metal-light-x: 55%;
+  background: var(--metal-foundation);
 }
 .recovery-showcase::before {
   content: "";
