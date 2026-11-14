@@ -67,9 +67,17 @@ if (track) {
   deck.dataset.enhanced = '';
 }
 
-const summary = document.querySelector('.feedback-summary');
-if (summary && !reducedMotion.matches) {
-  const counters = [...summary.querySelectorAll('[data-scenario-total]')].map(node => ({ node, total: Number(node.textContent) }));
+const stats = document.querySelector('.feedback-preview-stats');
+if (stats && !reducedMotion.matches) {
+  const count = stats.querySelector('[data-feedback-count]');
+  const score = stats.querySelector('[data-feedback-score]');
+  const stars = stats.querySelector('.feedback-stars-fill');
+  const countText = count.textContent;
+  const scoreText = score.textContent;
+  const total = Number(countText.replaceAll(',', ''));
+  const rating = Number(scoreText);
+  const formatter = new Intl.NumberFormat('en');
+
   const observer = new IntersectionObserver(([entry]) => {
     if (!entry.isIntersecting) return;
     observer.disconnect();
@@ -77,12 +85,35 @@ if (summary && !reducedMotion.matches) {
 
     const start = performance.now();
     function draw(time) {
-      const progress = Math.min(1, (time - start) / 1100);
-      const fraction = reducedMotion.matches ? 1 : 1 - (1 - progress) ** 3;
-      for (const { node, total } of counters) node.textContent = Math.round(fraction * total);
-      if (fraction < 1) requestAnimationFrame(draw);
+      const progress = Math.min(1, Math.max(0, (time - start) / 1450));
+      if (progress === 1 || reducedMotion.matches) {
+        count.textContent = countText;
+        score.textContent = scoreText;
+        stars.style.width = `${rating / 5 * 100}%`;
+        return;
+      }
+
+      const eased = 1 - (1 - progress) ** 3;
+      count.textContent = formatter.format(Math.floor(total * eased));
+      score.textContent = (rating * eased).toFixed(1);
+      stars.style.width = `${rating * eased / 5 * 100}%`;
+      requestAnimationFrame(draw);
     }
     requestAnimationFrame(draw);
   }, { threshold: .55 });
-  observer.observe(summary);
+  observer.observe(stats);
+}
+
+if (track && !reducedMotion.matches) {
+  const observer = new IntersectionObserver(entries => {
+    for (const entry of entries) {
+      if (entry.intersectionRatio < .6) continue;
+      observer.unobserve(entry.target);
+      if (reducedMotion.matches) continue;
+
+      const stars = entry.target.querySelector('.feedback-stars-fill');
+      if (stars) stars.animate([{ width: 0 }, { width: stars.style.width }], { duration: 620, easing: 'ease-out' });
+    }
+  }, { root: track, threshold: .6 });
+  for (const card of track.children) observer.observe(card);
 }
