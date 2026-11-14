@@ -33,7 +33,7 @@ function ratingStars(rating) {
   return `<span class="feedback-stars" aria-hidden="true">${star.repeat(5)}<span class="feedback-stars-fill" style="width:${100 * rating / 5}%">${star.repeat(5)}</span></span>`;
 }
 
-function reviewCard({ author, text, rating, url }, sample) {
+function reviewCard({ author, text, rating, url }) {
   const initials = author.trim().split(/\s+/).slice(0, 2).map(part => [...part][0]).join('').toUpperCase();
   const stars = Number.isFinite(rating) && rating >= 1 && rating <= 5
     ? `<div class="feedback-rating" role="img" aria-label="${rating} out of 5 stars">${ratingStars(rating)}<span aria-hidden="true">${rating}</span></div>`
@@ -41,7 +41,7 @@ function reviewCard({ author, text, rating, url }, sample) {
   return `<li class="feedback-card">
     <figure class="feedback-surface">
       <figcaption class="feedback-card-meta">
-        <span class="feedback-author"><span class="feedback-initials" aria-hidden="true">${escape(initials)}</span><span>${escape(author)}${sample ? '<small class="feedback-example-label">Illustrative example</small>' : ''}</span></span>
+        <span class="feedback-author"><span class="feedback-initials" aria-hidden="true">${escape(initials)}</span><span>${escape(author)}</span></span>
         ${stars}
       </figcaption>
       <blockquote><p>${escape(text)}</p></blockquote>
@@ -64,9 +64,10 @@ function feedbackSection(reviews, profile, sample) {
           <div><dt>Illustrative rating</dt><dd><span class="feedback-visually-hidden">4.5 out of 5 stars</span><span data-feedback-score aria-hidden="true">4.5</span>${ratingStars(4.5)}</dd></div>
         </dl>` : ''}
       </div>
+      ${sample ? '<p class="feedback-disclosure">Fictional testimonials</p>' : ''}
       <div class="feedback-deck">
         <ul class="feedback-track" tabindex="0" aria-label="${sample ? 'Fictional review examples' : 'Customer reviews'}. Use the left and right arrow keys to browse.">
-          ${reviews.map(review => reviewCard(review, sample)).join('')}
+          ${reviews.map(reviewCard).join('')}
         </ul>
       </div>
     </div>
