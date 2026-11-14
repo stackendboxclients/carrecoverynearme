@@ -15,7 +15,13 @@ if (mobileActions && heroActions && 'IntersectionObserver' in window) {
     const hidden = entry.boundingClientRect.bottom > 0;
     if (mobileActions.hidden !== hidden) mobileActions.hidden = hidden;
   }, { rootMargin: '0px 0px 1000px 0px' });
-  observer.observe(heroActions);
+  const mobile = matchMedia('(max-width: 590px)');
+  const syncObserver = () => {
+    observer.disconnect();
+    if (mobile.matches) observer.observe(heroActions);
+  };
+  mobile.addEventListener('change', syncObserver);
+  syncObserver();
 }
 
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');

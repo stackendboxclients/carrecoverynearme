@@ -32,7 +32,7 @@ const whatsapp = business.whatsapp ? `<a class="button outline" href="https://wa
 const brand = (placement) => {
   const inHeader = placement === 'header';
   const sizes = inHeader ? '(max-width: 590px) 178px, (max-width: 1067px) 192px, (max-width: 1289px) 18vw, 232px' : '(max-width: 1055px) 232px, (max-width: 1200px) 22vw, 264px';
-  return `<a class="brand brand--${placement}" href="/" aria-label="Dubai Car Recovery Near Me home"><img src="/assets/dcr-brand-480.webp" srcset="/assets/dcr-brand-480.webp 480w, /assets/dcr-brand-960.webp 960w" sizes="${sizes}" width="960" height="315" alt="" decoding="async"${inHeader ? '' : ' loading="lazy"'}></a>`;
+  return `<a class="brand brand--${placement}" href="/" aria-label="Dubai Car Recovery Near Me home"><img src="/assets/dcr-brand-480.webp" srcset="/assets/dcr-brand-240.webp 240w, /assets/dcr-brand-480.webp 480w, /assets/dcr-brand-960.webp 960w" sizes="${sizes}" width="960" height="315" alt="" decoding="async"${inHeader ? '' : ' loading="lazy"'}></a>`;
 };
 const serviceIcons = [
   '<path d="M2 6h13v11H2zM15 10h4l3 4v3h-7"/><circle cx="6" cy="18" r="2"/><circle cx="18" cy="18" r="2"/>',
@@ -258,7 +258,7 @@ const pages = [
 await rm('dist', { recursive: true, force: true });
 await mkdir('dist', { recursive: true });
 await mkdir('dist/assets');
-for (const file of ['dcr-brand-480.webp', 'dcr-brand-960.webp', 'dcr-master.svg', 'dcr-lockup-on-dark.svg', 'dcr-lockup-on-light.svg', 'dcr-lockup-monochrome.svg', 'dcr-symbol.svg', 'dcr-icon.svg']) {
+for (const file of ['dcr-brand-240.webp', 'dcr-brand-480.webp', 'dcr-brand-960.webp', 'dcr-master.svg', 'dcr-lockup-on-dark.svg', 'dcr-lockup-on-light.svg', 'dcr-lockup-monochrome.svg', 'dcr-symbol.svg', 'dcr-icon.svg']) {
   await cp(file, `dist/assets/${file}`);
 }
 const recoveryHero = await buildRecoveryHero({ callHref, whatsappHref });
