@@ -36,7 +36,6 @@
   pointer-events: none;
   background: var(--metal-foundation);
 }
-.highway-background canvas { display: block; width: 100%; height: 100%; }
 .highway-background::after {
   content: "";
   position: absolute;
@@ -103,12 +102,7 @@
   animation-play-state: paused;
 }
 [data-playing=true] .hero-copy .hero-chrome { animation-play-state: running; }
-.hero-copy :is(.eyebrow,h1 span,h1 em,.hero-description,.hero-actions,.hero-trust) {
-  animation: hero-reveal .64s cubic-bezier(.22,.72,.25,1) both;
-}
-.hero-copy h1 span { animation-delay: .07s; }
-.hero-copy h1 em { animation-delay: .16s; }
-.hero-copy .hero-description { animation-delay: .23s; }
+.hero-description { animation-delay: .23s; }
 .hero-copy .hero-actions { animation-delay: .3s; }
 .hero-copy .hero-trust { animation-delay: .39s; }
 @keyframes hero-reveal { from { opacity: .25; transform: translateY(12px); } to { opacity: 1; transform: none; } }

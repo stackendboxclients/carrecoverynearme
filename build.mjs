@@ -293,7 +293,7 @@ for (const [name, extension] of [['design', 'css'], ['recovery-hero', 'css'], ['
   await writeFile('dist' + url, contents);
   assetUrls[`${name}.${extension}`] = url;
 }
-const homepageAssets = `<link rel="preload" href="/assets/hero-space-grotesk.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="${assetUrls['recovery-hero.css']}"><script type="module" src="/assets/recovery-hero.js"></script><meta name="kinetic-motion" content="${assetUrls['recovery-kinetic.js']}"><meta name="feedback-motion" content="${assetUrls['recovery-feedback.js']}"><link rel="stylesheet" href="${assetUrls['recovery-kinetic.css']}"><link rel="stylesheet" href="${assetUrls['recovery-feedback.css']}">`;
+const homepageAssets = `<link rel="preload" href="/assets/hero-space-grotesk.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="${assetUrls['recovery-hero.css']}"><meta name="hero-motion" content="/assets/recovery-hero.js"><meta name="kinetic-motion" content="${assetUrls['recovery-kinetic.js']}"><meta name="feedback-motion" content="${assetUrls['recovery-feedback.js']}"><link rel="stylesheet" href="${assetUrls['recovery-kinetic.css']}"><link rel="stylesheet" href="${assetUrls['recovery-feedback.css']}">`;
 for (const [path, title, description, content] of pages) {
   const directory = `dist${path}`;
   await mkdir(directory, { recursive: true });

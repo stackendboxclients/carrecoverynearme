@@ -35,7 +35,7 @@ function RouteScene({ playing }: { playing: boolean }) {
         </g>
         <ellipse cx="342" cy="252" rx="266" ry="182" fill={"url(#" + prefix + "-light)"} />
         <path d={route} className="route-bed" />
-        <path d={route} className="route-trace" pathLength="1" strokeDasharray="1 1" strokeDashoffset="1" />
+        <path d={route} className="route-trace" pathLength="1" strokeDasharray="1 1" strokeDashoffset="0" />
         <circle cx={start.x} cy={start.y} r="10" className="map-pin-ring" />
         <circle cx={start.x} cy={start.y} r="4" className="map-pin-core" />
         <circle cx={finish.x} cy={finish.y} r="12" className="map-pin-ring map-pin-drop" />
@@ -76,7 +76,7 @@ function Wheel({ x, y, radius }: { x: number; y: number; radius: number }) {
 export function RecoveryHero({ bookingHref, callHref, whatsappHref }: { bookingHref: string; callHref: string; whatsappHref: string }) {
   return (
     <section className="recovery-hero" data-playing="false" aria-labelledby="recovery-title">
-      <div className="highway-background" aria-hidden="true"><canvas /></div>
+      <div className="highway-background" aria-hidden="true" />
       <div className="hero-shell">
         <div className="hero-copy">
           <p className="eyebrow"><span className="hero-icon"><MapPin size={15} /></span> Dubai, United Arab Emirates</p>

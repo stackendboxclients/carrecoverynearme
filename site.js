@@ -11,12 +11,19 @@ mobileMenu?.addEventListener('keydown', event => {
 const mobileActions = document.querySelector('.mobile-actions');
 const heroActions = document.querySelector('.hero-actions');
 if (mobileActions && heroActions) {
+  let pending = false;
   const updateMobileActions = () => {
     mobileActions.hidden = heroActions.getBoundingClientRect().bottom > 0;
+    pending = false;
+  };
+  const scheduleMobileActions = () => {
+    if (pending) return;
+    pending = true;
+    requestAnimationFrame(updateMobileActions);
   };
   updateMobileActions();
-  window.addEventListener('scroll', updateMobileActions, { passive: true });
-  window.addEventListener('resize', updateMobileActions);
+  window.addEventListener('scroll', scheduleMobileActions, { passive: true });
+  window.addEventListener('resize', scheduleMobileActions);
 }
 
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
@@ -175,4 +182,18 @@ if (form) {
   });
   locationButton.disabled = false;
   form.querySelector('.pickup-submit').disabled = false;
+}
+
+const heroMotion = document.querySelector('meta[name="hero-motion"]')?.content;
+const desktopMotion = matchMedia('(min-width: 851px) and (pointer: fine) and (prefers-reduced-motion: no-preference)');
+if (heroMotion && desktopMotion.matches && 'IntersectionObserver' in window) {
+  const loadHeroMotion = () => {
+    const startMotion = () => {
+      if (desktopMotion.matches && !document.hidden) import(heroMotion).catch(() => {});
+    };
+    if (window.requestIdleCallback) window.requestIdleCallback(startMotion);
+    else window.setTimeout(startMotion, 0);
+  };
+  if (document.readyState === 'complete') loadHeroMotion();
+  else window.addEventListener('load', loadHeroMotion, { once: true });
 }
