@@ -41,7 +41,7 @@ function reviewCard({ author, text, rating, url }, sample) {
   return `<li class="feedback-card">
     <figure class="feedback-surface">
       <figcaption class="feedback-card-meta">
-        <span class="feedback-author"><span class="feedback-initials" aria-hidden="true">${escape(initials)}</span><span>${escape(author)}${sample ? '<small class="feedback-example-label">Fictional review</small>' : ''}</span></span>
+        <span class="feedback-author"><span class="feedback-initials" aria-hidden="true">${escape(initials)}</span><span>${escape(author)}${sample ? '<small class="feedback-example-label">Illustrative example</small>' : ''}</span></span>
         ${stars}
       </figcaption>
       <blockquote><p>${escape(text)}</p></blockquote>
