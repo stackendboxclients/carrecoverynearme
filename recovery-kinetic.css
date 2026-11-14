@@ -8,7 +8,8 @@
   border-block: 1px solid var(--line);
   padding-block: clamp(42px, 4.25vw, 68px);
   color: var(--ink);
-  background: var(--platinum);
+  background: var(--metal-reflection), var(--metal-grazing-light),
+    linear-gradient(127deg, var(--metal-satin), var(--metal-pearl) 45%, var(--metal-platinum));
   scroll-margin-top: 12px;
 }
 .adv-backdrop, .adv-photo, .adv-photo img, .adv-backdrop img {
@@ -19,7 +20,7 @@
 }
 .adv-backdrop { z-index: -1; overflow: hidden; }
 .adv-backdrop img { object-fit: cover; object-position: center 47%; filter: saturate(.66); }
-.adv-backdrop::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg,#edf1f3ef,#edf1f3c9 69%,var(--platinum)),linear-gradient(90deg,#edf1f3c4,transparent); }
+.adv-backdrop::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, #fcfdfef0, #f3f6f8bc 66%, #edf2f5), linear-gradient(105deg, #ffffffe0, transparent 85%); }
 .adv-intro { margin-bottom: clamp(22px, 3vw, 36px); }
 .adv-intro h2 {
   margin: 0;

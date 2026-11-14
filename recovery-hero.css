@@ -7,12 +7,12 @@
   isolation: isolate;
   position: relative;
   overflow: hidden;
-  background: var(--platinum);
+  background: var(--metal-foundation);
 }
 .service-tape {
   --service-tape-height: 42px;
   min-height: var(--service-tape-height);
-  background: var(--warm);
+  background: var(--metal-reflection), linear-gradient(107deg, var(--metal-satin), var(--metal-pearl) 57%, var(--metal-platinum));
   color: var(--orange-ink);
   border-block: 1px solid var(--line);
   font: 650 .74rem/1 "Instrument Sans", sans-serif;
@@ -33,19 +33,25 @@
   inset: 0;
   overflow: hidden;
   pointer-events: none;
-  background: var(--platinum);
+  background: var(--metal-foundation);
 }
 .highway-background canvas { display: block; width: 100%; height: 100%; }
 .highway-background::after {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, #f7f8fafc, #f7f8fae6 35%, transparent 77%),
-    linear-gradient(180deg, #0b101432, transparent 50%, #0b101426);
+  background:
+    radial-gradient(ellipse at 16% 38%, #fffffff2, #ffffff7d 33%, transparent 65%),
+    radial-gradient(ellipse 86% 49% at 101% 111%, #fff9 0%, #ffffffad 31%, #fff0 59%),
+    linear-gradient(131deg, #d7e0e777 8%, #ffffff8c 25%, #fff1 42%, #fff8 58%, transparent 74%),
+    linear-gradient(104deg, #f4f7fae8 7%, #f8fafbe0 28%, #edf2f679 47%, transparent 69%);
 }
 @media (max-width: 850px) {
   .highway-background::after {
-    background: linear-gradient(180deg, #f7f8faf5, #f7f8fae0 38%, #f7f8fa22 90%);
+    background:
+      radial-gradient(ellipse at 12% 12%, #fffffff2, #ffffff47 48%, transparent 74%),
+      linear-gradient(148deg, #d7e0e77d 10%, #fff9 36%, transparent 61%, #fff5 82%, transparent),
+      linear-gradient(166deg, #fdfefe 6%, #f8fafbf0 34%, #eef3f67d 60%, #eef3f61c 91%);
   }
 }
 .hero-shell {

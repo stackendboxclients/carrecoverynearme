@@ -43,12 +43,12 @@ export function createHighway(surface: HTMLCanvasElement) {
       const near = Math.max(0, z);
       const far = z + spacing;
       const segment = Math.round((distance + z) / spacing);
-      strip(near, far, -1.23, 1.23, "#aab6bf");
-      strip(near, far, -1, 1, segment % 2 ? "#74858e" : "#778891");
+      strip(near, far, -1.23, 1.23, "#b9c5cd");
+      strip(near, far, -1, 1, segment % 2 ? "#8797a1" : "#8a9aa4");
       for (const side of [-1, 1]) {
         strip(near, far, side - .008, side + .008, "#ddd3be");
-        strip(near, far, side * 1.12 - .055, side * 1.12 + .055, "#9cabb3", .075);
-        polygon("#71818b", [project(near, side * 1.065), project(far, side * 1.065), project(far, side * 1.065, .075), project(near, side * 1.065, .075)]);
+        strip(near, far, side * 1.12 - .055, side * 1.12 + .055, "#adbcc5", .075);
+        polygon("#80919b", [project(near, side * 1.065), project(far, side * 1.065), project(far, side * 1.065, .075), project(near, side * 1.065, .075)]);
         if (segment % 2 === 0) strip(near, Math.min(far, near + 1), side * 1.08, side * 1.14, "#ef9b58", .078);
       }
       for (const lane of [-.33, .33]) {
@@ -108,10 +108,10 @@ export function createHighway(surface: HTMLCanvasElement) {
     surface.height = Math.round(height * ratio);
     context.setTransform(ratio, 0, 0, ratio, 0, 0);
     sky = context.createLinearGradient(0, 0, 0, height);
-    sky.addColorStop(0, "#eef1f3");
-    sky.addColorStop(.39, "#eee4db");
-    sky.addColorStop(.55, "#c3cdd2");
-    sky.addColorStop(1, "#a2b0b9");
+    sky.addColorStop(0, "#fcfefe");
+    sky.addColorStop(.39, "#f5f3f0");
+    sky.addColorStop(.55, "#dce4e9");
+    sky.addColorStop(1, "#b9c7cf");
     draw();
   }
 
