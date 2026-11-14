@@ -49,38 +49,48 @@ function reviewCard({ author, text, rating, url }) {
   </li>`;
 }
 
-function scenarioCard([slug, title, text], serviceNames) {
+function scenarioCard([slug, title, text], serviceDetails) {
+  const { name, icon } = serviceDetails.get(slug);
   return `<li class="feedback-card"><article class="feedback-surface feedback-scenario">
-    <p class="feedback-service">${escape(serviceNames.get(slug))}</p>
+    <div class="feedback-card-meta">
+      <span class="feedback-author"><span class="feedback-initials" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${icon}</svg></span><span>${escape(name)}</span></span>
+    </div>
     <h3>${escape(title)}</h3>
     <p>${escape(text)}</p>
   </article></li>`;
 }
 
-function feedbackSection(reviews, profile, serviceNames) {
+function feedbackSection(reviews, profile, serviceDetails) {
   const showScenarios = reviews.length === 0;
+  const totals = [[scenarios.length, 'Recovery scenarios'], [new Set(scenarios.map(([slug]) => slug)).size, 'Service types featured']];
   return `<section class="recovery-feedback" id="customer-feedback" aria-labelledby="feedback-title">
     <div class="wrap feedback-layout">
-      <div class="feedback-intro">
-        <h2 id="feedback-title">${showScenarios ? 'What recovery <em>looks like</em>' : 'Customer <em>feedback</em>'}</h2>
-        <p>${showScenarios ? 'Common recovery situations in Dubai and what to share when you book.' : 'Vehicle recovery and transport in Dubai.'}</p>
-        ${profile ? `<a class="feedback-source" href="${escape(profile)}">Open review profile <span aria-hidden="true">↗</span></a>` : ''}
+      <div class="feedback-intro${showScenarios ? ' feedback-intro-with-stats' : ''}">
+        <div>
+          <h2 id="feedback-title">${showScenarios ? 'What recovery <em>looks like</em>' : 'Customer <em>feedback</em>'}</h2>
+          <p>${showScenarios ? 'Common recovery situations in Dubai and what to share when you book.' : 'Vehicle recovery and transport in Dubai.'}</p>
+          ${profile ? `<a class="feedback-source" href="${escape(profile)}">Open review profile <span aria-hidden="true">↗</span></a>` : ''}
+        </div>
+        ${showScenarios ? `<dl class="feedback-summary">
+          ${totals.map(([total, label]) => `<div><dt>${label}</dt><dd aria-label="${total}"><span aria-hidden="true" data-scenario-total>${total}</span></dd></div>`).join('')}
+        </dl>` : ''}
       </div>
       <div class="feedback-deck">
         <ul class="feedback-track" tabindex="0" aria-label="${showScenarios ? 'Recovery scenarios' : 'Customer reviews'}. Use the left and right arrow keys to browse.">
-          ${(showScenarios ? scenarios.map(scenario => scenarioCard(scenario, serviceNames)) : reviews.map(reviewCard)).join('')}
+          ${(showScenarios ? scenarios.map(scenario => scenarioCard(scenario, serviceDetails)) : reviews.map(reviewCard)).join('')}
         </ul>
       </div>
     </div>
   </section>`;
 }
 
-export function recoveryFeedback({ customerReviews, reviewProfile }, services) {
+export function recoveryFeedback({ customerReviews, reviewProfile }, services, serviceIcons) {
   const entries = Array.isArray(customerReviews) ? customerReviews : [];
   const reviews = entries.flatMap(review => {
     const url = httpsUrl(review?.sourceUrl);
     if (!url || typeof review?.author !== 'string' || !review.author.trim() || typeof review.text !== 'string' || !review.text.trim()) return [];
     return [{ author: review.author, text: review.text, rating: review.rating, url }];
   });
-  return feedbackSection(reviews, httpsUrl(reviewProfile), new Map(services));
+  const serviceDetails = new Map(services.map(([slug, name], index) => [slug, { name, icon: serviceIcons[index] }]));
+  return feedbackSection(reviews, httpsUrl(reviewProfile), serviceDetails);
 }

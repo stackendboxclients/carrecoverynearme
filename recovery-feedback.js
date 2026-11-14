@@ -66,3 +66,23 @@ if (track) {
   }, { threshold: .55 }).observe(track);
   deck.dataset.enhanced = '';
 }
+
+const summary = document.querySelector('.feedback-summary');
+if (summary && !reducedMotion.matches) {
+  const counters = [...summary.querySelectorAll('[data-scenario-total]')].map(node => ({ node, total: Number(node.textContent) }));
+  const observer = new IntersectionObserver(([entry]) => {
+    if (!entry.isIntersecting) return;
+    observer.disconnect();
+    if (reducedMotion.matches) return;
+
+    const start = performance.now();
+    function draw(time) {
+      const progress = Math.min(1, (time - start) / 1100);
+      const fraction = reducedMotion.matches ? 1 : 1 - (1 - progress) ** 3;
+      for (const { node, total } of counters) node.textContent = Math.round(fraction * total);
+      if (fraction < 1) requestAnimationFrame(draw);
+    }
+    requestAnimationFrame(draw);
+  }, { threshold: .55 });
+  observer.observe(summary);
+}
