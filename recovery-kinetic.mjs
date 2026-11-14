@@ -3,10 +3,10 @@ import { capabilityDisplay, recoveryCapabilities } from './recovery-capabilities
 const art = '/assets/standard-art/';
 
 function picture(name, sizes = '(max-width: 600px) 42vw, 29vw', height = 360) {
-  return `<img src="${art}${name}-540.webp" srcset="${art}${name}-540.webp 540w, ${art}${name}-960.webp 960w" sizes="${sizes}" width="540" height="${height}" alt="" decoding="async" fetchpriority="low">`;
+  return `<img src="${art}${name}-540.webp" srcset="${art}${name}-540.webp 540w, ${art}${name}-960.webp 960w" sizes="${sizes}" width="540" height="${height}" alt="" loading="lazy" decoding="async" fetchpriority="low">`;
 }
 
-const dubai = (sizes) => `<img src="${art}dubai-szr-840.webp" srcset="${art}dubai-szr-840.webp 840w, ${art}dubai-szr-1440.webp 1440w" sizes="${sizes}" alt="" decoding="async" fetchpriority="low">`;
+const dubai = (sizes) => `<img src="${art}dubai-szr-840.webp" srcset="${art}dubai-szr-840.webp 840w, ${art}dubai-szr-1440.webp 1440w" sizes="${sizes}" alt="" loading="lazy" decoding="async" fetchpriority="low">`;
 
 const contact = `
   <div class="adv-photo adv-contact-photo">${picture('night')}</div>

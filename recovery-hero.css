@@ -1,19 +1,7 @@
-@font-face {
-  font-family: "Instrument Sans Variable";
-  src: url("/assets/hero-instrument-sans.woff2") format("woff2");
-  font-weight: 400 700;
-  font-display: swap;
-}
-@font-face {
-  font-family: "Space Grotesk Variable";
-  src: url("/assets/hero-space-grotesk.woff2") format("woff2");
-  font-weight: 300 700;
-  font-display: swap;
-}
 .recovery-hero {
   --hero-vertical-padding: clamp(22px, 4svh, 52px);
   color: var(--ink);
-  font: 1rem/1.5 "Instrument Sans Variable", sans-serif;
+  font: 1rem/1.5 "Instrument Sans", sans-serif;
   display: grid;
   align-items: center;
   isolation: isolate;
@@ -27,12 +15,13 @@
   background: var(--warm);
   color: var(--orange-ink);
   border-block: 1px solid var(--line);
-  font: 650 .74rem/1 "Instrument Sans Variable", sans-serif;
+  font: 650 .74rem/1 "Instrument Sans", sans-serif;
   letter-spacing: .075em;
   text-transform: uppercase;
 }
 .service-tape-window { overflow: hidden; }
-.service-tape-track { display: flex; width: max-content; animation: service-tape-scroll 45s linear infinite; }
+.service-tape-track { display: flex; width: max-content; animation: service-tape-scroll 45s linear infinite paused; }
+.service-tape[data-in-view="true"] .service-tape-track { animation-play-state: running; }
 .service-tape-track ul { display: flex; flex: none; align-items: center; justify-content: space-between; min-width: 100vw; min-height: 40px; padding: 0; margin: 0; list-style: none; }
 .service-tape-track li { display: flex; align-items: center; gap: 19px; padding-inline-end: 19px; white-space: nowrap; }
 .service-tape-track li::before { content: ""; width: 5px; height: 5px; margin-inline-start: 2px; background: var(--orange-ink); transform: rotate(45deg); }
@@ -74,7 +63,7 @@
 .hero-icon svg { flex: none; }
 .hero-copy h1 {
   margin: 20px 0 18px;
-  font-family: "Space Grotesk Variable", sans-serif;
+  font-family: "Space Grotesk", sans-serif;
   font-size: clamp(2.25rem, 5.4vw, 4.85rem);
   font-weight: 700;
   letter-spacing: -.065em;
@@ -202,7 +191,8 @@
 .route-bed { stroke: #9a4b2d; stroke-opacity: .65; }
 .route-trace { stroke: #b64b20; filter: drop-shadow(0 0 5px #ff6f3d71); }
 .map-pin-ring { fill: #ff92564d; stroke: #9e3715; stroke-width: 2; }
-.map-pin-arrived { fill: #83b89670; stroke: #267341; }
+.route-scene[data-arrived] .map-pin-drop { fill: #83b89670; stroke: #267341; }
+.map-pin-pulse { opacity: 0; transform-box: fill-box; transform-origin: center; }
 .map-pin-core { fill: #ab421a; }
 .map-vehicle { overflow: visible; filter: drop-shadow(0 4px 10px #e77e3f66); }
 .route-label { position: absolute; display: flex; align-items: center; gap: 7px; padding: 6px 9px; border: 1px solid var(--control-border); border-radius: 7px; background: var(--surface); color: var(--ink); font-size: clamp(.7rem, 1vw, .88rem); line-height: 1; }
@@ -211,6 +201,8 @@
 .route-label-drop { right: 7%; top: calc(49px + 6%); }
 .route-label-drop[data-delivered=true] { border-color: #5ca477; }
 .route-label-drop[data-delivered=true] svg { color: #247346; }
+.route-label-drop[data-delivered=false] :is(.route-delivered-icon, .route-delivered-text),
+.route-label-drop[data-delivered=true] :is(.route-drop-icon, .route-drop-text) { display: none; }
 @media (min-width: 851px) {
   .recovery-hero {
     /* The production header takes 79px plus its border. */

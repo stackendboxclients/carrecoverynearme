@@ -11,23 +11,41 @@ if (hero && !reducedMotion.matches) {
   });
   hero.append(motion);
 }
-if (!reducedMotion.matches && 'IntersectionObserver' in window) {
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('revealed');
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.15 });
-  document.querySelectorAll('.process article, .coverage, .pickup-guide article, .final-call').forEach(element => observer.observe(element));
-}
 const showcase = document.querySelector('.recovery-showcase');
-if (showcase && 'IntersectionObserver' in window) {
-  const observer = new IntersectionObserver(([entry]) => {
-    showcase.dataset.inView = String(entry.isIntersecting);
+const tape = document.querySelector('.service-tape');
+if ('IntersectionObserver' in window) {
+  const observer = new IntersectionObserver(entries => {
+    for (const entry of entries) entry.target.dataset.inView = String(entry.isIntersecting);
   });
-  observer.observe(showcase);
+  if (tape) observer.observe(tape);
+  if (showcase) {
+    observer.observe(showcase);
+    showcase.querySelectorAll('.showcase-card').forEach(card => observer.observe(card));
+  }
+}
+
+const deferredSections = new Map([
+  ['.recovery-kinetic', document.querySelector('meta[name="kinetic-motion"]')?.content],
+  ['.feedback-deck', document.querySelector('meta[name="feedback-motion"]')?.content],
+].filter(([, source]) => source));
+if (deferredSections.size) {
+  const targets = new Map();
+  for (const [selector, source] of deferredSections) {
+    const section = document.querySelector(selector);
+    if (section) targets.set(section, source);
+  }
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver(entries => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue;
+        observer.unobserve(entry.target);
+        import(targets.get(entry.target)).catch(() => {
+          // Static sections and native controls remain available.
+        });
+      }
+    }, { rootMargin: '480px 0px' });
+    for (const section of targets.keys()) observer.observe(section);
+  }
 }
 const form = document.querySelector('#booking');
 if (form) {

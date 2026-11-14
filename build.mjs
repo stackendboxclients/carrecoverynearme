@@ -1,6 +1,6 @@
 import { readFile, mkdir, writeFile, cp, rm } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
-import { build } from 'esbuild';
+import { build, transform } from 'esbuild';
 
 import { buildRecoveryHero } from './recovery-hero-build.mjs';
 import { recoveryKinetic } from './recovery-kinetic.mjs';
@@ -268,17 +268,22 @@ for (const file of ['advantage-loading-540.webp', 'advantage-loading-960.webp', 
   await cp('section3-' + file, 'dist/assets/standard-art/' + file);
 }
 const assetUrls = {};
+const stylesheets = new Set(['design', 'recovery-kinetic', 'recovery-feedback']);
 const kineticScript = await build({ entryPoints: ['recovery-kinetic.js'], bundle: true, minify: true, write: false, legalComments: 'inline' });
 for (const [name, extension] of [['design', 'css'], ['site', 'js'], ['recovery-kinetic', 'css'], ['recovery-kinetic', 'js'], ['recovery-feedback', 'css'], ['recovery-feedback', 'js']]) {
-  const contents = name === 'recovery-kinetic' && extension === 'js'
+  let contents = name === 'recovery-kinetic' && extension === 'js'
     ? kineticScript.outputFiles[0].contents
     : await readFile(`${name}.${extension}`);
+  if (extension === 'css') {
+    const result = await transform(contents.toString(), { loader: 'css', minify: true });
+    contents = result.code;
+  }
   const version = createHash('sha256').update(contents).digest('hex').slice(0, 12);
   const url = `/assets/${name}.${version}.${extension}`;
   await writeFile('dist' + url, contents);
   assetUrls[`${name}.${extension}`] = url;
 }
-const homepageAssets = `<link rel="stylesheet" href="/assets/recovery-hero.css"><script type="module" src="/assets/recovery-hero.js"></script><link rel="stylesheet" href="${assetUrls['recovery-kinetic.css']}"><script src="${assetUrls['recovery-kinetic.js']}" defer></script><link rel="stylesheet" href="${assetUrls['recovery-feedback.css']}"><script type="module" src="${assetUrls['recovery-feedback.js']}"></script>`;
+const homepageAssets = `<link rel="preload" href="/assets/hero-space-grotesk.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/assets/recovery-hero.css"><script type="module" src="/assets/recovery-hero.js"></script><meta name="kinetic-motion" content="${assetUrls['recovery-kinetic.js']}"><meta name="feedback-motion" content="${assetUrls['recovery-feedback.js']}"><link rel="stylesheet" href="${assetUrls['recovery-kinetic.css']}"><link rel="stylesheet" href="${assetUrls['recovery-feedback.css']}">`;
 for (const [path, title, description, content] of pages) {
   const directory = `dist${path}`;
   await mkdir(directory, { recursive: true });

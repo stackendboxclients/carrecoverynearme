@@ -1,10 +1,5 @@
-"use client";
-
-import { useEffect, useId, useRef, useState } from "react";
-import { animate, motion, useInView, useMotionValue, useMotionValueEvent, useReducedMotion, useTransform } from "motion/react";
+import { useId } from "react";
 import { ArrowRight, ArrowUpRight, Check, Flag, MapPin, ShieldCheck, Truck } from "lucide-react";
-import { Button } from "./recovery-hero-button";
-import { HighwayBackground } from "./recovery-highway-background";
 
 const route = "M126 346 H204 Q241 346 241 309 V274 Q241 237 278 237 H361 Q400 237 400 198 V172 Q400 135 437 135 H482 Q520 135 520 98 H553";
 const start = { x: 126, y: 346 };
@@ -12,55 +7,6 @@ const finish = { x: 553, y: 98 };
 
 function RouteScene({ playing }: { playing: boolean }) {
   const prefix = useId();
-  const path = useRef<SVGPathElement>(null);
-  const phase = useMotionValue(0);
-  const progress = useTransform(phase, [0, .76, 1], [0, 1, 1]);
-  const playback = useRef<ReturnType<typeof animate> | null>(null);
-  const reachedDropOff = useRef(false);
-  const [arrived, setArrived] = useState(false);
-  const reduced = useReducedMotion();
-  const position = useTransform(progress, value => {
-    const line = path.current;
-    if (!line) return value === 1 ? finish : start;
-    return line.getPointAtLength(line.getTotalLength() * value);
-  });
-  const x = useTransform(position, point => point.x);
-  const y = useTransform(position, point => point.y);
-  const wheelAngle = useTransform(progress, value => value * 1500);
-  const wheelRear = useTransform(wheelAngle, angle => "rotate(" + angle + " 463 376)");
-  const wheelFront = useTransform(wheelAngle, angle => "rotate(" + angle + " 790 335)");
-
-  useMotionValueEvent(phase, "change", value => {
-    const complete = value >= .76;
-    if (reachedDropOff.current === complete) return;
-    reachedDropOff.current = complete;
-    setArrived(complete);
-  });
-
-  useEffect(() => {
-    if (reduced === null) return;
-    if (reduced) {
-      phase.set(.82);
-      return;
-    }
-    phase.set(0);
-    const controls = animate(phase, [0, 1], {
-      duration: 9, ease: "linear", repeat: Infinity, autoplay: false,
-    });
-    playback.current = controls;
-    return () => {
-      controls.stop();
-      playback.current = null;
-    };
-  }, [phase, reduced]);
-
-  useEffect(() => {
-    if (playing && !reduced) playback.current?.play();
-    else playback.current?.pause();
-  }, [playing, reduced]);
-
-  // The reduced-motion effect sets the final route phase after hydration.
-  const delivered = arrived;
   return (
     <figure className="route-scene">
       <figcaption className="scene-caption">
@@ -88,27 +34,26 @@ function RouteScene({ playing }: { playing: boolean }) {
           <path d="M68 188l45 80 83 67 76 95M172 109l48 81 64 56 45 92 77 92M263 52l58 68 81 68 65 93 41 83 69 66M382 0l72 100 50 63 51 67 60 89 45 25M506 0l45 58 53 51 56 20"/>
         </g>
         <ellipse cx="342" cy="252" rx="266" ry="182" fill={"url(#" + prefix + "-light)"} />
-        <path ref={path} d={route} className="route-bed" />
-        <motion.path d={route} className="route-trace" initial={false} style={{ pathLength: progress }} />
+        <path d={route} className="route-bed" />
+        <path d={route} className="route-trace" pathLength="1" strokeDasharray="1 1" strokeDashoffset="1" />
         <circle cx={start.x} cy={start.y} r="10" className="map-pin-ring" />
         <circle cx={start.x} cy={start.y} r="4" className="map-pin-core" />
-        <circle cx={finish.x} cy={finish.y} r="12" className={delivered ? "map-pin-ring map-pin-arrived" : "map-pin-ring"} />
+        <circle cx={finish.x} cy={finish.y} r="12" className="map-pin-ring map-pin-drop" />
         <circle cx={finish.x} cy={finish.y} r="4" className="map-pin-core" />
-        {delivered && !reduced && <motion.circle cx={finish.x} cy={finish.y} r={12} fill="none" stroke="#2e784a"
-          initial={{ scale: 1, opacity: .85 }} animate={{ scale: 2.9, opacity: 0 }} transition={{ duration: .9, ease: "easeOut" }} />}
-        <motion.g style={{ x, y }}>
+        <circle cx={finish.x} cy={finish.y} r="12" className="map-pin-pulse" fill="none" stroke="#2e784a" />
+        <g className="route-truck" transform={`translate(${start.x} ${start.y})`}>
           <ellipse cx="0" cy="1" rx="64" ry="10" fill="#4e5356" opacity=".38" />
           <svg x="-82" y="-77" width="174" height="98" viewBox="0 0 900 506" className="map-vehicle">
             <image href="/flatbed.webp" width="900" height="506" clipPath={"url(#" + prefix + "-vehicle)"} />
-            <motion.g style={{ transform: wheelRear }}><Wheel x={463} y={376} radius={23} /></motion.g>
-            <motion.g style={{ transform: wheelFront }}><Wheel x={790} y={335} radius={15} /></motion.g>
+            <g className="route-wheel" data-center="463 376"><Wheel x={463} y={376} radius={23} /></g>
+            <g className="route-wheel" data-center="790 335"><Wheel x={790} y={335} radius={15} /></g>
           </svg>
-        </motion.g>
+        </g>
       </svg>
       <div className="route-label route-label-pickup"><MapPin size={16} /><span>Pickup</span></div>
-      <div className="route-label route-label-drop" data-delivered={delivered}>
-        {delivered ? <Check size={16} /> : <Flag size={16} />}
-        <span>{delivered ? "Delivered" : "Drop-off"}</span>
+      <div className="route-label route-label-drop" data-delivered="false">
+        <Flag className="route-drop-icon" size={16} /><Check className="route-delivered-icon" size={16} />
+        <span className="route-drop-text">Drop-off</span><span className="route-delivered-text">Delivered</span>
       </div>
       <div className="scene-footer">
         <span>
@@ -129,28 +74,24 @@ function Wheel({ x, y, radius }: { x: number; y: number; radius: number }) {
 }
 
 export function RecoveryHero({ bookingHref, servicesHref }: { bookingHref: string; servicesHref: string }) {
-  const hero = useRef<HTMLElement>(null);
-  const visible = useInView(hero);
-  const reduced = useReducedMotion();
-  const playing = visible && !reduced;
   return (
-    <section ref={hero} className="recovery-hero" data-playing={playing} aria-labelledby="recovery-title">
-      <HighwayBackground playing={playing} />
+    <section className="recovery-hero" data-playing="false" aria-labelledby="recovery-title">
+      <div className="highway-background" aria-hidden="true"><canvas /></div>
       <div className="hero-shell">
         <div className="hero-copy">
           <p className="eyebrow"><span className="hero-icon"><MapPin size={15} /></span> Dubai, United Arab Emirates</p>
           <h1 id="recovery-title"><span><b className="hero-chrome">Car towing &amp;</b></span><em><strong>recovery in Dubai.</strong></em></h1>
           <p className="hero-description">Stuck after a breakdown or need to move a vehicle? Share your pickup point and destination to arrange recovery across Dubai.</p>
           <div className="hero-actions">
-            <Button asChild className="hero-request"><a href={bookingHref} data-cta="request-recovery">Request recovery <span><ArrowUpRight size={18} /></span></a></Button>
-            <Button asChild variant="outline" className="hero-services"><a href={servicesHref}>Explore services <span><ArrowRight size={16} /></span></a></Button>
+            <a className="hero-request" href={bookingHref} data-cta="request-recovery">Request recovery <span><ArrowUpRight size={18} /></span></a>
+            <a className="hero-services" href={servicesHref}>Explore services <span><ArrowRight size={16} /></span></a>
           </div>
           <ul className="hero-trust">
             <li><span className="hero-icon"><Truck size={17} /></span> Breakdown recovery &amp; flatbed towing</li>
             <li><span className="hero-icon"><ShieldCheck size={17} /></span> Luxury vehicle transport</li>
           </ul>
         </div>
-        <RouteScene playing={playing} />
+        <RouteScene />
       </div>
     </section>
   );
