@@ -23,9 +23,6 @@
 }
 .service-tape {
   --service-tape-height: 42px;
-  position: relative;
-  display: flex;
-  flex-direction: row-reverse;
   min-height: var(--service-tape-height);
   background: #090908;
   color: #ff9e64;
@@ -34,19 +31,11 @@
   letter-spacing: .075em;
   text-transform: uppercase;
 }
-.service-tape-window { min-width: 0; flex: 1; overflow: hidden; }
+.service-tape-window { overflow: hidden; }
 .service-tape-track { display: flex; width: max-content; animation: service-tape-scroll 45s linear infinite; }
 .service-tape-track ul { display: flex; flex: none; align-items: center; justify-content: space-between; min-width: 100vw; min-height: 40px; padding: 0; margin: 0; list-style: none; }
 .service-tape-track li { display: flex; align-items: center; gap: 19px; padding-inline-end: 19px; white-space: nowrap; }
 .service-tape-track li::before { content: ""; width: 5px; height: 5px; margin-inline-start: 2px; background: #ff9e64; transform: rotate(45deg); }
-.service-tape-pause { position: absolute; opacity: 0; inset: 0 0 auto auto; width: 1px; height: 1px; }
-.service-tape-control { display: grid; width: 44px; flex: none; place-items: center; border-inline-start: 1px solid #f78e543b; cursor: pointer; }
-.service-tape-control svg { width: 16px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
-.service-tape-pause:focus-visible + label { outline: 2px solid currentColor; outline-offset: -4px; }
-.service-tape:has(.service-tape-pause:checked) .service-tape-track,
-.service-tape:hover .service-tape-track { animation-play-state: paused; }
-.tape-play-icon, .service-tape-pause:checked + label .tape-pause-icon { display: none; }
-.service-tape-pause:checked + label .tape-play-icon { display: block; }
 @keyframes service-tape-scroll { to { transform: translateX(-50%); } }
 /* The road and flyover sit behind a separate contrast layer for the copy. */
 .highway-background {
@@ -263,7 +252,7 @@
 @media (prefers-reduced-motion: reduce) {
   .service-tape-track { animation: none; }
   .service-tape-window { overflow-x: auto; }
-  .service-tape-track ul[aria-hidden], .service-tape-control, .service-tape-pause { display: none; }
+  .service-tape-track ul[aria-hidden] { display: none; }
   .highway-background *,.hero-copy * { animation: none !important; }
   .hero-copy h1 strong { color: #ff9256; background: none; }
   .hero-copy .hero-chrome { color: #f3f5f6; background: none; }

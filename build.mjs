@@ -29,7 +29,7 @@ const coverage = `<section class="section wrap coverage" id="coverage"><div><p c
 const pickupGuide = `<section class="section wrap pickup-guide" id="pickup-guide"><h2>Get ready for pickup</h2><div class="steps"><article><span>01</span><h3>Check your surroundings</h3><p>Move to a safe place if you can. If anyone is injured or there’s an immediate danger, contact emergency services.</p></article><article><span>02</span><h3>Save your map pin</h3><p>Share the nearest exit, landmark, or parking level so the team can find the vehicle.</p></article><article><span>03</span><h3>Describe the vehicle</h3><p>Include the make and model and whether it can steer or roll. Mention low clearance or limited access.</p></article></div></section>`;
 const phone = business.phone ? `<a class="button outline" href="tel:${business.phone}">Call now</a>` : '';
 const whatsapp = business.whatsapp ? `<a class="button outline" href="https://wa.me/${business.whatsapp}">WhatsApp</a>` : '';
-const brand = `<a class="brand" href="/"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span><span>Dubai Car Recovery<em>Near Me</em></span></a>`;
+const brand = `<a class="brand" href="/" aria-label="Dubai Car Recovery Near Me home"><img src="/assets/dcr-logo-480.webp" srcset="/assets/dcr-logo-480.webp 480w, /assets/dcr-logo-960.webp 960w" sizes="(max-width: 590px) 176px, (max-width: 900px) 192px, 216px" width="480" height="270" alt=""></a>`;
 const actions = `<a class="button" href="/book/">Plan a pickup <span aria-hidden="true">↗</span></a>${phone}${whatsapp}`;
 const serviceIcons = [
   '<path d="M2 6h13v11H2zM15 10h4l3 4v3h-7"/><circle cx="6" cy="18" r="2"/><circle cx="18" cy="18" r="2"/>',
@@ -251,11 +251,12 @@ const pages = [
 await rm('dist', { recursive: true, force: true });
 await mkdir('dist', { recursive: true });
 await mkdir('dist/assets');
+for (const width of [480, 960]) {
+  await cp(`dcr-logo-${width}.webp`, `dist/assets/dcr-logo-${width}.webp`);
+}
 const recoveryHero = await buildRecoveryHero();
 const serviceTapeItems = services.map(([, title]) => `<li>${title}</li>`).join('');
 const serviceTape = `<div class="service-tape">
-  <input class="service-tape-pause" type="checkbox" id="pause-service-tape" aria-label="Pause service ticker">
-  <label class="service-tape-control" for="pause-service-tape" title="Pause or resume service ticker"><svg viewBox="0 0 16 16" aria-hidden="true"><path class="tape-pause-icon" d="M5 3v10m6-10v10"/><path class="tape-play-icon" d="m5 3 7 5-7 5z"/></svg></label>
   <div class="service-tape-window"><div class="service-tape-track">
     <ul aria-label="Recovery services">${serviceTapeItems}</ul>
     <ul aria-hidden="true">${serviceTapeItems}</ul>

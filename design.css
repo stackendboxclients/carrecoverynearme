@@ -9,13 +9,16 @@ a{color:inherit} button,input,select,textarea{font:inherit}
 .wrap{width:min(1280px,calc(100% - 80px));margin-inline:auto}
 .skip{position:absolute;top:-100px;left:10px;z-index:10;background:white;padding:8px}
 .skip:focus{top:10px}.narrow{max-width:760px}
-header{border-bottom:1px solid var(--line)}
+body>header{background:#191a1c;color:#f7f5f0;border-bottom:1px solid #533628}
+body>header nav a:hover{color:#ffad7e}
+body>header :focus-visible{outline-color:#ffad7e}
 .header-inner,footer{display:flex;align-items:center;justify-content:space-between;gap:24px;min-height:79px}
-.brand{display:inline-flex;align-items:center;gap:11px;font-weight:700;line-height:1.06;text-decoration:none}
-.brand em{display:block;font-size:.77rem;font-style:normal;margin-top:4px;color:#94401e}
-.brand-mark{display:flex;align-items:center;justify-content:center;gap:3px;width:38px;height:38px;background:var(--orange);border-radius:50%}
-.brand-mark i{width:3px;height:15px;background:var(--ink);transform:skew(-23deg)}
-.brand-mark i:nth-child(2){height:21px}.brand-mark i:nth-child(3){height:11px}
+.brand{display:block;flex:none;max-width:100%;width:216px;border-radius:9px}
+.brand img{display:block;width:100%;height:auto;border-radius:inherit}
+.header-inner .brand img{aspect-ratio:3.25 / 1;object-fit:cover;object-position:center 28%}
+.header-inner{padding-block:8px}
+@media(max-width:900px){.brand{width:192px}}
+@media(max-width:590px){.brand{width:176px}}
 nav,footer div,.actions{display:flex;gap:18px;flex-wrap:wrap}
 nav a,footer a{text-decoration:none;font-weight:600}
 nav a:hover,footer a:hover{text-decoration:underline}
