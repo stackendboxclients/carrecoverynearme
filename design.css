@@ -49,33 +49,14 @@ body > header :focus-visible { outline-color: #542005; }
 }
 .header-inner .header-action:hover { background: #fff9ef; }
 .brand {
-  position: relative;
   display: block;
   flex: none;
   max-width: 100%;
-  overflow: hidden;
-  border-radius: 7px;
-  background: #0d0f12;
+  outline-offset: 4px;
 }
 .brand img { display: block; width: 100%; height: auto; }
-.brand--header {
-  width: clamp(192px, 18vw, 212px);
-  aspect-ratio: 2.94;
-  outline-offset: 3px;
-  box-shadow: 0 0 0 1px #34170570, 0 3px 10px #63280b29;
-}
-/* Frame the original badge and wordmark at navbar scale. */
-.brand--header img {
-  position: absolute;
-  width: 109%;
-  left: -3.7%;
-  top: -25%;
-}
-.brand--footer {
-  width: clamp(228px, 22vw, 264px);
-  border: 1px solid #8997a3;
-  box-shadow: var(--shadow);
-}
+.brand--header { width: clamp(192px, 18vw, 232px); }
+.brand--footer { width: clamp(232px, 22vw, 264px); }
 nav,footer div,.actions{display:flex;gap:18px;flex-wrap:wrap}
 nav a,footer a{text-decoration:none;font-weight:600}
 nav a:hover,footer a:hover{text-decoration:underline}

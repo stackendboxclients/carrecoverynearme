@@ -29,8 +29,8 @@ const phone = business.phone ? `<a class="button outline" href="tel:${business.p
 const whatsapp = business.whatsapp ? `<a class="button outline" href="https://wa.me/${business.whatsapp}">WhatsApp</a>` : '';
 const brand = (placement) => {
   const inHeader = placement === 'header';
-  const sizes = inHeader ? '(max-width: 590px) 178px, 212px' : '(max-width: 590px) 228px, 264px';
-  return `<a class="brand brand--${placement}" href="/" aria-label="Dubai Car Recovery Near Me home"><img src="/assets/dcr-logo-480.webp" srcset="/assets/dcr-logo-480.webp 480w, /assets/dcr-logo-960.webp 960w" sizes="${sizes}" width="960" height="540" alt="" decoding="async"${inHeader ? '' : ' loading="lazy"'}></a>`;
+  const sizes = inHeader ? '(max-width: 590px) 178px, (max-width: 1067px) 192px, (max-width: 1289px) 18vw, 232px' : '(max-width: 1055px) 232px, (max-width: 1200px) 22vw, 264px';
+  return `<a class="brand brand--${placement}" href="/" aria-label="Dubai Car Recovery Near Me home"><img src="/assets/dcr-brand-480.webp" srcset="/assets/dcr-brand-480.webp 480w, /assets/dcr-brand-960.webp 960w" sizes="${sizes}" width="960" height="315" alt="" decoding="async"${inHeader ? '' : ' loading="lazy"'}></a>`;
 };
 const actions = `<a class="button" href="/book/">Plan a pickup <span aria-hidden="true">↗</span></a>${phone}${whatsapp}`;
 const serviceIcons = [
@@ -251,7 +251,7 @@ const pages = [
 await rm('dist', { recursive: true, force: true });
 await mkdir('dist', { recursive: true });
 await mkdir('dist/assets');
-for (const file of ['dcr-logo-480.webp', 'dcr-logo-960.webp', 'dcr-master.svg', 'dcr-lockup-on-dark.svg', 'dcr-lockup-on-light.svg', 'dcr-lockup-monochrome.svg', 'dcr-symbol.svg', 'dcr-icon.svg']) {
+for (const file of ['dcr-brand-480.webp', 'dcr-brand-960.webp', 'dcr-master.svg', 'dcr-lockup-on-dark.svg', 'dcr-lockup-on-light.svg', 'dcr-lockup-monochrome.svg', 'dcr-symbol.svg', 'dcr-icon.svg']) {
   await cp(file, `dist/assets/${file}`);
 }
 const recoveryHero = await buildRecoveryHero();
