@@ -61,6 +61,7 @@
 }
 .feedback-card-meta { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px 14px; }
 .feedback-author { display: flex; align-items: center; gap: 9px; font-weight: 700; line-height: 1.25; overflow-wrap: anywhere; }
+.feedback-example-label { display: block; margin-top: 3px; color: #6b3c28; font-size: .78rem; font-weight: 600; }
 .feedback-initials { display: grid; flex: 0 0 37px; width: 37px; height: 37px; place-items: center; border-radius: 50%; background: #6c3828; color: #fff1e7; font: 700 .82rem/1 var(--display); }
 .feedback-rating { display: flex; align-items: center; gap: 6px; color: #6b3c28; font-size: .84rem; font-weight: 700; font-variant-numeric: tabular-nums; }
 .feedback-stars { position: relative; display: inline-flex; color: #a5816f55; }
