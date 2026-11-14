@@ -62,10 +62,6 @@ const serviceAdvice = [
   'Share your inspection centre, appointment time, and whether the vehicle can roll and steer.',
 ];
 const cards = services.map(([slug, title, description], index) => `<article class="service-card"><span class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${serviceIcons[index]}</svg></span><h3>${title}</h3><p>${description}</p><a href="/services/${slug}/">Explore service <span aria-hidden="true">↗</span></a></article>`).join('');
-const faq = `<section class="section wrap" id="faq"><h2>Recovery questions</h2>
-<details><summary>What should I have ready for a recovery request?</summary><p>Share your pickup location, vehicle type, and what happened. Include your preferred destination if you already know it.</p></details>
-<details><summary>Can I enter my pickup location manually?</summary><p>Yes. Enter an area, nearby landmark, or a map link. You can also use your device location if you choose.</p></details>
-<details><summary>When is recovery confirmed?</summary><p>The recovery team confirms availability, price, and pickup arrangements directly with you.</p></details></section>`;
 const enquiryIcons = {
   person: '<circle cx="12" cy="8" r="3"/><path d="M5 20v-2a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v2"/>',
   phone: '<path d="M8 3H5a2 2 0 0 0-2 2 16 16 0 0 0 16 16 2 2 0 0 0 2-2v-3l-5-2-2 2a12 12 0 0 1-6-6l2-2z"/>',
@@ -79,6 +75,33 @@ const enquiryIcons = {
   copy: '<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/>',
 };
 const enquiryIcon = (name) => `<svg class="enquiry-icon" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round">${enquiryIcons[name]}</svg>`;
+const recoveryQuestions = [
+  ['What should I have ready for a pickup?', 'Share your pickup point, vehicle make and model, what happened, and where you’d like the vehicle taken. Mention if it can’t roll, steer, or shift into neutral.'],
+  ['How much will recovery cost?', 'The quote depends on the vehicle, the distance to your destination, and what’s needed to reach and load it. Ask the recovery team to confirm the price before you agree to the pickup.'],
+  ['How soon can a truck reach me?', 'Pickup timing depends on your location, road access, and which truck is available for the job. Ask the team for an estimated pickup window when you share your location.'],
+  ['Can you move a sports car or a vehicle with low clearance?', 'Flatbed transport is available to request for sports and luxury cars. Mention low bumpers, steep ramps, or tight parking so the team can assess how to load the vehicle.'],
+  ['What if my car is stuck in sand or off-road?', 'Share a map pin, the nearest road or track, and a photo of the terrain if you can take one safely. This helps the team assess access and what recovery equipment may be needed.'],
+  ['Can I arrange towing after an accident?', 'Once the scene is safe and the vehicle can be moved, tell the team where it is, which parts are damaged, and whether the wheels and steering still move. Share the body shop or other drop-off address if you have it.'],
+  ['Can I choose the drop-off point or schedule a pickup?', 'Use the pickup form’s optional details to add a garage, testing centre, or other destination. Choose scheduled pickup to include your preferred date and time, then confirm the arrangements with the recovery team.'],
+  ['Can I enter my location without sharing GPS?', 'Yes. Enter a map link, nearby landmark, road exit, or parking level. If the address is hard to find, add the entrance or other access details.'],
+];
+
+const faq = `<section class="recovery-faq" id="faq" aria-labelledby="recovery-faq-heading">
+  <div class="wrap recovery-faq-layout">
+    <div class="recovery-faq-intro">
+      <h2 id="recovery-faq-heading">Frequently asked <em>questions</em></h2>
+      <p>What to know before you arrange towing or vehicle recovery in Dubai.</p>
+      <a class="button recovery-faq-cta" href="#request-recovery">Open pickup form ${enquiryIcon('arrow')}</a>
+    </div>
+    <div class="recovery-faq-list">
+      ${recoveryQuestions.map(([question, answer], index) => `<details class="recovery-faq-item" name="recovery-faq"${index === 0 ? ' open' : ''}>
+        <summary><span>${question}</span><span class="recovery-faq-indicator" aria-hidden="true">${enquiryIcon('plus')}</span></summary>
+        <p>${answer}</p>
+      </details>`).join('')}
+    </div>
+  </div>
+</section>`;
+
 const pickupChannel = (icon, title, href) => {
   const content = `${enquiryIcon(icon)}<span>${title}</span>`;
   return href
@@ -203,7 +226,8 @@ ${booking('h2')}
 ${serviceShowcase}
 ${recoveryKinetic(enquiryIcon, services)}
 ${recoveryFeedback(business, services)}
-<section class="process"><div class="section wrap"><h2>How to request recovery</h2><div class="steps"><article><span>01</span><h3>Tell us what happened</h3><p>Choose a service and describe your vehicle or the issue.</p></article><article><span>02</span><h3>Share your pickup point</h3><p>Enter a landmark, map link, or your device location.</p></article><article><span>03</span><h3>Confirm the details</h3><p>The team confirms availability, pickup, and pricing with you.</p></article></div></div></section>${faq}
+${faq}
+<section class="process"><div class="section wrap"><h2>How to request recovery</h2><div class="steps"><article><span>01</span><h3>Tell us what happened</h3><p>Choose a service and describe your vehicle or the issue.</p></article><article><span>02</span><h3>Share your pickup point</h3><p>Enter a landmark, map link, or your device location.</p></article><article><span>03</span><h3>Confirm the details</h3><p>The team confirms availability, pickup, and pricing with you.</p></article></div></div></section>
 ${coverage}${pickupGuide}<section class="section wrap final-call"><h2>Need to move your vehicle?</h2><div class="actions">${actions}</div></section>`;
 const guides = [
   ['dubai-breakdown-recovery-checklist', 'Dubai breakdown checklist', 'Once you’re somewhere safe, note the nearest exit, parking level, or landmark. Share your map pin, vehicle make and model, and whether it can roll and steer. Mention warning lights, leaks, or damage before arranging transport.'],
