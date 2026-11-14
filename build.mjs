@@ -4,6 +4,7 @@ import { build } from 'esbuild';
 
 import { buildRecoveryHero } from './recovery-hero-build.mjs';
 import { recoveryKinetic } from './recovery-kinetic.mjs';
+import { recoveryFeedback } from './recovery-feedback.mjs';
 
 const business = JSON.parse(await readFile('business.json', 'utf8'));
 const services = [
@@ -14,7 +15,7 @@ const services = [
   ['accident-recovery', 'Accident recovery', 'Discuss pickup for a damaged vehicle once the scene is safe.', '05'],
   ['battery-assistance', 'Battery assistance', 'Describe the vehicle and symptoms so the team can assess jump-start assistance.', '06'],
   ['luxury-car-transport', 'Luxury car transport', 'Plan transport for a sports car, luxury vehicle, or low-clearance car.'],
-  ['tyre-assistance', 'Tyre assistance', 'Get help assessing a puncture, flat tyre, or damaged wheel.'],
+  ['tyre-assistance', 'Towing after tyre damage', 'Arrange a tow if tyre or wheel damage leaves the vehicle unable to continue.'],
   ['fuel-delivery', 'Fuel assistance', 'Ask about help when you’ve run out of fuel.'],
   ['desert-recovery', 'Desert recovery', 'Share the terrain and your location for an off-road recovery assessment.'],
   ['motorcycle-towing', 'Motorcycle transport', 'Arrange pickup for a motorcycle or scooter.'],
@@ -53,7 +54,7 @@ const serviceAdvice = [
   'Arrange pickup once the scene is safe. Describe the damage and whether the vehicle can steer and roll.',
   'Share the make and model and describe what happens when you try to start the vehicle.',
   'Mention ground clearance, steering lock, and any manufacturer guidance on loading the vehicle.',
-  'Tell the team which wheel is affected and whether you have a usable spare and wheel-lock key.',
+  'Tell the team which wheel is damaged and whether the vehicle can roll, steer, or be shifted into neutral.',
   'Share the correct fuel type and a safe access point near your vehicle.',
   'Provide a map pin and describe the surface, slope, and whether the vehicle is stuck or damaged.',
   'Tell the team the type of bike, whether it rolls, and where it needs to go.',
@@ -201,6 +202,7 @@ const home = `<!-- recovery-hero -->
 ${booking('h2')}
 ${serviceShowcase}
 ${recoveryKinetic(enquiryIcon, services)}
+${recoveryFeedback(business, services)}
 <section class="process"><div class="section wrap"><h2>How to request recovery</h2><div class="steps"><article><span>01</span><h3>Tell us what happened</h3><p>Choose a service and describe your vehicle or the issue.</p></article><article><span>02</span><h3>Share your pickup point</h3><p>Enter a landmark, map link, or your device location.</p></article><article><span>03</span><h3>Confirm the details</h3><p>The team confirms availability, pickup, and pricing with you.</p></article></div></div></section>${faq}
 ${coverage}${pickupGuide}<section class="section wrap final-call"><h2>Need to move your vehicle?</h2><div class="actions">${actions}</div></section>`;
 const guides = [
@@ -246,7 +248,7 @@ for (const file of ['advantage-loading-540.webp', 'advantage-loading-960.webp', 
 }
 const assetUrls = {};
 const kineticScript = await build({ entryPoints: ['recovery-kinetic.js'], bundle: true, minify: true, write: false, legalComments: 'inline' });
-for (const [name, extension] of [['design', 'css'], ['site', 'js'], ['recovery-kinetic', 'css'], ['recovery-kinetic', 'js']]) {
+for (const [name, extension] of [['design', 'css'], ['site', 'js'], ['recovery-kinetic', 'css'], ['recovery-kinetic', 'js'], ['recovery-feedback', 'css'], ['recovery-feedback', 'js']]) {
   const contents = name === 'recovery-kinetic' && extension === 'js'
     ? kineticScript.outputFiles[0].contents
     : await readFile(`${name}.${extension}`);
@@ -255,7 +257,7 @@ for (const [name, extension] of [['design', 'css'], ['site', 'js'], ['recovery-k
   await writeFile('dist' + url, contents);
   assetUrls[`${name}.${extension}`] = url;
 }
-const homepageAssets = `<link rel="stylesheet" href="/assets/recovery-hero.css"><script type="module" src="/assets/recovery-hero.js"></script><link rel="stylesheet" href="${assetUrls['recovery-kinetic.css']}"><script src="${assetUrls['recovery-kinetic.js']}" defer></script>`;
+const homepageAssets = `<link rel="stylesheet" href="/assets/recovery-hero.css"><script type="module" src="/assets/recovery-hero.js"></script><link rel="stylesheet" href="${assetUrls['recovery-kinetic.css']}"><script src="${assetUrls['recovery-kinetic.js']}" defer></script><link rel="stylesheet" href="${assetUrls['recovery-feedback.css']}"><script type="module" src="${assetUrls['recovery-feedback.js']}"></script>`;
 for (const [path, title, description, content] of pages) {
   const directory = `dist${path}`;
   await mkdir(directory, { recursive: true });
