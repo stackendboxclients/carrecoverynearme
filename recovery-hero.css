@@ -187,3 +187,8 @@
   .hero-copy .hero-chrome { color: var(--ink); background: none; }
   .recovery-hero *, .recovery-hero *::before, .recovery-hero *::after { transition-duration: 0s !important; }
 }
+
+@media (max-width: 850px) {
+  .service-tape-track { animation: none; }
+  .route-trace,.map-vehicle { filter: none; }
+}

@@ -39,9 +39,10 @@ if (hero && !reducedMotion.matches) {
   });
   hero.append(motion);
 }
+const compactLayout = matchMedia('(max-width: 850px)');
 const showcase = document.querySelector('.recovery-showcase');
 const tape = document.querySelector('.service-tape');
-if ('IntersectionObserver' in window) {
+if (!compactLayout.matches && 'IntersectionObserver' in window) {
   const observer = new IntersectionObserver(entries => {
     for (const entry of entries) entry.target.dataset.inView = String(entry.isIntersecting);
   });
@@ -71,14 +72,14 @@ if (deferredSections.size) {
           // Static sections and native controls remain available.
         });
       }
-    }, { rootMargin: '480px 0px' });
+    }, { rootMargin: compactLayout.matches ? '0px' : '480px 0px' });
     for (const section of targets.keys()) observer.observe(section);
   }
 }
 const form = document.querySelector('#booking');
 if (form) {
   const section = form.closest('.recovery-contact');
-  if (section && 'IntersectionObserver' in window) {
+  if (section && !compactLayout.matches && 'IntersectionObserver' in window) {
     const observer = new IntersectionObserver(([entry]) => {
       section.dataset.inView = String(entry.isIntersecting);
     });
