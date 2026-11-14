@@ -43,10 +43,10 @@ export function HighwayBackground({ playing }: { playing: boolean }) {
         polygon(color, [project(z, left, elevation), project(end, left, elevation), project(end, right, elevation), project(z, right, elevation)]);
 
       const sky = context.createLinearGradient(0, 0, 0, height);
-      sky.addColorStop(0, "#0a1119");
-      sky.addColorStop(.39, "#352921");
-      sky.addColorStop(.55, "#171a1c");
-      sky.addColorStop(1, "#101518");
+      sky.addColorStop(0, "#eef1f3");
+      sky.addColorStop(.39, "#eee4db");
+      sky.addColorStop(.55, "#c3cdd2");
+      sky.addColorStop(1, "#a2b0b9");
       context.fillStyle = sky;
       context.fillRect(0, 0, width, height);
 
@@ -55,17 +55,17 @@ export function HighwayBackground({ playing }: { playing: boolean }) {
         const near = Math.max(0, z);
         const far = z + spacing;
         const segment = Math.round((distance + z) / spacing);
-        strip(near, far, -1.23, 1.23, "#26282a");
-        strip(near, far, -1, 1, segment % 2 ? "#222629" : "#23272a");
+        strip(near, far, -1.23, 1.23, "#aab6bf");
+        strip(near, far, -1, 1, segment % 2 ? "#74858e" : "#778891");
         for (const side of [-1, 1]) {
-          strip(near, far, side - .008, side + .008, "#ab9b7f");
-          strip(near, far, side * 1.12 - .055, side * 1.12 + .055, "#474542", .075);
-          polygon("#393836", [project(near, side * 1.065), project(far, side * 1.065), project(far, side * 1.065, .075), project(near, side * 1.065, .075)]);
-          if (segment % 2 === 0) strip(near, Math.min(far, near + 1), side * 1.08, side * 1.14, "#dc8950", .078);
+          strip(near, far, side - .008, side + .008, "#ddd3be");
+          strip(near, far, side * 1.12 - .055, side * 1.12 + .055, "#9cabb3", .075);
+          polygon("#71818b", [project(near, side * 1.065), project(far, side * 1.065), project(far, side * 1.065, .075), project(near, side * 1.065, .075)]);
+          if (segment % 2 === 0) strip(near, Math.min(far, near + 1), side * 1.08, side * 1.14, "#ef9b58", .078);
         }
         for (const lane of [-.33, .33]) {
           const markerEnd = Math.min(far, z + 1.65);
-          if (markerEnd > near) strip(near, markerEnd, lane - .012, lane + .012, "#b8b5a7");
+          if (markerEnd > near) strip(near, markerEnd, lane - .012, lane + .012, "#eff0e8");
         }
         if (segment % 4 === 0 && z >= 0) {
           const base = project(z, -1.21);
@@ -76,16 +76,16 @@ export function HighwayBackground({ playing }: { playing: boolean }) {
           context.moveTo(...base);
           context.lineTo(...top);
           context.lineTo(...lamp);
-          context.strokeStyle = "#65605a";
+          context.strokeStyle = "#7d8586";
           context.lineWidth = Math.max(.6, scale * .006);
           context.stroke();
           const reach = Math.max(2, scale * .095);
           const light = context.createRadialGradient(...lamp, 0, ...lamp, reach);
-          light.addColorStop(0, "#ffbb747c");
+          light.addColorStop(0, "#ffad5caa");
           light.addColorStop(1, "#ff8c4200");
           context.fillStyle = light;
           context.fillRect(lamp[0] - reach, lamp[1] - reach, reach * 2, reach * 2);
-          context.fillStyle = "#ffd8a0";
+          context.fillStyle = "#fff0cc";
           context.fillRect(lamp[0] - reach * .13, lamp[1], reach * .26, Math.max(1, reach * .08));
         }
       }
