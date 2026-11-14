@@ -13,12 +13,9 @@ body>header{background:#191a1c;color:#f7f5f0;border-bottom:1px solid #533628}
 body>header nav a:hover{color:#ffad7e}
 body>header :focus-visible{outline-color:#ffad7e}
 .header-inner,footer{display:flex;align-items:center;justify-content:space-between;gap:24px;min-height:79px}
-.brand{display:block;flex:none;max-width:100%;width:216px;border-radius:9px}
-.brand img{display:block;width:100%;height:auto;border-radius:inherit}
-.header-inner .brand img{aspect-ratio:3.25 / 1;object-fit:cover;object-position:center 28%}
+.brand{display:inline-flex;align-items:center;flex:none;width:clamp(174px,18vw,211px);max-width:100%;min-height:44px}
+.brand img{display:block;width:100%;height:auto}
 .header-inner{padding-block:8px}
-@media(max-width:900px){.brand{width:192px}}
-@media(max-width:590px){.brand{width:176px}}
 nav,footer div,.actions{display:flex;gap:18px;flex-wrap:wrap}
 nav a,footer a{text-decoration:none;font-weight:600}
 nav a:hover,footer a:hover{text-decoration:underline}
