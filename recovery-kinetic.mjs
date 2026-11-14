@@ -92,13 +92,12 @@ export function recoveryKinetic(icon, services) {
     </div>
     <div class="adv-footer">
       <a class="adv-cta" href="#request-recovery">Discuss your recovery needs ${icon('arrow')}</a>
-      <details class="adv-catalog"><summary>View all eight services</summary>
-        <ul>${capabilities.map(({ name }) => `<li>${name.replaceAll('&', '&amp;')}</li>`).join('')}</ul>
-      </details>
-      <div class="adv-credit">
-        <span>Illustrative scenes · <a href="https://unsplash.com/photos/a-night-view-of-a-city-with-a-freeway-sTOQG-SAFqY">Dubai photo by Michael Starkie</a></span>
-        <button class="adv-pause" type="button" hidden>Pause motion</button>
-      </div>
+      <button class="adv-pause" type="button" aria-label="Pause section animations" hidden>
+        <svg width="17" height="17" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path class="adv-pause-icon" d="M7 5v10m6-10v10"/>
+          <path class="adv-resume-icon" d="m7 4 9 6-9 6V4Z"/>
+        </svg>
+      </button>
     </div>
   </div>
 </section>`;

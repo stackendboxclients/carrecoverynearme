@@ -145,7 +145,7 @@ if (section) {
       }
       pause.addEventListener('click', () => {
         paused = !paused;
-        pause.textContent = paused ? 'Resume motion' : 'Pause motion';
+        pause.setAttribute('aria-label', paused ? 'Resume section animations' : 'Pause section animations');
         sync();
       }, motionListen);
       document.addEventListener('visibilitychange', sync, motionListen);
@@ -155,7 +155,7 @@ if (section) {
         capability.cleanup();
         motionEvents.abort();
         pause.hidden = true;
-        pause.textContent = 'Pause motion';
+        pause.setAttribute('aria-label', 'Pause section animations');
         stage.removeAttribute('data-playing');
         stage.removeAttribute('data-paused');
       };
