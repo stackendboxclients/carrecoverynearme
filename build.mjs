@@ -25,7 +25,9 @@ const services = [
 const name = business.name;
 const contactReady = Boolean(business.whatsapp || business.phone);
 const indexable = business.launchReady && Boolean(business.whatsapp);
-const phone = business.phone ? `<a class="button outline" href="tel:${business.phone}">Call now</a>` : '';
+const callHref = business.phone ? `tel:${business.phone}` : '';
+const whatsappHref = business.whatsapp ? `https://wa.me/${business.whatsapp}` : '';
+const phone = callHref ? `<a class="button outline" href="${callHref}">Call now</a>` : '';
 const whatsapp = business.whatsapp ? `<a class="button outline" href="https://wa.me/${business.whatsapp}">WhatsApp</a>` : '';
 const brand = (placement) => {
   const inHeader = placement === 'header';
@@ -254,7 +256,7 @@ await mkdir('dist/assets');
 for (const file of ['dcr-brand-480.webp', 'dcr-brand-960.webp', 'dcr-master.svg', 'dcr-lockup-on-dark.svg', 'dcr-lockup-on-light.svg', 'dcr-lockup-monochrome.svg', 'dcr-symbol.svg', 'dcr-icon.svg']) {
   await cp(file, `dist/assets/${file}`);
 }
-const recoveryHero = await buildRecoveryHero();
+const recoveryHero = await buildRecoveryHero({ callHref, whatsappHref });
 const serviceTapeItems = services.map(([, title]) => `<li>${title}</li>`).join('');
 const serviceTape = `<div class="service-tape">
   <div class="service-tape-window"><div class="service-tape-track">
@@ -291,7 +293,10 @@ for (const [path, title, description, content] of pages) {
   const directory = `dist${path}`;
   await mkdir(directory, { recursive: true });
   const canonical = business.domain + path;
-  await writeFile(directory + 'index.html', `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${path === '/' ? title : title + ' | ' + name}</title><meta name="description" content="${description}"><meta name="robots" content="${indexable ? 'index,follow' : 'noindex,nofollow'}"><link rel="canonical" href="${canonical}"><link rel="icon" href="/assets/dcr-icon.svg" type="image/svg+xml" sizes="any"><link rel="stylesheet" href="${assetUrls['design.css']}"><script src="${assetUrls['site.js']}" defer></script>${path === '/' ? homepageAssets : ''}</head><body><a class="skip" href="#main">Skip to content</a><header><div class="wrap header-inner">${brand('header')}<nav aria-label="Main"><a href="/services/">Services</a><a href="/#faq">FAQs</a><a href="/about/">About</a><a href="/contact/">Contact</a></nav><a class="button header-action" href="/book/">Plan a pickup ↗</a></div></header><main id="main">${path === '/' ? content.replace('<!-- recovery-hero -->', serviceTape + recoveryHero) : content}</main><footer class="wrap">${brand('footer')}<div><a href="/services/">Services</a><a href="/contact/">Contact</a><a href="/blogs/">Guides</a><a href="/privacy/">Privacy</a></div><small>Developed by <a href="https://www.stackendbox.com/">StackEndBox</a></small></footer><aside class="mobile-actions" aria-label="Recovery actions">${actions}</aside></body></html>`);
+  await writeFile(directory + 'index.html', `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${path === '/' ? title : title + ' | ' + name}</title><meta name="description" content="${description}"><meta name="robots" content="${indexable ? 'index,follow' : 'noindex,nofollow'}"><link rel="canonical" href="${canonical}"><link rel="icon" href="/assets/dcr-icon.svg" type="image/svg+xml" sizes="any"><link rel="stylesheet" href="${assetUrls['design.css']}"><script src="${assetUrls['site.js']}" defer></script>${path === '/' ? homepageAssets : ''}</head><body><a class="skip" href="#main">Skip to content</a><header><div class="wrap header-inner">${brand('header')}<nav aria-label="Main"><a href="/services/">Services</a><a href="/#faq">FAQs</a><a href="/about/">About</a><a href="/contact/">Contact</a></nav><div class="header-contact">${callHref || whatsappHref ? [
+  callHref && `<a class="contact-cta contact-cta--call" href="${callHref}">${enquiryIcon('phone')} Call now</a>`,
+  whatsappHref && `<a class="contact-cta contact-cta--whatsapp" href="${whatsappHref}">${enquiryIcon('whatsapp')} WhatsApp</a>`,
+].filter(Boolean).join('') : '<a class="button" href="/book/">Plan a pickup ↗</a>'}</div></div></header><main id="main">${path === '/' ? content.replace('<!-- recovery-hero -->', serviceTape + recoveryHero) : content}</main><footer class="wrap">${brand('footer')}<div><a href="/services/">Services</a><a href="/contact/">Contact</a><a href="/blogs/">Guides</a><a href="/privacy/">Privacy</a></div><small>Developed by <a href="https://www.stackendbox.com/">StackEndBox</a></small></footer><aside class="mobile-actions" aria-label="Recovery actions">${actions}</aside></body></html>`);
 }
 await writeFile('dist/robots.txt', indexable ? `User-agent: *\nAllow: /\nSitemap: ${business.domain}/sitemap.xml\n` : 'User-agent: *\nAllow: /\n');
 await writeFile('dist/sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${pages.map(([path]) => `<url><loc>${business.domain}${path}</loc></url>`).join('')}</urlset>`);

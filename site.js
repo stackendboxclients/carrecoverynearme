@@ -95,6 +95,11 @@ if (form) {
       if (pickup.value === previousPickup) status.textContent = 'Could not get your location. Enter a landmark or map link manually.';
     }, { enableHighAccuracy: true, timeout: 10000 });
   });
+  document.querySelector('[data-use-pickup-location]')?.addEventListener('click', event => {
+    if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+    locationButton.click();
+    pickup.focus({ preventScroll: true });
+  });
   const sendStatus = form.querySelector('#pickup-send-status');
   const preparedMessage = form.querySelector('#pickup-message');
   form.addEventListener('invalid', event => {

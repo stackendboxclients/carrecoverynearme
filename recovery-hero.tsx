@@ -1,5 +1,5 @@
 import { useId } from "react";
-import { ArrowRight, ArrowUpRight, Check, Flag, MapPin, ShieldCheck, Truck } from "lucide-react";
+import { ArrowUpRight, Check, Flag, MapPin, MessageCircle, Phone, ShieldCheck, Truck } from "lucide-react";
 
 const route = "M126 346 H204 Q241 346 241 309 V274 Q241 237 278 237 H361 Q400 237 400 198 V172 Q400 135 437 135 H482 Q520 135 520 98 H553";
 const start = { x: 126, y: 346 };
@@ -73,7 +73,7 @@ function Wheel({ x, y, radius }: { x: number; y: number; radius: number }) {
   </g>;
 }
 
-export function RecoveryHero({ bookingHref, servicesHref }: { bookingHref: string; servicesHref: string }) {
+export function RecoveryHero({ bookingHref, callHref, whatsappHref }: { bookingHref: string; callHref: string; whatsappHref: string }) {
   return (
     <section className="recovery-hero" data-playing="false" aria-labelledby="recovery-title">
       <div className="highway-background" aria-hidden="true"><canvas /></div>
@@ -83,8 +83,10 @@ export function RecoveryHero({ bookingHref, servicesHref }: { bookingHref: strin
           <h1 id="recovery-title"><span><b className="hero-chrome">Car towing &amp;</b></span><em><strong>recovery in Dubai.</strong></em></h1>
           <p className="hero-description">Stuck after a breakdown or need to move a vehicle? Share your pickup point and destination to arrange recovery across Dubai.</p>
           <div className="hero-actions">
-            <a className="hero-request" href={bookingHref} data-cta="request-recovery">Request recovery <span><ArrowUpRight size={18} /></span></a>
-            <a className="hero-services" href={servicesHref}>Explore services <span><ArrowRight size={16} /></span></a>
+            {callHref && <a className="contact-cta contact-cta--call" href={callHref}><Phone size={18} aria-hidden="true" /> Call now</a>}
+            {whatsappHref && <a className="contact-cta contact-cta--whatsapp" href={whatsappHref}><MessageCircle size={18} aria-hidden="true" /> WhatsApp</a>}
+            {!callHref && !whatsappHref && <a className="contact-cta contact-cta--call" href={bookingHref}>Request recovery <ArrowUpRight size={18} aria-hidden="true" /></a>}
+            <a className="contact-cta contact-cta--location" href={bookingHref} data-use-pickup-location><MapPin size={18} aria-hidden="true" /> Use my current location</a>
           </div>
           <ul className="hero-trust">
             <li><span className="hero-icon"><Truck size={17} /></span> Breakdown recovery &amp; flatbed towing</li>

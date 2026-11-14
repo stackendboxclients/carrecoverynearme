@@ -2,7 +2,7 @@ import { createRequire } from 'node:module';
 import { cp, unlink } from 'node:fs/promises';
 import { build } from 'esbuild';
 
-export async function buildRecoveryHero() {
+export async function buildRecoveryHero({ callHref, whatsappHref }) {
   const serverPath = 'dist/recovery-hero-server.cjs';
   const settings = {
     bundle: true,
@@ -32,7 +32,8 @@ export async function buildRecoveryHero() {
   const { RecoveryHero } = require('./' + serverPath);
   const markup = renderToString(createElement(RecoveryHero, {
     bookingHref: '#request-recovery',
-    servicesHref: '/services/',
+    callHref,
+    whatsappHref,
   }));
   await unlink(serverPath);
 
