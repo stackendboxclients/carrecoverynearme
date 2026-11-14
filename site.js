@@ -149,8 +149,9 @@ if (form) {
       'Name: ' + data.get('name').trim(),
       'Phone: ' + data.get('phone').trim(),
       'Service: ' + serviceField.selectedOptions[0].textContent,
-      'Pickup: ' + data.get('pickup').trim(),
     ];
+    const pickupLocation = data.get('pickup').trim();
+    if (pickupLocation) message.push('Pickup: ' + pickupLocation);
     for (const [field, label] of [['vehicle', 'Vehicle'], ['destination', 'Drop-off'], ['timing', 'Timing'], ['datetime', 'Preferred time']]) {
       const value = data.get(field).trim();
       if (value && (field !== 'datetime' || date.required)) message.push(label + ': ' + value);

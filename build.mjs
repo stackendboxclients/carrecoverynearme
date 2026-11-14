@@ -123,7 +123,7 @@ const booking = (heading) => `<section class="recovery-contact" id="request-reco
   <div class="pickup-intro">
     <p class="eyebrow">${enquiryIcon('pin')} Dubai vehicle recovery</p>
     <${heading} id="pickup-heading">Request a vehicle pickup</${heading}>
-    <p>Share your pickup point and choose a service. The recovery team confirms availability and pricing before dispatch.</p>
+    <p>Choose a recovery service and add your pickup location if you know it. The recovery team confirms availability and pricing before dispatch.</p>
   </div>
   <div class="pickup-form-stage">
     <div class="pickup-backdrop" aria-hidden="true">
@@ -138,12 +138,12 @@ const booking = (heading) => `<section class="recovery-contact" id="request-reco
       <label><span>${enquiryIcon('person')} Your name <span aria-hidden="true">*</span></span><input name="name" autocomplete="name" maxlength="100" placeholder="Full name" required></label>
       <label><span>${enquiryIcon('phone')} Phone number <span aria-hidden="true">*</span></span><input name="phone" type="tel" autocomplete="tel" maxlength="30" minlength="7" placeholder="Include country code" required></label>
       <label class="pickup-wide"><span>${enquiryIcon('truck')} Recovery service <span aria-hidden="true">*</span></span><select name="service" required><option value="">Choose a service</option>${services.map(([slug, title]) => `<option value="${slug}">${title}</option>`).join('')}</select></label>
-      <label class="pickup-wide"><span>${enquiryIcon('pin')} Pickup location <span aria-hidden="true">*</span></span><input name="pickup" maxlength="300" placeholder="Area, landmark, or map link" aria-describedby="pickup-location-help" required></label>
+      <label class="pickup-wide"><span>${enquiryIcon('pin')} Pickup location (optional)</span><input name="pickup" maxlength="300" placeholder="Area, landmark, or map link" aria-describedby="pickup-location-help"></label>
     </div>
     <div class="pickup-location">
       <button type="button" id="location" disabled>${enquiryIcon('locate')} Use my current location</button>
       <a id="pickup-map" target="_blank" rel="noopener noreferrer" hidden>Check map pin ↗</a>
-      <p id="pickup-location-help">A landmark or map link works too.</p>
+      <p id="pickup-location-help">Enter a landmark or map link, or leave this blank and share your location later.</p>
       <p id="location-status" role="status"></p>
     </div>
     <details class="pickup-extra">
