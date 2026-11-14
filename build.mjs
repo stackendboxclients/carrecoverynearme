@@ -1,7 +1,9 @@
 import { readFile, mkdir, writeFile, cp, rm } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
+import { build } from 'esbuild';
 
 import { buildRecoveryHero } from './recovery-hero-build.mjs';
+import { recoveryKinetic } from './recovery-kinetic.mjs';
 
 const business = JSON.parse(await readFile('business.json', 'utf8'));
 const services = [
@@ -198,6 +200,7 @@ const serviceShowcase = `<section class="recovery-showcase" id="services" aria-l
 const home = `<!-- recovery-hero -->
 ${booking('h2')}
 ${serviceShowcase}
+${recoveryKinetic(enquiryIcon, services)}
 <section class="process"><div class="section wrap"><h2>How to request recovery</h2><div class="steps"><article><span>01</span><h3>Tell us what happened</h3><p>Choose a service and describe your vehicle or the issue.</p></article><article><span>02</span><h3>Share your pickup point</h3><p>Enter a landmark, map link, or your device location.</p></article><article><span>03</span><h3>Confirm the details</h3><p>The team confirms availability, pickup, and pricing with you.</p></article></div></div></section>${faq}
 ${coverage}${pickupGuide}<section class="section wrap final-call"><h2>Need to move your vehicle?</h2><div class="actions">${actions}</div></section>`;
 const guides = [
@@ -237,21 +240,28 @@ await mkdir('dist/assets/service-art');
 for (const name of [...showcaseServices.map(([slug]) => slug), 'overpass', 'skyline']) {
   await cp('service-' + name + '.webp', 'dist/assets/service-art/' + name + '.webp');
 }
+await mkdir('dist/assets/standard-art');
+for (const file of ['advantage-loading-540.webp', 'advantage-loading-960.webp', 'dubai-szr-840.webp', 'dubai-szr-1440.webp', 'night-540.webp', 'night-960.webp']) {
+  await cp('section3-' + file, 'dist/assets/standard-art/' + file);
+}
 const assetUrls = {};
-for (const [name, extension] of [['design', 'css'], ['site', 'js']]) {
-  const contents = await readFile(`${name}.${extension}`);
+const kineticScript = await build({ entryPoints: ['recovery-kinetic.js'], bundle: true, minify: true, write: false, legalComments: 'inline' });
+for (const [name, extension] of [['design', 'css'], ['site', 'js'], ['recovery-kinetic', 'css'], ['recovery-kinetic', 'js']]) {
+  const contents = name === 'recovery-kinetic' && extension === 'js'
+    ? kineticScript.outputFiles[0].contents
+    : await readFile(`${name}.${extension}`);
   const version = createHash('sha256').update(contents).digest('hex').slice(0, 12);
   const url = `/assets/${name}.${version}.${extension}`;
   await writeFile('dist' + url, contents);
-  assetUrls[name] = url;
+  assetUrls[`${name}.${extension}`] = url;
 }
+const homepageAssets = `<link rel="stylesheet" href="/assets/recovery-hero.css"><script type="module" src="/assets/recovery-hero.js"></script><link rel="stylesheet" href="${assetUrls['recovery-kinetic.css']}"><script src="${assetUrls['recovery-kinetic.js']}" defer></script>`;
 for (const [path, title, description, content] of pages) {
   const directory = `dist${path}`;
   await mkdir(directory, { recursive: true });
   const canonical = business.domain + path;
-  await writeFile(directory + 'index.html', `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${path === '/' ? title : title + ' | ' + name}</title><meta name="description" content="${description}"><meta name="robots" content="${indexable ? 'index,follow' : 'noindex,nofollow'}"><link rel="canonical" href="${canonical}"><link rel="stylesheet" href="${assetUrls.design}"><script src="${assetUrls.site}" defer></script>${path === '/' ? '<link rel="stylesheet" href="/assets/recovery-hero.css"><script type="module" src="/assets/recovery-hero.js"></script>' : ''}</head><body><a class="skip" href="#main">Skip to content</a><header><div class="wrap header-inner">${brand}<nav aria-label="Main"><a href="/services/">Services</a><a href="/#faq">FAQs</a><a href="/about/">About</a><a href="/contact/">Contact</a></nav><a class="button header-action" href="/book/">Plan a pickup ↗</a></div></header><main id="main">${path === '/' ? content.replace('<!-- recovery-hero -->', serviceTape + recoveryHero) : content}</main><footer class="wrap">${brand}<div><a href="/services/">Services</a><a href="/contact/">Contact</a><a href="/blogs/">Guides</a><a href="/privacy/">Privacy</a></div><small>Developed by <a href="https://www.stackendbox.com/">StackEndBox</a></small></footer><aside class="mobile-actions" aria-label="Recovery actions">${actions}</aside></body></html>`);
+  await writeFile(directory + 'index.html', `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${path === '/' ? title : title + ' | ' + name}</title><meta name="description" content="${description}"><meta name="robots" content="${indexable ? 'index,follow' : 'noindex,nofollow'}"><link rel="canonical" href="${canonical}"><link rel="stylesheet" href="${assetUrls['design.css']}"><script src="${assetUrls['site.js']}" defer></script>${path === '/' ? homepageAssets : ''}</head><body><a class="skip" href="#main">Skip to content</a><header><div class="wrap header-inner">${brand}<nav aria-label="Main"><a href="/services/">Services</a><a href="/#faq">FAQs</a><a href="/about/">About</a><a href="/contact/">Contact</a></nav><a class="button header-action" href="/book/">Plan a pickup ↗</a></div></header><main id="main">${path === '/' ? content.replace('<!-- recovery-hero -->', serviceTape + recoveryHero) : content}</main><footer class="wrap">${brand}<div><a href="/services/">Services</a><a href="/contact/">Contact</a><a href="/blogs/">Guides</a><a href="/privacy/">Privacy</a></div><small>Developed by <a href="https://www.stackendbox.com/">StackEndBox</a></small></footer><aside class="mobile-actions" aria-label="Recovery actions">${actions}</aside></body></html>`);
 }
 await writeFile('dist/robots.txt', indexable ? `User-agent: *\nAllow: /\nSitemap: ${business.domain}/sitemap.xml\n` : 'User-agent: *\nAllow: /\n');
 await writeFile('dist/sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${pages.map(([path]) => `<url><loc>${business.domain}${path}</loc></url>`).join('')}</urlset>`);
 console.log(`Built ${pages.length} pages for ${business.domain}`);
-
