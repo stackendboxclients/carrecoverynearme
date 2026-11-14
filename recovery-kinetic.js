@@ -242,11 +242,11 @@ function contextualScene(panel) {
       .fromTo(pick('.adv-loading-note span'), { opacity: 0, y: 4 }, { opacity: 1, y: 0, duration: .33, stagger: .23 }, 'annotations+=.13')
       .to(pick('.adv-loading-light'), { xPercent: 14, opacity: 0, duration: .72, ease: 'power1.inOut' }, 1.58);
   } else {
-    reveal.addLabel('briefing', .4).addLabel('details', .85).addLabel('quote', 1.55)
+    reveal.addLabel('briefing', .4).addLabel('details', .85).addLabel('quote', 1.64)
       .fromTo(pick('.adv-briefing-photo img'), { xPercent: -1.5, scale: 1.035 }, { xPercent: 0, scale: 1.035, duration: .85, ease: 'power1.out' }, 0)
       .set(pick('.adv-briefing, .adv-briefing dl div, .adv-briefing-action'), { opacity: 0 }, 0)
       .fromTo(pick('.adv-briefing'), { opacity: 0, y: 7, clipPath: 'inset(0% 0% 94% 0%)' }, { opacity: 1, y: 0, clipPath: 'inset(0% 0% 0% 0%)', duration: .45 }, 'briefing')
-      .fromTo(pick('.adv-briefing dl div'), { y: 4, opacity: 0 }, { y: 0, opacity: 1, duration: .28, stagger: .18 }, 'details')
+      .fromTo(pick('.adv-briefing dl div'), { y: 3, opacity: 0 }, { y: 0, opacity: 1, duration: .28, stagger: .14 }, 'details')
       .fromTo(pick('.adv-briefing-action'), { opacity: 0 }, { opacity: 1, duration: .35 }, 'quote')
       .fromTo(pick('.adv-briefing-highlight'), { xPercent: -68, opacity: .85 }, { xPercent: 60, opacity: 0, duration: .65 }, 'quote');
   }
