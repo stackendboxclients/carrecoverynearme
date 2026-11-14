@@ -34,7 +34,6 @@ const brand = (placement) => {
   const sizes = inHeader ? '(max-width: 590px) 178px, (max-width: 1067px) 192px, (max-width: 1289px) 18vw, 232px' : '(max-width: 1055px) 232px, (max-width: 1200px) 22vw, 264px';
   return `<a class="brand brand--${placement}" href="/" aria-label="Dubai Car Recovery Near Me home"><img src="/assets/dcr-brand-480.webp" srcset="/assets/dcr-brand-480.webp 480w, /assets/dcr-brand-960.webp 960w" sizes="${sizes}" width="960" height="315" alt="" decoding="async"${inHeader ? '' : ' loading="lazy"'}></a>`;
 };
-const actions = `<a class="button" href="/book/">Plan a pickup <span aria-hidden="true">↗</span></a>${phone}${whatsapp}`;
 const serviceIcons = [
   '<path d="M2 6h13v11H2zM15 10h4l3 4v3h-7"/><circle cx="6" cy="18" r="2"/><circle cx="18" cy="18" r="2"/>',
   '<path d="m13 2-9 12h7l-1 8 10-12h-7z"/>',
@@ -67,6 +66,7 @@ const serviceAdvice = [
 ];
 const cards = services.map(([slug, title, description], index) => `<article class="service-card"><span class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${serviceIcons[index]}</svg></span><h3>${title}</h3><p>${description}</p><a href="/services/${slug}/">Explore service <span aria-hidden="true">↗</span></a></article>`).join('');
 const enquiryIcons = {
+  menu: '<path d="M4 6h16M4 12h16M4 18h16"/>',
   person: '<circle cx="12" cy="8" r="3"/><path d="M5 20v-2a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v2"/>',
   phone: '<path d="M8 3H5a2 2 0 0 0-2 2 16 16 0 0 0 16 16 2 2 0 0 0 2-2v-3l-5-2-2 2a12 12 0 0 1-6-6l2-2z"/>',
   truck: '<path d="M2 6h12v11H2zM14 10h4l4 4v3h-8"/><circle cx="6" cy="18" r="2"/><circle cx="18" cy="18" r="2"/>',
@@ -79,6 +79,11 @@ const enquiryIcons = {
   copy: '<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/>',
 };
 const enquiryIcon = (name) => `<svg class="enquiry-icon" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round">${enquiryIcons[name]}</svg>`;
+const mainNav = '<a href="/services/">Services</a><a href="/#faq">FAQs</a><a href="/about/">About</a><a href="/contact/">Contact</a>';
+const directContact = [
+  callHref && `<a class="contact-cta contact-cta--call" href="${callHref}">${enquiryIcon('phone')} Call now</a>`,
+  whatsappHref && `<a class="contact-cta contact-cta--whatsapp" href="${whatsappHref}">${enquiryIcon('whatsapp')} WhatsApp</a>`,
+].filter(Boolean).join('');
 const recoveryQuestions = [
   ['What should I have ready for a pickup?', 'Share your pickup point, vehicle make and model, what happened, and where you’d like the vehicle taken. Mention if it can’t roll, steer, or shift into neutral.'],
   ['How much will recovery cost?', 'The quote depends on the vehicle, the distance to your destination, and what’s needed to reach and load it. Ask the recovery team to confirm the price before you agree to the pickup.'],
@@ -293,10 +298,7 @@ for (const [path, title, description, content] of pages) {
   const directory = `dist${path}`;
   await mkdir(directory, { recursive: true });
   const canonical = business.domain + path;
-  await writeFile(directory + 'index.html', `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${path === '/' ? title : title + ' | ' + name}</title><meta name="description" content="${description}"><meta name="robots" content="${indexable ? 'index,follow' : 'noindex,nofollow'}"><link rel="canonical" href="${canonical}"><link rel="icon" href="/assets/dcr-icon.svg" type="image/svg+xml" sizes="any"><link rel="stylesheet" href="${assetUrls['design.css']}"><script src="${assetUrls['site.js']}" defer></script>${path === '/' ? homepageAssets : ''}</head><body><a class="skip" href="#main">Skip to content</a><header><div class="wrap header-inner">${brand('header')}<nav aria-label="Main"><a href="/services/">Services</a><a href="/#faq">FAQs</a><a href="/about/">About</a><a href="/contact/">Contact</a></nav><div class="header-contact">${callHref || whatsappHref ? [
-  callHref && `<a class="contact-cta contact-cta--call" href="${callHref}">${enquiryIcon('phone')} Call now</a>`,
-  whatsappHref && `<a class="contact-cta contact-cta--whatsapp" href="${whatsappHref}">${enquiryIcon('whatsapp')} WhatsApp</a>`,
-].filter(Boolean).join('') : '<a class="button" href="/book/">Plan a pickup ↗</a>'}</div></div></header><main id="main">${path === '/' ? content.replace('<!-- recovery-hero -->', serviceTape + recoveryHero) : content}</main><footer class="wrap">${brand('footer')}<div><a href="/services/">Services</a><a href="/contact/">Contact</a><a href="/blogs/">Guides</a><a href="/privacy/">Privacy</a></div><small>Developed by <a href="https://www.stackendbox.com/">StackEndBox</a></small></footer><aside class="mobile-actions" aria-label="Recovery actions">${actions}</aside></body></html>`);
+  await writeFile(directory + 'index.html', `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${path === '/' ? title : title + ' | ' + name}</title><meta name="description" content="${description}"><meta name="robots" content="${indexable ? 'index,follow' : 'noindex,nofollow'}"><link rel="canonical" href="${canonical}"><link rel="icon" href="/assets/dcr-icon.svg" type="image/svg+xml" sizes="any"><link rel="stylesheet" href="${assetUrls['design.css']}"><script src="${assetUrls['site.js']}" defer></script>${path === '/' ? homepageAssets : ''}</head><body><a class="skip" href="#main">Skip to content</a><header><div class="wrap header-inner">${brand('header')}<nav class="desktop-nav" aria-label="Main">${mainNav}</nav><details class="mobile-menu"><summary>${enquiryIcon('menu')}<span>Menu</span></summary><nav aria-label="Main">${mainNav}</nav></details><div class="header-contact">${directContact || '<a class="button" href="/book/">Plan a pickup ↗</a>'}</div></div></header><main id="main">${path === '/' ? content.replace('<!-- recovery-hero -->', serviceTape + recoveryHero) : content}</main><footer class="wrap">${brand('footer')}<div><a href="/services/">Services</a><a href="/contact/">Contact</a><a href="/blogs/">Guides</a><a href="/privacy/">Privacy</a></div><small>Developed by <a href="https://www.stackendbox.com/">StackEndBox</a></small></footer><aside class="mobile-actions" aria-label="Recovery actions">${directContact}<a class="contact-cta contact-cta--book" href="${path === '/' ? '#request-recovery' : '/book/'}">Book</a></aside></body></html>`);
 }
 await writeFile('dist/robots.txt', indexable ? `User-agent: *\nAllow: /\nSitemap: ${business.domain}/sitemap.xml\n` : 'User-agent: *\nAllow: /\n');
 await writeFile('dist/sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${pages.map(([path]) => `<url><loc>${business.domain}${path}</loc></url>`).join('')}</urlset>`);

@@ -1,3 +1,24 @@
+const mobileMenu = document.querySelector('.mobile-menu');
+mobileMenu?.addEventListener('click', event => {
+  if (event.target.closest('a')) mobileMenu.open = false;
+});
+mobileMenu?.addEventListener('keydown', event => {
+  if (event.key !== 'Escape' || !mobileMenu.open) return;
+  mobileMenu.open = false;
+  mobileMenu.querySelector('summary').focus();
+});
+
+const mobileActions = document.querySelector('.mobile-actions');
+const heroActions = document.querySelector('.hero-actions');
+if (mobileActions && heroActions) {
+  const updateMobileActions = () => {
+    mobileActions.hidden = heroActions.getBoundingClientRect().bottom > 0;
+  };
+  updateMobileActions();
+  window.addEventListener('scroll', updateMobileActions, { passive: true });
+  window.addEventListener('resize', updateMobileActions);
+}
+
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
 const hero = document.querySelector('.hero');
 if (hero && !reducedMotion.matches) {
