@@ -10,20 +10,12 @@ mobileMenu?.addEventListener('keydown', event => {
 
 const mobileActions = document.querySelector('.mobile-actions');
 const heroActions = document.querySelector('.hero-actions');
-if (mobileActions && heroActions) {
-  let pending = false;
-  const updateMobileActions = () => {
-    mobileActions.hidden = heroActions.getBoundingClientRect().bottom > 0;
-    pending = false;
-  };
-  const scheduleMobileActions = () => {
-    if (pending) return;
-    pending = true;
-    requestAnimationFrame(updateMobileActions);
-  };
-  updateMobileActions();
-  window.addEventListener('scroll', scheduleMobileActions, { passive: true });
-  window.addEventListener('resize', scheduleMobileActions);
+if (mobileActions && heroActions && 'IntersectionObserver' in window) {
+  const observer = new IntersectionObserver(([entry]) => {
+    const hidden = entry.boundingClientRect.bottom > 0;
+    if (mobileActions.hidden !== hidden) mobileActions.hidden = hidden;
+  }, { rootMargin: '0px 0px 1000px 0px' });
+  observer.observe(heroActions);
 }
 
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');

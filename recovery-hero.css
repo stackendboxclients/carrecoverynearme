@@ -190,5 +190,5 @@
 
 @media (max-width: 850px) {
   .service-tape-track { animation: none; }
-  .route-trace,.map-vehicle { filter: none; }
+  .route-scene { display: none; }
 }
