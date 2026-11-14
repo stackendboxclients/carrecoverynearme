@@ -27,7 +27,11 @@ const contactReady = Boolean(business.whatsapp || business.phone);
 const indexable = business.launchReady && Boolean(business.whatsapp);
 const phone = business.phone ? `<a class="button outline" href="tel:${business.phone}">Call now</a>` : '';
 const whatsapp = business.whatsapp ? `<a class="button outline" href="https://wa.me/${business.whatsapp}">WhatsApp</a>` : '';
-const brand = (surface) => `<a class="brand" href="/" aria-label="Dubai Car Recovery Near Me home"><img src="/assets/dcr-lockup-on-${surface}.svg" width="211" height="43" alt=""></a>`;
+const brand = (placement) => {
+  const inHeader = placement === 'header';
+  const sizes = inHeader ? '(max-width: 590px) 178px, 212px' : '(max-width: 590px) 228px, 264px';
+  return `<a class="brand brand--${placement}" href="/" aria-label="Dubai Car Recovery Near Me home"><img src="/assets/dcr-logo-480.webp" srcset="/assets/dcr-logo-480.webp 480w, /assets/dcr-logo-960.webp 960w" sizes="${sizes}" width="960" height="540" alt="" decoding="async"${inHeader ? '' : ' loading="lazy"'}></a>`;
+};
 const actions = `<a class="button" href="/book/">Plan a pickup <span aria-hidden="true">↗</span></a>${phone}${whatsapp}`;
 const serviceIcons = [
   '<path d="M2 6h13v11H2zM15 10h4l3 4v3h-7"/><circle cx="6" cy="18" r="2"/><circle cx="18" cy="18" r="2"/>',
@@ -247,7 +251,7 @@ const pages = [
 await rm('dist', { recursive: true, force: true });
 await mkdir('dist', { recursive: true });
 await mkdir('dist/assets');
-for (const file of ['dcr-master.svg', 'dcr-lockup-on-dark.svg', 'dcr-lockup-on-light.svg', 'dcr-lockup-monochrome.svg', 'dcr-symbol.svg', 'dcr-icon.svg']) {
+for (const file of ['dcr-logo-480.webp', 'dcr-logo-960.webp', 'dcr-master.svg', 'dcr-lockup-on-dark.svg', 'dcr-lockup-on-light.svg', 'dcr-lockup-monochrome.svg', 'dcr-symbol.svg', 'dcr-icon.svg']) {
   await cp(file, `dist/assets/${file}`);
 }
 const recoveryHero = await buildRecoveryHero();
@@ -287,7 +291,7 @@ for (const [path, title, description, content] of pages) {
   const directory = `dist${path}`;
   await mkdir(directory, { recursive: true });
   const canonical = business.domain + path;
-  await writeFile(directory + 'index.html', `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${path === '/' ? title : title + ' | ' + name}</title><meta name="description" content="${description}"><meta name="robots" content="${indexable ? 'index,follow' : 'noindex,nofollow'}"><link rel="canonical" href="${canonical}"><link rel="icon" href="/assets/dcr-icon.svg" type="image/svg+xml" sizes="any"><link rel="stylesheet" href="${assetUrls['design.css']}"><script src="${assetUrls['site.js']}" defer></script>${path === '/' ? homepageAssets : ''}</head><body><a class="skip" href="#main">Skip to content</a><header><div class="wrap header-inner">${brand('light')}<nav aria-label="Main"><a href="/services/">Services</a><a href="/#faq">FAQs</a><a href="/about/">About</a><a href="/contact/">Contact</a></nav><a class="button header-action" href="/book/">Plan a pickup ↗</a></div></header><main id="main">${path === '/' ? content.replace('<!-- recovery-hero -->', serviceTape + recoveryHero) : content}</main><footer class="wrap">${brand('light')}<div><a href="/services/">Services</a><a href="/contact/">Contact</a><a href="/blogs/">Guides</a><a href="/privacy/">Privacy</a></div><small>Developed by <a href="https://www.stackendbox.com/">StackEndBox</a></small></footer><aside class="mobile-actions" aria-label="Recovery actions">${actions}</aside></body></html>`);
+  await writeFile(directory + 'index.html', `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${path === '/' ? title : title + ' | ' + name}</title><meta name="description" content="${description}"><meta name="robots" content="${indexable ? 'index,follow' : 'noindex,nofollow'}"><link rel="canonical" href="${canonical}"><link rel="icon" href="/assets/dcr-icon.svg" type="image/svg+xml" sizes="any"><link rel="stylesheet" href="${assetUrls['design.css']}"><script src="${assetUrls['site.js']}" defer></script>${path === '/' ? homepageAssets : ''}</head><body><a class="skip" href="#main">Skip to content</a><header><div class="wrap header-inner">${brand('header')}<nav aria-label="Main"><a href="/services/">Services</a><a href="/#faq">FAQs</a><a href="/about/">About</a><a href="/contact/">Contact</a></nav><a class="button header-action" href="/book/">Plan a pickup ↗</a></div></header><main id="main">${path === '/' ? content.replace('<!-- recovery-hero -->', serviceTape + recoveryHero) : content}</main><footer class="wrap">${brand('footer')}<div><a href="/services/">Services</a><a href="/contact/">Contact</a><a href="/blogs/">Guides</a><a href="/privacy/">Privacy</a></div><small>Developed by <a href="https://www.stackendbox.com/">StackEndBox</a></small></footer><aside class="mobile-actions" aria-label="Recovery actions">${actions}</aside></body></html>`);
 }
 await writeFile('dist/robots.txt', indexable ? `User-agent: *\nAllow: /\nSitemap: ${business.domain}/sitemap.xml\n` : 'User-agent: *\nAllow: /\n');
 await writeFile('dist/sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${pages.map(([path]) => `<url><loc>${business.domain}${path}</loc></url>`).join('')}</urlset>`);
