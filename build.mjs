@@ -25,8 +25,6 @@ const services = [
 const name = business.name;
 const contactReady = Boolean(business.whatsapp || business.phone);
 const indexable = business.launchReady && Boolean(business.whatsapp);
-const coverage = `<section class="section wrap coverage" id="coverage"><div><p class="eyebrow">Pickup and drop-off</p><h2>Start with a pin.</h2><p>Send the exact spot if you can. A road exit, parking level, or nearby landmark helps when a street address is hard to find.</p><a class="button outline" href="/book/">Add your pickup point ↗</a></div><div class="route-art" aria-hidden="true"><svg viewBox="0 0 500 260" preserveAspectRatio="none"><path class="map-street" d="M0 57H500M0 205H500M68 0V260M430 0V260M0 126H500M170 0V260M331 0V260"/><path class="map-route" d="M82 193H174Q198 193 198 169V137Q198 112 223 112H308Q333 112 333 86V74H413"/><circle cx="82" cy="193" r="8"/><circle cx="413" cy="74" r="8"/></svg><span class="route-point pickup">Pickup</span><span class="route-point dropoff">Drop-off</span></div></section>`;
-const pickupGuide = `<section class="section wrap pickup-guide" id="pickup-guide"><h2>Get ready for pickup</h2><div class="steps"><article><span>01</span><h3>Check your surroundings</h3><p>Move to a safe place if you can. If anyone is injured or there’s an immediate danger, contact emergency services.</p></article><article><span>02</span><h3>Save your map pin</h3><p>Share the nearest exit, landmark, or parking level so the team can find the vehicle.</p></article><article><span>03</span><h3>Describe the vehicle</h3><p>Include the make and model and whether it can steer or roll. Mention low clearance or limited access.</p></article></div></section>`;
 const phone = business.phone ? `<a class="button outline" href="tel:${business.phone}">Call now</a>` : '';
 const whatsapp = business.whatsapp ? `<a class="button outline" href="https://wa.me/${business.whatsapp}">WhatsApp</a>` : '';
 const brand = (surface) => `<a class="brand" href="/" aria-label="Dubai Car Recovery Near Me home"><img src="/assets/dcr-lockup-on-${surface}.svg" width="211" height="43" alt=""></a>`;
@@ -226,9 +224,7 @@ ${booking('h2')}
 ${serviceShowcase}
 ${recoveryKinetic(enquiryIcon, services)}
 ${recoveryFeedback(business)}
-${faq}
-<section class="process"><div class="section wrap"><h2>How to request recovery</h2><div class="steps"><article><span>01</span><h3>Tell us what happened</h3><p>Choose a service and describe your vehicle or the issue.</p></article><article><span>02</span><h3>Share your pickup point</h3><p>Enter a landmark, map link, or your device location.</p></article><article><span>03</span><h3>Confirm the details</h3><p>The team confirms availability, pickup, and pricing with you.</p></article></div></div></section>
-${coverage}${pickupGuide}<section class="section wrap final-call"><h2>Need to move your vehicle?</h2><div class="actions">${actions}</div></section>`;
+${faq}`;
 const guides = [
   ['dubai-breakdown-recovery-checklist', 'Dubai breakdown checklist', 'Once you’re somewhere safe, note the nearest exit, parking level, or landmark. Share your map pin, vehicle make and model, and whether it can roll and steer. Mention warning lights, leaks, or damage before arranging transport.'],
   ['flatbed-luxury-vehicle-transport-dubai', 'Planning a flatbed pickup', 'Mention low ground clearance, wheel locks, or a car that cannot go into neutral. Tell the team about ramps, basement entrances, and tight turns at both addresses. Confirm the pickup plan before moving the vehicle.'],
