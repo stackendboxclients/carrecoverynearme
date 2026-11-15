@@ -6,33 +6,47 @@ if (section) {
   const stage = section.querySelector('.adv-stage');
   const panels = [...stage.querySelectorAll('.adv-panel')];
   const buttons = panels.map(panel => panel.querySelector('.adv-select'));
+  const mobileButtons = [...section.querySelectorAll('.adv-mobile-tab')];
+  const compact = matchMedia('(max-width: 600px)');
   const pause = section.querySelector('.adv-pause');
   const effects = new EventTarget();
   const events = new AbortController();
   const listen = { signal: events.signal };
 
-  function choose(index, focus = false) {
+  function choose(index) {
     stage.dataset.selected = panels[index].dataset.panel;
-    buttons.forEach((button, i) => button.setAttribute('aria-pressed', String(i === index)));
-    if (focus) buttons[index].focus();
+    panels.forEach((panel, i) => {
+      const active = i === index;
+      panel.toggleAttribute('data-active', active);
+      buttons[i].setAttribute('aria-pressed', String(active));
+      mobileButtons[i].setAttribute('aria-pressed', String(active));
+    });
     effects.dispatchEvent(new Event('selection'));
   }
 
+  function bindControls(controls) {
+    controls.forEach((button, index) => {
+      button.hidden = false;
+      button.addEventListener('click', () => choose(index), listen);
+      button.addEventListener('keydown', event => {
+        const directions = { ArrowLeft: -1, ArrowUp: -1, ArrowRight: 1, ArrowDown: 1 };
+        let next;
+        if (Object.hasOwn(directions, event.key)) next = (index + directions[event.key] + controls.length) % controls.length;
+        else if (event.key === 'Home') next = 0;
+        else if (event.key === 'End') next = controls.length - 1;
+        else return;
+        event.preventDefault();
+        choose(next);
+        controls[next].focus();
+      }, listen);
+    });
+  }
+
+  choose(0);
+  bindControls(buttons);
+  bindControls(mobileButtons);
+  section.setAttribute('data-tabs-ready', '');
   stage.dataset.enhanced = '';
-  buttons.forEach((button, index) => {
-    button.hidden = false;
-    button.addEventListener('click', () => choose(index), listen);
-    button.addEventListener('keydown', event => {
-      const directions = { ArrowLeft: -1, ArrowUp: -1, ArrowRight: 1, ArrowDown: 1 };
-      let next;
-      if (Object.hasOwn(directions, event.key)) next = (index + directions[event.key] + buttons.length) % buttons.length;
-      else if (event.key === 'Home') next = 0;
-      else if (event.key === 'End') next = buttons.length - 1;
-      else return;
-      event.preventDefault();
-      choose(next, true);
-    }, listen);
-  });
 
   const service = panels.find(panel => panel.dataset.panel === 'services');
   service.addEventListener('change', event => {
@@ -52,7 +66,7 @@ if (section) {
       const contact = panels.find(panel => panel.dataset.panel === 'contact');
       const contactLoop = contactScene(contact);
       const capability = capabilityMotion(service, motionListen);
-      const contextual = new Map(panels.filter(panel => panel !== contact && panel !== service).map(panel => [panel, contextualScene(panel)]));
+      const contextual = new Map(panels.filter(panel => panel !== contact && panel !== service).map(panel => [panel, contextualScene(panel, compact.matches)]));
       const activePanels = new Set();
       const introduced = new Set();
       const pending = new Set();
@@ -63,11 +77,13 @@ if (section) {
 
       function sync() {
         const canPlay = !paused && !document.hidden;
-        ambient.paused(!canPlay || !activePanels.size);
-        contactLoop.timeScale(selected === 'contact' ? 1 : .82).paused(!canPlay || !activePanels.has(contact));
-        capability.sync(canPlay && activePanels.has(service));
+        const canPlayPanel = panel => canPlay && activePanels.has(panel) && (!compact.matches || panel.dataset.panel === selected);
+        const onScreen = panels.some(canPlayPanel);
+        ambient.paused(!onScreen || compact.matches);
+        contactLoop.timeScale(selected === 'contact' ? 1 : .82).paused(!canPlayPanel(contact));
+        capability.sync(canPlayPanel(service));
         for (const [panel, { reveal, reflection }] of contextual) {
-          const visible = canPlay && activePanels.has(panel);
+          const visible = canPlayPanel(panel);
           reflection.paused(!visible);
           if (!visible) reveal.pause();
           else if (pending.delete(panel)) {
@@ -75,7 +91,7 @@ if (section) {
             reveal.restart();
           } else if (started.has(panel) && reveal.progress() < 1) reveal.resume();
         }
-        stage.toggleAttribute('data-playing', canPlay && activePanels.size > 0);
+        stage.toggleAttribute('data-playing', onScreen);
         stage.toggleAttribute('data-paused', paused);
       }
 
@@ -91,7 +107,8 @@ if (section) {
         }
         if (!revealed && activePanels.size && !paused) {
           revealed = true;
-          gsap.fromTo(panels.map(panel => panel.querySelector('.adv-scene')), { opacity: .78 }, { opacity: 1, duration: .62, stagger: .06 });
+          const entering = compact.matches ? [...activePanels] : panels;
+          gsap.fromTo(entering.map(panel => panel.querySelector('.adv-scene')), { opacity: .78 }, { opacity: 1, duration: .62, stagger: .06 });
         }
         sync();
       }, { threshold: [0, .25] });
@@ -149,6 +166,7 @@ if (section) {
         sync();
       }, motionListen);
       document.addEventListener('visibilitychange', sync, motionListen);
+      compact.addEventListener('change', sync, motionListen);
 
       return () => {
         observer.disconnect();
@@ -227,7 +245,7 @@ function capabilityMotion(panel, listen) {
   };
 }
 
-function contextualScene(panel) {
+function contextualScene(panel, compact) {
   const pick = gsap.utils.selector(panel);
   const reveal = gsap.timeline({ paused: true, defaults: { ease: 'power2.out', immediateRender: false } });
   const reflection = gsap.timeline({ paused: true, repeat: -1, yoyo: true, repeatDelay: 2.5 });
@@ -242,10 +260,11 @@ function contextualScene(panel) {
       .fromTo(pick('.adv-loading-note span'), { opacity: 0, y: 4 }, { opacity: 1, y: 0, duration: .33, stagger: .23 }, 'annotations+=.13')
       .to(pick('.adv-loading-light'), { xPercent: 14, opacity: 0, duration: .72, ease: 'power1.inOut' }, 1.58);
   } else {
+    const clipping = compact ? [{}, {}] : [{ clipPath: 'inset(0% 0% 94% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)' }];
     reveal.addLabel('briefing', .4).addLabel('details', .85).addLabel('quote', 1.64)
       .fromTo(pick('.adv-briefing-photo img'), { xPercent: -1.5, scale: 1.035 }, { xPercent: 0, scale: 1.035, duration: .85, ease: 'power1.out' }, 0)
       .set(pick('.adv-briefing, .adv-briefing dl div, .adv-briefing-action'), { opacity: 0 }, 0)
-      .fromTo(pick('.adv-briefing'), { opacity: 0, y: 7, clipPath: 'inset(0% 0% 94% 0%)' }, { opacity: 1, y: 0, clipPath: 'inset(0% 0% 0% 0%)', duration: .45 }, 'briefing')
+      .fromTo(pick('.adv-briefing'), { opacity: 0, y: 7, ...clipping[0] }, { opacity: 1, y: 0, duration: .45, ...clipping[1] }, 'briefing')
       .fromTo(pick('.adv-briefing dl div'), { y: 3, opacity: 0 }, { y: 0, opacity: 1, duration: .28, stagger: .14 }, 'details')
       .fromTo(pick('.adv-briefing-action'), { opacity: 0 }, { opacity: 1, duration: .35 }, 'quote')
       .fromTo(pick('.adv-briefing-highlight'), { xPercent: -68, opacity: .85 }, { xPercent: 60, opacity: 0, duration: .65 }, 'quote');

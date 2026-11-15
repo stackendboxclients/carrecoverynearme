@@ -75,11 +75,14 @@ export function recoveryKinetic(icon, services) {
       <h2 id="kinetic-heading">Why choose <em>Dubai Car Recovery?</em></h2>
       <p class="adv-lede">Eight ways to get help, with recovery arrangements shaped around your vehicle and where it’s stopped.</p>
     </div>
+    <div class="adv-mobile-tabs" role="group" aria-label="Recovery advantages">
+      ${panels.map(({ key, label }) => `<button class="adv-mobile-tab" type="button" aria-controls="adv-panel-${key}" aria-pressed="${key === 'contact'}">${label}</button>`).join('')}
+    </div>
     <div class="adv-stage" data-selected="contact" role="group" aria-label="Recovery advantages">
       ${panels.map(({ key, label, title, description, visual }, index) => {
         const tag = `<div class="adv-tag"><span>0${index + 1}</span>${key === 'services' ? ' /' : ''} ${label}</div>`;
         return `
-        <article class="adv-panel" data-panel="${key}">
+        <article class="adv-panel" id="adv-panel-${key}" data-panel="${key}">
           ${visual ? tag : ''}
           <div class="adv-scene"${key === 'contact' || key === 'handling' ? ' aria-hidden="true"' : ''}>${visual ?? capabilityDisplay(capabilities, tag)}</div>
           <div class="adv-copy">

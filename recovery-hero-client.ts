@@ -26,6 +26,7 @@ function startHeroMotion(hero: HTMLElement) {
   let phase = 0;
   let frame = 0;
   let previous = 0;
+  let roadElapsed = 0;
 
   function drawRoute(progress: number, showPulse: boolean) {
     if (!positions.length) {
@@ -61,7 +62,13 @@ function startHeroMotion(hero: HTMLElement) {
     if (now - previous >= step - 1) {
       const elapsed = Math.min(now - previous, 100);
       previous = now;
-      if (heroVisible) highway?.advance(elapsed);
+      if (heroVisible) {
+        roadElapsed += elapsed;
+        if (roadElapsed >= 64) {
+          highway?.advance(roadElapsed);
+          roadElapsed = 0;
+        }
+      }
       if (mapVisible) {
         phase = (phase + elapsed) % cycle;
         const progress = Math.min(phase / travel, 1);
@@ -72,8 +79,9 @@ function startHeroMotion(hero: HTMLElement) {
   }
 
   function sync() {
-    const playing = (heroVisible || mapVisible) && !document.hidden && !reduced.matches;
-    hero.dataset.playing = String(playing);
+    const motionAllowed = !document.hidden && !reduced.matches;
+    const playing = (heroVisible || mapVisible) && motionAllowed;
+    hero.dataset.playing = String(heroVisible && motionAllowed);
     if (playing && !frame) {
       previous = performance.now();
       frame = requestAnimationFrame(tick);

@@ -37,6 +37,7 @@
   background: var(--metal-foundation);
 }
 .highway-background canvas { display: block; width: 100%; height: 100%; opacity: .82; }
+.highway-motion { position: absolute; inset: 0; }
 .highway-background::after {
   content: "";
   position: absolute;
@@ -50,7 +51,7 @@
 @media (max-width: 850px) {
   .highway-background::after {
     background:
-      linear-gradient(180deg, #f9fcfff0 0%, #f2f7fcde 35%, #edf3f99c 56%, #f5f9fc26 80%),
+      linear-gradient(180deg, #f9fcfff0 0%, #f2f7fcc7 32%, #edf3f979 53%, #f5f9fc26 80%),
       linear-gradient(144deg, #aabdd088 1%, #fff9 23%, #dce6ef45 47%, #fff0 80%);
   }
 }
@@ -109,6 +110,7 @@
 .hero-description { margin: 0; color: #3e4b53; font-size: clamp(1rem, 1.45vw, 1.17rem); line-height: 1.58; max-width: 39ch; text-wrap: pretty; }
 .hero-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
 .hero-actions .contact-cta { min-height: 52px; }
+.hero-location-short { display: none; }
 .hero-trust { display: flex; flex-wrap: wrap; gap: 9px 16px; padding: 0; margin: 18px 0 0; list-style: none; color: #3e4b53; font-size: .88rem; }
 .hero-trust li,.scene-caption span:first-child { display: inline-flex; align-items: center; gap: 7px; }
 .hero-trust svg,.scene-caption svg { color: var(--orange-ink); }
@@ -162,22 +164,39 @@
   .hero-description { font-size: 1rem; }
   .hero-actions,.hero-trust { margin-top: 14px; }
 }
-@media (max-width: 460px) {
-  .hero-shell { width: calc(100% - 32px); padding-block: 22px 16px; gap: 16px; }
-  .hero-copy h1 { margin-block: 12px 10px; }
-  .hero-description { font-size: .95rem; line-height: 1.5; }
-  .hero-actions { margin-top: 14px; gap: 8px; }
-  .hero-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .hero-actions .contact-cta { min-height: 50px; }
-  .hero-actions .contact-cta--call { grid-column: 1 / -1; }
-  .hero-actions .contact-cta--location { padding-inline: 9px; }
-  .hero-trust { margin-top: 12px; gap: 5px 12px; font-size: .8rem; }
+@media (max-width: 600px), (max-width: 950px) and (max-height: 500px) and (pointer: coarse) {
+  .hero-shell { width: calc(100% - 32px); padding-block: 14px 16px; gap: 10px; }
+  .recovery-hero .hero-copy { display: contents; }
+  .recovery-hero .eyebrow { font-size: .69rem; }
+  .hero-copy h1 { margin: 0; font-size: clamp(1.94rem, 8.4vw, 2.9rem); }
+  .hero-description { max-width: 48ch; font-size: .91rem; line-height: 1.42; }
+  .hero-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 2px; gap: 6px; }
+  .hero-actions[data-contact-count="3"] { grid-template-columns: .86fr 1fr 1.14fr; }
+  .hero-actions .contact-cta { min-height: 44px; min-width: 0; gap: 4px; padding: 7px 5px; font-size: clamp(.7rem, 3vw, .87rem); line-height: 1.15; }
+  .hero-actions .contact-cta svg { width: 14px; height: 14px; flex: none; }
+  .hero-location-full { display: none; }
+  .hero-location-short { display: inline; }
+  .hero-trust { order: 1; margin-top: 0; gap: 5px 12px; font-size: .8rem; }
+  .route-scene { border-radius: 13px; }
   .hero-icon { width: 24px; height: 24px; flex-basis: 24px; }
-  .scene-caption,.scene-footer { min-height: 34px; padding: 5px 10px; }
-  .route-label-pickup { bottom: calc(34px + 5%); }
-  .route-label-drop { top: calc(34px + 6%); }
+  .scene-caption,.scene-footer { min-height: 30px; padding: 4px 10px; font-size: .72rem; }
+  .route-label-pickup { bottom: calc(30px + 5%); }
+  .route-label-drop { top: calc(30px + 6%); }
   .route-label { padding: 4px 6px; gap: 4px; }
   .route-label svg { width: 13px; height: 13px; }
+  .hero-copy :is(.hero-chrome, h1 strong) { animation-iteration-count: 1; }
+}
+@media (max-width: 350px) {
+  .hero-shell { padding-top: 10px; gap: 8px; }
+  .hero-description { font-size: .87rem; }
+}
+@media (min-width: 601px) and (max-width: 950px) and (max-height: 500px) and (pointer: coarse) {
+  .recovery-hero { min-height: 0; }
+  .hero-shell { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 16px; }
+  .recovery-hero .hero-copy { display: block; }
+  .hero-copy h1 { margin-block: 8px; font-size: clamp(1.9rem, 4vw, 2.3rem); }
+  .hero-actions, .hero-trust { margin-top: 8px; }
+  .recovery-hero .route-scene { max-width: none; }
 }
 @media (prefers-reduced-motion: reduce) {
   .service-tape-track { animation: none; }

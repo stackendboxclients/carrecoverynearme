@@ -73,7 +73,7 @@ if (deferredSections.size) {
           // Static sections and native controls remain available.
         });
       }
-    }, { rootMargin: compactLayout.matches ? '0px' : '480px 0px' });
+    }, { rootMargin: compactLayout.matches ? '240px 0px' : '480px 0px' });
     for (const section of targets.keys()) observer.observe(section);
   }
 }

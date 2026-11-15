@@ -661,7 +661,7 @@ a.pickup-channel:hover { border-color: var(--orange-ink); background: var(--warm
 
 /* Shared finish for the visible action surfaces. */
 :is(.contact-cta, .button, .pickup-channel, #pickup-map, .adv-cta,
-    button:not(.adv-select), .mobile-menu summary, .pickup-extra summary) {
+    button:not(.adv-select, .adv-mobile-tab), .mobile-menu summary, .pickup-extra summary) {
   background:
     linear-gradient(117deg, transparent 30%, #ffffff26 48%, #ffffff08 58%, transparent 74%),
     linear-gradient(180deg, #ffffff1c 0%, transparent 46%, #24000e28 48%, transparent 65%),
@@ -690,11 +690,11 @@ a:is(.contact-cta, .button, .pickup-channel)[href^="https://wa.me/"],
   --gloss-base: #361322;
 }
 :is(.contact-cta, .button, .pickup-channel, #pickup-map, .adv-cta,
-    button:not(.adv-select), .mobile-menu summary, .pickup-extra summary):hover:not(:disabled) {
+    button:not(.adv-select, .adv-mobile-tab), .mobile-menu summary, .pickup-extra summary):hover:not(:disabled) {
   filter: brightness(1.12);
 }
 :is(.contact-cta, .button, .pickup-channel, #pickup-map, .adv-cta,
-    button:not(.adv-select), .mobile-menu summary, .pickup-extra summary):active:not(:disabled) {
+    button:not(.adv-select, .adv-mobile-tab), .mobile-menu summary, .pickup-extra summary):active:not(:disabled) {
   filter: brightness(.94);
   box-shadow: inset 0 2px 4px #23000c66;
 }
@@ -715,10 +715,13 @@ a:is(.contact-cta, .button, .pickup-channel)[href^="https://wa.me/"],
 @media (max-width: 850px) {
   html { scroll-behavior: auto; }
   .recovery-showcase { content-visibility: auto; contain-intrinsic-block-size: auto 1050px; }
-  .recovery-kinetic { content-visibility: auto; contain-intrinsic-block-size: auto 1220px; }
+  .recovery-kinetic { content-visibility: auto; contain-intrinsic-block-size: auto 745px; }
   .recovery-feedback { content-visibility: auto; contain-intrinsic-block-size: auto 680px; }
   .recovery-faq { content-visibility: auto; contain-intrinsic-block-size: auto 650px; }
   .recovery-showcase::before,.recovery-showcase::after { background-image: none; }
   .showcase-frame .showcase-frame-glow { animation: none; }
   .showcase-photo,.showcase-frame rect { filter: none; }
+}
+@media (max-width: 600px) {
+  .recovery-kinetic { contain-intrinsic-block-size: auto 485px; }
 }
