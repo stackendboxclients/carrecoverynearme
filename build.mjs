@@ -29,10 +29,13 @@ const callHref = business.phone ? `tel:${business.phone}` : '';
 const whatsappHref = business.whatsapp ? `https://wa.me/${business.whatsapp}` : '';
 const phone = callHref ? `<a class="button outline" href="${callHref}">Call now</a>` : '';
 const whatsapp = business.whatsapp ? `<a class="button outline" href="https://wa.me/${business.whatsapp}">WhatsApp</a>` : '';
+const brandWidths = [240, 384, 480, 640, 960];
+const brandSource = width => `/assets/dcr-brand-${width}.webp`;
+const brandSources = brandWidths.map(width => `${brandSource(width)} ${width}w`).join(', ');
 const brand = (placement) => {
   const inHeader = placement === 'header';
   const sizes = inHeader ? '(max-width: 590px) 178px, (max-width: 1067px) 192px, (max-width: 1289px) 18vw, 232px' : '(max-width: 1055px) 232px, (max-width: 1200px) 22vw, 264px';
-  return `<a class="brand brand--${placement}" href="/" aria-label="Dubai Car Recovery Near Me home"><img src="/assets/dcr-brand-480.webp" srcset="/assets/dcr-brand-240.webp 240w, /assets/dcr-brand-480.webp 480w, /assets/dcr-brand-960.webp 960w" sizes="${sizes}" width="960" height="315" alt="" decoding="async"${inHeader ? '' : ' loading="lazy"'}></a>`;
+  return `<a class="brand brand--${placement}" href="/" aria-label="Dubai Car Recovery Near Me home"><img src="${brandSource(480)}" srcset="${brandSources}" sizes="${sizes}" width="960" height="315" alt="" decoding="async"${inHeader ? '' : ' loading="lazy" fetchpriority="low"'}></a>`;
 };
 const serviceIcons = [
   '<path d="M2 6h13v11H2zM15 10h4l3 4v3h-7"/><circle cx="6" cy="18" r="2"/><circle cx="18" cy="18" r="2"/>',
@@ -258,7 +261,7 @@ const pages = [
 await rm('dist', { recursive: true, force: true });
 await mkdir('dist', { recursive: true });
 await mkdir('dist/assets');
-for (const file of ['dcr-brand-240.webp', 'dcr-brand-480.webp', 'dcr-brand-960.webp', 'dcr-master.svg', 'dcr-lockup-on-dark.svg', 'dcr-lockup-on-light.svg', 'dcr-lockup-monochrome.svg', 'dcr-symbol.svg', 'dcr-icon.svg']) {
+for (const file of [...brandWidths.map(width => `dcr-brand-${width}.webp`), 'dcr-master.svg', 'dcr-lockup-on-dark.svg', 'dcr-lockup-on-light.svg', 'dcr-lockup-monochrome.svg', 'dcr-symbol.svg', 'dcr-icon.svg']) {
   await cp(file, `dist/assets/${file}`);
 }
 const { markup: recoveryHero, motionSrc: heroMotionSrc } = await buildRecoveryHero({ callHref, whatsappHref });
@@ -290,6 +293,9 @@ for (const [name, extension] of [['design', 'css'], ['recovery-hero', 'css'], ['
     contents = result.code;
     homepageStyles.push(contents);
     if (name !== 'design') continue;
+  } else if (name === 'site') {
+    const result = await transform(contents.toString(), { loader: 'js', minify: true });
+    contents = result.code;
   }
   const version = createHash('sha256').update(contents).digest('hex').slice(0, 12);
   const url = `/assets/${name}.${version}.${extension}`;
@@ -297,16 +303,15 @@ for (const [name, extension] of [['design', 'css'], ['recovery-hero', 'css'], ['
   assetUrls[`${name}.${extension}`] = url;
 }
 const homeCSS = homepageStyles.join('\n');
-const homeVersion = createHash('sha256').update(homeCSS).digest('hex').slice(0, 12);
-const homeStylesHref = `/assets/home.${homeVersion}.css`;
-await writeFile('dist' + homeStylesHref, homeCSS);
-const homepageAssets = `<link rel="preload" href="/assets/hero-space-grotesk.woff2" as="font" type="font/woff2" crossorigin><meta name="hero-motion" content="${heroMotionSrc}"><meta name="kinetic-motion" content="${assetUrls['recovery-kinetic.js']}"><meta name="feedback-motion" content="${assetUrls['recovery-feedback.js']}">`;
+const homepageAssets = `<link rel="preload" href="/assets/hero-space-grotesk.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/hero-instrument-sans.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="modulepreload" href="${heroMotionSrc}" fetchpriority="low">
+<meta name="hero-motion" content="${heroMotionSrc}"><meta name="kinetic-motion" content="${assetUrls['recovery-kinetic.js']}"><meta name="feedback-motion" content="${assetUrls['recovery-feedback.js']}"><style>${homeCSS}</style>`;
 for (const [path, title, description, content] of pages) {
   const directory = `dist${path}`;
   await mkdir(directory, { recursive: true });
   const canonical = business.domain + path;
-  const stylesheet = path === '/' ? homeStylesHref : assetUrls['design.css'];
-  await writeFile(directory + 'index.html', `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${path === '/' ? title : title + ' | ' + name}</title><meta name="description" content="${description}"><meta name="robots" content="${indexable ? 'index,follow' : 'noindex,nofollow'}"><link rel="canonical" href="${canonical}"><link rel="icon" href="/assets/dcr-icon.svg" type="image/svg+xml" sizes="any"><link rel="stylesheet" href="${stylesheet}"><script src="${assetUrls['site.js']}" defer></script>${path === '/' ? homepageAssets : ''}</head><body><a class="skip" href="#main">Skip to content</a><header><div class="wrap header-inner">${brand('header')}<nav class="desktop-nav" aria-label="Main">${mainNav}</nav><details class="mobile-menu"><summary>${enquiryIcon('menu')}<span>Menu</span></summary><nav aria-label="Main">${mainNav}</nav></details><div class="header-contact">${directContact || '<a class="button" href="/book/">Plan a pickup ↗</a>'}</div></div></header><main id="main">${path === '/' ? content.replace('<!-- recovery-hero -->', serviceTape + recoveryHero) : content}</main><footer class="wrap">${brand('footer')}<div><a href="/services/">Services</a><a href="/contact/">Contact</a><a href="/blogs/">Guides</a><a href="/privacy/">Privacy</a></div><small>Developed by <a href="https://www.stackendbox.com/">StackEndBox</a></small></footer><aside class="mobile-actions" aria-label="Recovery actions"${path === '/' ? ' hidden' : ''}>${directContact}<a class="contact-cta contact-cta--book" href="${path === '/' ? '#request-recovery' : '/book/'}">Book</a></aside></body></html>`);
+  await writeFile(directory + 'index.html', `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${path === '/' ? title : title + ' | ' + name}</title><meta name="description" content="${description}"><meta name="robots" content="${indexable ? 'index,follow' : 'noindex,nofollow'}"><link rel="canonical" href="${canonical}"><link rel="icon" href="/assets/dcr-icon.svg" type="image/svg+xml" sizes="any"><script src="${assetUrls['site.js']}" defer></script>${path === '/' ? homepageAssets : `<link rel="stylesheet" href="${assetUrls['design.css']}">`}</head><body><a class="skip" href="#main">Skip to content</a><header><div class="wrap header-inner">${brand('header')}<nav class="desktop-nav" aria-label="Main">${mainNav}</nav><details class="mobile-menu"><summary>${enquiryIcon('menu')}<span>Menu</span></summary><nav aria-label="Main">${mainNav}</nav></details><div class="header-contact">${directContact || '<a class="button" href="/book/">Plan a pickup ↗</a>'}</div></div></header><main id="main">${path === '/' ? content.replace('<!-- recovery-hero -->', serviceTape + recoveryHero) : content}</main><footer class="wrap">${brand('footer')}<div><a href="/services/">Services</a><a href="/contact/">Contact</a><a href="/blogs/">Guides</a><a href="/privacy/">Privacy</a></div><small>Developed by <a href="https://www.stackendbox.com/">StackEndBox</a></small></footer><aside class="mobile-actions" aria-label="Recovery actions"${path === '/' ? ' hidden' : ''}>${directContact}<a class="contact-cta contact-cta--book" href="${path === '/' ? '#request-recovery' : '/book/'}">Book</a></aside></body></html>`);
 }
 await writeFile('dist/robots.txt', indexable ? `User-agent: *\nAllow: /\nSitemap: ${business.domain}/sitemap.xml\n` : 'User-agent: *\nAllow: /\n');
 await writeFile('dist/sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${pages.map(([path]) => `<url><loc>${business.domain}${path}</loc></url>`).join('')}</urlset>`);

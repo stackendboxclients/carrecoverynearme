@@ -4,9 +4,10 @@ const section = document.querySelector('.recovery-kinetic');
 
 if (section) {
   const stage = section.querySelector('.adv-stage');
+  const mobileTabs = section.querySelector('.adv-mobile-tabs');
   const panels = [...stage.querySelectorAll('.adv-panel')];
   const buttons = panels.map(panel => panel.querySelector('.adv-select'));
-  const mobileButtons = [...section.querySelectorAll('.adv-mobile-tab')];
+  const mobileButtons = [...mobileTabs.querySelectorAll('.adv-mobile-tab')];
   const compact = matchMedia('(max-width: 600px)');
   const pause = section.querySelector('.adv-pause');
   const effects = new EventTarget();
@@ -25,9 +26,20 @@ if (section) {
   }
 
   function bindControls(controls) {
+    const mobile = controls === mobileButtons;
+    const select = index => {
+      choose(index);
+      if (!mobile) return;
+      const panel = panels[index].getBoundingClientRect();
+      const viewport = window.visualViewport?.height ?? window.innerHeight;
+      const required = Math.min(panel.height / 2, viewport / 3);
+      if (panel.top + required > viewport) {
+        mobileTabs.scrollIntoView({ block: 'start' });
+      }
+    };
     controls.forEach((button, index) => {
       button.hidden = false;
-      button.addEventListener('click', () => choose(index), listen);
+      button.addEventListener('click', () => select(index), listen);
       button.addEventListener('keydown', event => {
         const directions = { ArrowLeft: -1, ArrowUp: -1, ArrowRight: 1, ArrowDown: 1 };
         let next;
@@ -36,8 +48,8 @@ if (section) {
         else if (event.key === 'End') next = controls.length - 1;
         else return;
         event.preventDefault();
-        choose(next);
-        controls[next].focus();
+        select(next);
+        controls[next].focus({ preventScroll: mobile });
       }, listen);
     });
   }
@@ -66,7 +78,7 @@ if (section) {
       const contact = panels.find(panel => panel.dataset.panel === 'contact');
       const contactLoop = contactScene(contact);
       const capability = capabilityMotion(service, motionListen);
-      const contextual = new Map(panels.filter(panel => panel !== contact && panel !== service).map(panel => [panel, contextualScene(panel, compact.matches)]));
+      const contextual = new Map(panels.filter(panel => panel !== contact && panel !== service).map(panel => [panel, contextualScene(panel)]));
       const activePanels = new Set();
       const introduced = new Set();
       const pending = new Set();
@@ -83,7 +95,7 @@ if (section) {
         contactLoop.timeScale(selected === 'contact' ? 1 : .82).paused(!canPlayPanel(contact));
         capability.sync(canPlayPanel(service));
         for (const [panel, { reveal, reflection }] of contextual) {
-          const visible = canPlayPanel(panel);
+          const visible = !compact.matches && canPlayPanel(panel);
           reflection.paused(!visible);
           if (!visible) reveal.pause();
           else if (pending.delete(panel)) {
@@ -245,7 +257,7 @@ function capabilityMotion(panel, listen) {
   };
 }
 
-function contextualScene(panel, compact) {
+function contextualScene(panel) {
   const pick = gsap.utils.selector(panel);
   const reveal = gsap.timeline({ paused: true, defaults: { ease: 'power2.out', immediateRender: false } });
   const reflection = gsap.timeline({ paused: true, repeat: -1, yoyo: true, repeatDelay: 2.5 });
@@ -260,11 +272,10 @@ function contextualScene(panel, compact) {
       .fromTo(pick('.adv-loading-note span'), { opacity: 0, y: 4 }, { opacity: 1, y: 0, duration: .33, stagger: .23 }, 'annotations+=.13')
       .to(pick('.adv-loading-light'), { xPercent: 14, opacity: 0, duration: .72, ease: 'power1.inOut' }, 1.58);
   } else {
-    const clipping = compact ? [{}, {}] : [{ clipPath: 'inset(0% 0% 94% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)' }];
     reveal.addLabel('briefing', .4).addLabel('details', .85).addLabel('quote', 1.64)
       .fromTo(pick('.adv-briefing-photo img'), { xPercent: -1.5, scale: 1.035 }, { xPercent: 0, scale: 1.035, duration: .85, ease: 'power1.out' }, 0)
       .set(pick('.adv-briefing, .adv-briefing dl div, .adv-briefing-action'), { opacity: 0 }, 0)
-      .fromTo(pick('.adv-briefing'), { opacity: 0, y: 7, ...clipping[0] }, { opacity: 1, y: 0, duration: .45, ...clipping[1] }, 'briefing')
+      .fromTo(pick('.adv-briefing'), { opacity: 0, y: 7, clipPath: 'inset(0% 0% 94% 0%)' }, { opacity: 1, y: 0, duration: .45, clipPath: 'inset(0% 0% 0% 0%)' }, 'briefing')
       .fromTo(pick('.adv-briefing dl div'), { y: 3, opacity: 0 }, { y: 0, opacity: 1, duration: .28, stagger: .14 }, 'details')
       .fromTo(pick('.adv-briefing-action'), { opacity: 0 }, { opacity: 1, duration: .35 }, 'quote')
       .fromTo(pick('.adv-briefing-highlight'), { xPercent: -68, opacity: .85 }, { xPercent: 60, opacity: 0, duration: .65 }, 'quote');

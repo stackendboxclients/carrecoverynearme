@@ -69,9 +69,13 @@ if (deferredSections.size) {
       for (const entry of entries) {
         if (!entry.isIntersecting) continue;
         observer.unobserve(entry.target);
-        import(targets.get(entry.target)).catch(() => {
+        const load = () => import(targets.get(entry.target)).catch(() => {
           // Static sections and native controls remain available.
         });
+        if (entry.target.matches('.recovery-hero')) {
+          // Let the static hero paint before building the canvas and SVG motion.
+          requestAnimationFrame(() => requestAnimationFrame(load));
+        } else load();
       }
     }, { rootMargin: compactLayout.matches ? '240px 0px' : '480px 0px' });
     for (const section of targets.keys()) observer.observe(section);

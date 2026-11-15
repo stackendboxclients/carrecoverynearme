@@ -1,5 +1,6 @@
 import { createHighway } from "./recovery-highway-background";
 
+const routeSamples = 48;
 const hero = document.querySelector<HTMLElement>(".recovery-hero");
 if (hero) startHeroMotion(hero);
 
@@ -32,7 +33,7 @@ function startHeroMotion(hero: HTMLElement) {
     if (!positions.length) {
       // Sample the fixed SVG path once, then interpolate between samples.
       const length = route!.getTotalLength();
-      positions = Array.from({ length: 97 }, (_, index) => route!.getPointAtLength(length * index / 96));
+      positions = Array.from({ length: routeSamples + 1 }, (_, index) => route!.getPointAtLength(length * index / routeSamples));
     }
     const index = progress * (positions.length - 1);
     const whole = Math.floor(index);

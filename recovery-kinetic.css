@@ -382,6 +382,7 @@
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 4px;
     margin-bottom: 9px;
+    scroll-margin-top: 12px;
   }
   .adv-mobile-tab {
     appearance: none;
@@ -415,6 +416,52 @@
 }
 @media (max-width: 350px) {
   .recovery-kinetic[data-tabs-ready] .adv-mobile-tabs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 600px) and (prefers-reduced-motion: no-preference) {
+  .adv-stage[data-enhanced] [data-active] .adv-scene-veil {
+    animation: adv-phone-veil .46s ease-out both var(--adv-play-state, paused);
+  }
+  .adv-stage[data-enhanced] [data-active] .adv-loading-light {
+    animation: adv-phone-loading-light 1.4s .4s ease-in-out both var(--adv-play-state, paused);
+  }
+  .adv-stage[data-enhanced] [data-active] .adv-loading-note {
+    animation: adv-phone-detail .34s .85s ease-out both var(--adv-play-state, paused);
+  }
+  .adv-stage[data-enhanced] [data-active] .adv-loading-access { animation-delay: 1.1s; }
+  .adv-stage[data-enhanced] [data-active] .adv-briefing {
+    animation: adv-phone-detail .45s .35s ease-out both var(--adv-play-state, paused);
+  }
+  .adv-stage[data-enhanced] [data-active] :is(.adv-briefing dl div, .adv-briefing-action) {
+    animation: adv-phone-detail .33s var(--adv-detail-delay, .75s) ease-out both var(--adv-play-state, paused);
+  }
+  .adv-stage[data-enhanced] [data-active] .adv-briefing dl div:nth-child(2) { --adv-detail-delay: .88s; }
+  .adv-stage[data-enhanced] [data-active] .adv-briefing dl div:nth-child(3) { --adv-detail-delay: 1.01s; }
+  .adv-stage[data-enhanced] [data-active] .adv-briefing dl div:nth-child(4) { --adv-detail-delay: 1.14s; }
+  .adv-stage[data-enhanced] [data-active] .adv-briefing-action { --adv-detail-delay: 1.4s; }
+  .adv-stage[data-enhanced] [data-active] .adv-briefing-highlight {
+    animation: adv-phone-veil .65s 1.45s ease-out both var(--adv-play-state, paused);
+  }
+  .adv-stage[data-enhanced] [data-active] .adv-scene-reflection {
+    animation: adv-phone-reflection 4s ease-in-out infinite alternate var(--adv-play-state, paused);
+  }
+  .adv-stage[data-playing] { --adv-play-state: running; }
+}
+@keyframes adv-phone-veil {
+  from { opacity: .76; transform: translateX(-12%); }
+  to { opacity: 0; transform: translateX(18%); }
+}
+@keyframes adv-phone-loading-light {
+  0% { opacity: 0; transform: translateX(-21%); }
+  35% { opacity: .9; }
+  100% { opacity: 0; transform: translateX(14%); }
+}
+@keyframes adv-phone-detail {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes adv-phone-reflection {
+  from { opacity: .12; }
+  to { opacity: .27; }
 }
 @media (prefers-reduced-motion: reduce) {
   .adv-stage[data-enhanced], .adv-panel::after, .adv-scene::before { transition: none; }

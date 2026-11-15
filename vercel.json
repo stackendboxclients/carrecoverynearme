@@ -2,6 +2,20 @@
   "buildCommand": "node build.mjs",
   "outputDirectory": "dist",
   "framework": null,
+  "headers": [
+    {
+      "source": "/assets/:name.:version([0-9a-f]{12}).:extension(css|js)",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+    },
+    {
+      "source": "/assets/:name.:extension(woff2|webp|svg)",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=3600" }]
+    },
+    {
+      "source": "/flatbed.webp",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=3600" }]
+    }
+  ],
   "redirects": [
     { "source": "/services/breakdown-recovery", "destination": "/services/emergency-recovery/", "permanent": true }
   ]
