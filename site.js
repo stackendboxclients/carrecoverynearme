@@ -40,11 +40,13 @@ if (hero && !reducedMotion.matches) {
 const compactLayout = matchMedia('(max-width: 850px)');
 const showcase = document.querySelector('.recovery-showcase');
 const tape = document.querySelector('.service-tape');
-if (!compactLayout.matches && 'IntersectionObserver' in window) {
+const recoveryContact = document.querySelector('.recovery-contact');
+if ('IntersectionObserver' in window) {
   const observer = new IntersectionObserver(entries => {
     for (const entry of entries) entry.target.dataset.inView = String(entry.isIntersecting);
   });
   if (tape) observer.observe(tape);
+  if (recoveryContact) observer.observe(recoveryContact);
   if (showcase) {
     observer.observe(showcase);
     showcase.querySelectorAll('.showcase-card').forEach(card => observer.observe(card));
@@ -52,6 +54,7 @@ if (!compactLayout.matches && 'IntersectionObserver' in window) {
 }
 
 const deferredSections = new Map([
+  ['.recovery-hero', document.querySelector('meta[name="hero-motion"]')?.content],
   ['.recovery-kinetic', document.querySelector('meta[name="kinetic-motion"]')?.content],
   ['.feedback-deck', document.querySelector('meta[name="feedback-motion"]')?.content],
 ].filter(([, source]) => source));
@@ -76,13 +79,6 @@ if (deferredSections.size) {
 }
 const form = document.querySelector('#booking');
 if (form) {
-  const section = form.closest('.recovery-contact');
-  if (section && !compactLayout.matches && 'IntersectionObserver' in window) {
-    const observer = new IntersectionObserver(([entry]) => {
-      section.dataset.inView = String(entry.isIntersecting);
-    });
-    observer.observe(section);
-  }
   const service = new URLSearchParams(location.search).get('service');
   const serviceField = form.elements.namedItem('service');
   const timing = form.elements.namedItem('timing');
@@ -181,18 +177,4 @@ if (form) {
   });
   locationButton.disabled = false;
   form.querySelector('.pickup-submit').disabled = false;
-}
-
-const heroMotion = document.querySelector('meta[name="hero-motion"]')?.content;
-const desktopMotion = matchMedia('(min-width: 851px) and (pointer: fine) and (prefers-reduced-motion: no-preference)');
-if (heroMotion && desktopMotion.matches && 'IntersectionObserver' in window) {
-  const loadHeroMotion = () => {
-    const startMotion = () => {
-      if (desktopMotion.matches && !document.hidden) import(heroMotion).catch(() => {});
-    };
-    if (window.requestIdleCallback) window.requestIdleCallback(startMotion);
-    else window.setTimeout(startMotion, 0);
-  };
-  if (document.readyState === 'complete') loadHeroMotion();
-  else window.addEventListener('load', loadHeroMotion, { once: true });
 }

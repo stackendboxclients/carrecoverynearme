@@ -1,6 +1,7 @@
 const deck = document.querySelector('.feedback-deck');
 const track = deck?.querySelector('.feedback-track');
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+const fineHover = matchMedia('(hover: hover) and (pointer: fine)');
 
 if (track) {
   const advanceDelay = 4500;
@@ -23,7 +24,9 @@ if (track) {
 
   function schedule() {
     clearTimeout(timer);
-    if (!visible || pointerActive || reducedMotion.matches || document.hidden || deck.matches(':hover, :focus-within') || track.scrollWidth <= track.clientWidth) return;
+    if (!visible || pointerActive || reducedMotion.matches || document.hidden) return;
+    if ((fineHover.matches && deck.matches(':hover')) || deck.querySelector(':focus-visible')) return;
+    if (track.scrollWidth <= track.clientWidth) return;
     timer = setTimeout(() => {
       if (!shift(direction)) {
         direction *= -1;

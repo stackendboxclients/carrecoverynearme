@@ -5,7 +5,7 @@ const route = "M126 346 H204 Q241 346 241 309 V274 Q241 237 278 237 H361 Q400 23
 const start = { x: 126, y: 346 };
 const finish = { x: 553, y: 98 };
 
-function RouteScene({ playing }: { playing: boolean }) {
+function RouteScene() {
   const prefix = useId();
   return (
     <figure className="route-scene">
@@ -76,7 +76,7 @@ function Wheel({ x, y, radius }: { x: number; y: number; radius: number }) {
 export function RecoveryHero({ bookingHref, callHref, whatsappHref }: { bookingHref: string; callHref: string; whatsappHref: string }) {
   return (
     <section className="recovery-hero" data-playing="false" aria-labelledby="recovery-title">
-      <div className="highway-background" aria-hidden="true" />
+      <div className="highway-background" aria-hidden="true"><canvas width="1" height="1" /></div>
       <div className="hero-shell">
         <div className="hero-copy">
           <p className="eyebrow"><span className="hero-icon"><MapPin size={15} /></span> Dubai, United Arab Emirates</p>

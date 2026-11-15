@@ -1,5 +1,6 @@
+import { createHash } from 'node:crypto';
 import { createRequire } from 'node:module';
-import { cp, unlink } from 'node:fs/promises';
+import { cp, unlink, writeFile } from 'node:fs/promises';
 import { build } from 'esbuild';
 
 export async function buildRecoveryHero({ callHref, whatsappHref }) {
@@ -11,8 +12,8 @@ export async function buildRecoveryHero({ callHref, whatsappHref }) {
     define: { 'process.env.NODE_ENV': '"production"' },
   };
 
-  await Promise.all([
-    build({ ...settings, entryPoints: ['recovery-hero-client.ts'], outfile: 'dist/assets/recovery-hero.js', format: 'esm' }),
+  const [client] = await Promise.all([
+    build({ ...settings, entryPoints: ['recovery-hero-client.ts'], write: false, format: 'esm' }),
     build({
       ...settings,
       stdin: {
@@ -25,6 +26,10 @@ export async function buildRecoveryHero({ callHref, whatsappHref }) {
     }),
     cp('recovery-hero-flatbed.webp', 'dist/flatbed.webp'),
   ]);
+  const motion = client.outputFiles[0].contents;
+  const version = createHash('sha256').update(motion).digest('hex').slice(0, 12);
+  const motionSrc = `/assets/recovery-hero.${version}.js`;
+  await writeFile('dist' + motionSrc, motion);
 
   const require = createRequire(import.meta.url);
   const { createElement } = require('react');
@@ -43,5 +48,5 @@ export async function buildRecoveryHero({ callHref, whatsappHref }) {
       'dist/assets/hero-' + font + '.woff2',
     );
   }
-  return '<div id="recovery-hero-root">' + markup + '</div>';
+  return { markup: '<div id="recovery-hero-root">' + markup + '</div>', motionSrc };
 }

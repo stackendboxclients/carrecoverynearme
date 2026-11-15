@@ -261,7 +261,7 @@ await mkdir('dist/assets');
 for (const file of ['dcr-brand-240.webp', 'dcr-brand-480.webp', 'dcr-brand-960.webp', 'dcr-master.svg', 'dcr-lockup-on-dark.svg', 'dcr-lockup-on-light.svg', 'dcr-lockup-monochrome.svg', 'dcr-symbol.svg', 'dcr-icon.svg']) {
   await cp(file, `dist/assets/${file}`);
 }
-const recoveryHero = await buildRecoveryHero({ callHref, whatsappHref });
+const { markup: recoveryHero, motionSrc: heroMotionSrc } = await buildRecoveryHero({ callHref, whatsappHref });
 const serviceTapeItems = services.map(([, title]) => `<li>${title}</li>`).join('');
 const serviceTape = `<div class="service-tape">
   <div class="service-tape-window"><div class="service-tape-track">
@@ -279,6 +279,7 @@ for (const file of ['advantage-loading-540.webp', 'advantage-loading-960.webp', 
   await cp('section3-' + file, 'dist/assets/standard-art/' + file);
 }
 const assetUrls = {};
+const homepageStyles = [];
 const kineticScript = await build({ entryPoints: ['recovery-kinetic.js'], bundle: true, minify: true, write: false, legalComments: 'inline' });
 for (const [name, extension] of [['design', 'css'], ['recovery-hero', 'css'], ['site', 'js'], ['recovery-kinetic', 'css'], ['recovery-kinetic', 'js'], ['recovery-feedback', 'css'], ['recovery-feedback', 'js']]) {
   let contents = name === 'recovery-kinetic' && extension === 'js'
@@ -287,18 +288,25 @@ for (const [name, extension] of [['design', 'css'], ['recovery-hero', 'css'], ['
   if (extension === 'css') {
     const result = await transform(contents.toString(), { loader: 'css', minify: true });
     contents = result.code;
+    homepageStyles.push(contents);
+    if (name !== 'design') continue;
   }
   const version = createHash('sha256').update(contents).digest('hex').slice(0, 12);
   const url = `/assets/${name}.${version}.${extension}`;
   await writeFile('dist' + url, contents);
   assetUrls[`${name}.${extension}`] = url;
 }
-const homepageAssets = `<link rel="preload" href="/assets/hero-space-grotesk.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="${assetUrls['recovery-hero.css']}"><meta name="hero-motion" content="/assets/recovery-hero.js"><meta name="kinetic-motion" content="${assetUrls['recovery-kinetic.js']}"><meta name="feedback-motion" content="${assetUrls['recovery-feedback.js']}"><link rel="stylesheet" href="${assetUrls['recovery-kinetic.css']}"><link rel="stylesheet" href="${assetUrls['recovery-feedback.css']}">`;
+const homeCSS = homepageStyles.join('\n');
+const homeVersion = createHash('sha256').update(homeCSS).digest('hex').slice(0, 12);
+const homeStylesHref = `/assets/home.${homeVersion}.css`;
+await writeFile('dist' + homeStylesHref, homeCSS);
+const homepageAssets = `<link rel="preload" href="/assets/hero-space-grotesk.woff2" as="font" type="font/woff2" crossorigin><meta name="hero-motion" content="${heroMotionSrc}"><meta name="kinetic-motion" content="${assetUrls['recovery-kinetic.js']}"><meta name="feedback-motion" content="${assetUrls['recovery-feedback.js']}">`;
 for (const [path, title, description, content] of pages) {
   const directory = `dist${path}`;
   await mkdir(directory, { recursive: true });
   const canonical = business.domain + path;
-  await writeFile(directory + 'index.html', `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${path === '/' ? title : title + ' | ' + name}</title><meta name="description" content="${description}"><meta name="robots" content="${indexable ? 'index,follow' : 'noindex,nofollow'}"><link rel="canonical" href="${canonical}"><link rel="icon" href="/assets/dcr-icon.svg" type="image/svg+xml" sizes="any"><link rel="stylesheet" href="${assetUrls['design.css']}"><script src="${assetUrls['site.js']}" defer></script>${path === '/' ? homepageAssets : ''}</head><body><a class="skip" href="#main">Skip to content</a><header><div class="wrap header-inner">${brand('header')}<nav class="desktop-nav" aria-label="Main">${mainNav}</nav><details class="mobile-menu"><summary>${enquiryIcon('menu')}<span>Menu</span></summary><nav aria-label="Main">${mainNav}</nav></details><div class="header-contact">${directContact || '<a class="button" href="/book/">Plan a pickup ↗</a>'}</div></div></header><main id="main">${path === '/' ? content.replace('<!-- recovery-hero -->', serviceTape + recoveryHero) : content}</main><footer class="wrap">${brand('footer')}<div><a href="/services/">Services</a><a href="/contact/">Contact</a><a href="/blogs/">Guides</a><a href="/privacy/">Privacy</a></div><small>Developed by <a href="https://www.stackendbox.com/">StackEndBox</a></small></footer><aside class="mobile-actions" aria-label="Recovery actions"${path === '/' ? ' hidden' : ''}>${directContact}<a class="contact-cta contact-cta--book" href="${path === '/' ? '#request-recovery' : '/book/'}">Book</a></aside></body></html>`);
+  const stylesheet = path === '/' ? homeStylesHref : assetUrls['design.css'];
+  await writeFile(directory + 'index.html', `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${path === '/' ? title : title + ' | ' + name}</title><meta name="description" content="${description}"><meta name="robots" content="${indexable ? 'index,follow' : 'noindex,nofollow'}"><link rel="canonical" href="${canonical}"><link rel="icon" href="/assets/dcr-icon.svg" type="image/svg+xml" sizes="any"><link rel="stylesheet" href="${stylesheet}"><script src="${assetUrls['site.js']}" defer></script>${path === '/' ? homepageAssets : ''}</head><body><a class="skip" href="#main">Skip to content</a><header><div class="wrap header-inner">${brand('header')}<nav class="desktop-nav" aria-label="Main">${mainNav}</nav><details class="mobile-menu"><summary>${enquiryIcon('menu')}<span>Menu</span></summary><nav aria-label="Main">${mainNav}</nav></details><div class="header-contact">${directContact || '<a class="button" href="/book/">Plan a pickup ↗</a>'}</div></div></header><main id="main">${path === '/' ? content.replace('<!-- recovery-hero -->', serviceTape + recoveryHero) : content}</main><footer class="wrap">${brand('footer')}<div><a href="/services/">Services</a><a href="/contact/">Contact</a><a href="/blogs/">Guides</a><a href="/privacy/">Privacy</a></div><small>Developed by <a href="https://www.stackendbox.com/">StackEndBox</a></small></footer><aside class="mobile-actions" aria-label="Recovery actions"${path === '/' ? ' hidden' : ''}>${directContact}<a class="contact-cta contact-cta--book" href="${path === '/' ? '#request-recovery' : '/book/'}">Book</a></aside></body></html>`);
 }
 await writeFile('dist/robots.txt', indexable ? `User-agent: *\nAllow: /\nSitemap: ${business.domain}/sitemap.xml\n` : 'User-agent: *\nAllow: /\n');
 await writeFile('dist/sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${pages.map(([path]) => `<url><loc>${business.domain}${path}</loc></url>`).join('')}</urlset>`);

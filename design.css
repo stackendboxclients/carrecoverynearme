@@ -719,7 +719,6 @@ a:is(.contact-cta, .button, .pickup-channel)[href^="https://wa.me/"],
   .recovery-feedback { content-visibility: auto; contain-intrinsic-block-size: auto 680px; }
   .recovery-faq { content-visibility: auto; contain-intrinsic-block-size: auto 650px; }
   .recovery-showcase::before,.recovery-showcase::after { background-image: none; }
-  .recovery-showcase :is(.showcase-road-light,.showcase-road-reflection,.showcase-frame rect),
-  .recovery-contact :is(.pickup-lane-markings,.pickup-traffic-light) { animation: none; }
+  .showcase-frame .showcase-frame-glow { animation: none; }
   .showcase-photo,.showcase-frame rect { filter: none; }
 }
