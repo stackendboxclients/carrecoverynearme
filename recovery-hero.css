@@ -237,35 +237,76 @@
 
 .hero-phone-button { min-height: 44px; font-size: .875rem; }
 
-/* Keep the night scene inside the text-and-actions area; the map area stays white. */
-.hero-night-background { position: absolute; z-index: -1; inset: 0; overflow: hidden; pointer-events: none; background: #09132b; }
-.hero-night-background img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; transform: scale(1.04); }
-@media (prefers-reduced-motion: no-preference) {
-  .hero-night-background img { animation: hero-night-drift 24s ease-in-out infinite; }
-}
-@keyframes hero-night-drift {
-  0%, 100% { transform: translate(-.35%, -.35%) scale(1.04); }
-  50% { transform: translate(.35%, .35%) scale(1.055); }
-}
-
-
+/* Reference-inspired towing advertisement, scoped to the hero only. */
 body.has-site-video .recovery-hero { background: #fff; }
 .recovery-hero .hero-shell { display: block; width: 100%; padding: 0; }
-.recovery-hero .hero-copy {
-  position: relative; isolation: isolate; display: grid; gap: 10px; align-content: start;
-  min-height: 720px; padding: 28px max(24px, calc((100% - 1200px) / 2));
+.recovery-hero .hero-ad {
+  position: relative; isolation: isolate; overflow: hidden;
+  display: grid; grid-template-columns: minmax(0, 1.08fr) minmax(0, 1fr);
+  grid-template-rows: auto auto 1fr; gap: 22px 36px;
+  padding: 40px max(28px, calc((100% - 1280px) / 2)) 36px;
+  color: #252b31; background: linear-gradient(115deg, #e8e9e9, #fafafa 63%, #f0f0ef);
+  min-height: 0;
 }
-.hero-copy .hero-night-background { inset: 0; }
-.recovery-hero .hero-copy h1 { max-width: 900px; margin-block: 8px; font-size: clamp(2rem, 4vw, 3.6rem); }
-.recovery-hero .hero-description { max-width: 62ch; }
-.recovery-hero .hero-actions { width: fit-content; max-width: 100%; margin-top: 12px; }
+.recovery-hero .hero-ad-intro { grid-column: 2; grid-row: 1; position: relative; z-index: 2; }
+.recovery-hero .hero-ad .eyebrow { color: #51565c; font-size: .65rem; letter-spacing: .07em; line-height: 1.5; }
+.recovery-hero .hero-ad h1 { margin: 16px 0 0; max-width: 650px; font-size: clamp(2rem, 3.4vw, 3.5rem); line-height: 1.04; letter-spacing: -.055em; }
+.recovery-hero .hero-ad :is(h1, h1 b, h1 em, h1 strong, .eyebrow, .hero-description, .hero-service-list, .hero-availability, .hero-arrival) {
+  -webkit-text-stroke: 0; text-shadow: none; background: none; background-clip: border-box;
+  animation: none;
+}
+.recovery-hero .hero-ad :is(h1, h1 b) { color: #1c2228 !important; }
+.recovery-hero .hero-ad :is(h1 em, h1 strong) { color: #bb4903 !important; }
+.recovery-hero .hero-ad-visual {
+  grid-column: 1; grid-row: 1 / 4; align-self: center;
+  position: relative; z-index: 2; min-width: 0; margin: 0 -26px 0 -30px;
+}
+.recovery-hero .hero-ad-truck { display: block; width: 100%; height: auto; }
+.recovery-hero .hero-ad-diamond {
+  position: absolute; width: 88px; height: 88px; right: 14px; bottom: -13px;
+  transform: rotate(45deg); border: 5px solid #fff; background: #efefed;
+  box-shadow: 0 7px 15px #26262626; overflow: hidden;
+}
+.recovery-hero .hero-ad-diamond img { width: 150%; height: 150%; max-width: none; object-fit: contain; transform: translate(-17%, -17%) rotate(-45deg); }
+.recovery-hero .hero-ad .hero-arrival {
+  grid-column: 2; grid-row: 2; position: relative; z-index: 1; margin: 0;
+  padding-block: 20px; font-size: clamp(1.04rem, 1.6vw, 1.4rem); color: #171d23; line-height: 1.2; font-weight: 750;
+}
+.recovery-hero .hero-ad .hero-arrival::before {
+  content: ''; position: absolute; z-index: -1; top: 0; bottom: 0; left: -150vw; width: 300vw;
+  background: linear-gradient(90deg, #f17a16, #ff9b35);
+}
+.recovery-hero .hero-ad .hero-arrival span { position: relative; }
+.recovery-hero .hero-ad-details { grid-column: 2; grid-row: 3; position: relative; z-index: 2; min-width: 0; }
+.recovery-hero .hero-ad .hero-description { max-width: 62ch; color: #353b42; font-size: .96rem; line-height: 1.55; }
+.recovery-hero .hero-ad .hero-service-list { color: #353b42; font-weight: 600; }
+body.has-site-video .recovery-hero .hero-ad .hero-availability { margin-top: 14px; color: #1c2228; font-weight: 700; }
+.recovery-hero .hero-ad .hero-actions { width: 100%; max-width: 100%; margin-top: 18px; gap: 8px; }
+.recovery-hero .hero-ad .contact-cta { padding-inline: 14px; font-size: .875rem; }
 .recovery-hero .route-scene { width: min(670px, calc(100% - 32px)); max-width: none; margin: 24px auto; }
-@media (max-width: 900px) {
-  .recovery-hero .hero-copy { min-height: 640px; padding: 24px; }
-  .recovery-hero .hero-copy h1 { font-size: clamp(2rem, 5.4vw, 2.9rem); }
+@media (max-width: 1000px) and (min-width: 701px) {
+  .recovery-hero .hero-ad { grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 20px; padding-inline: 24px; }
+  .recovery-hero .hero-ad .hero-description { font-size: .875rem; }
+  .recovery-hero .hero-ad .hero-actions { display: grid; grid-template-columns: 1fr 1fr; align-items: end; }
+  .recovery-hero .hero-ad .contact-cta--location { grid-column: 1 / -1; }
+  .recovery-hero .hero-ad-diamond { width: 62px; height: 62px; right: 14px; }
 }
-@media (max-width: 600px) {
-  .recovery-hero .hero-copy { min-height: 0; padding: 14px 16px 16px; }
-  .recovery-hero .hero-copy h1 { font-size: clamp(1.94rem, 8.4vw, 2.9rem); }
-  .recovery-hero .hero-actions { width: 100%; margin-top: 2px; }
+@media (max-width: 700px) {
+  .recovery-hero .hero-ad { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto auto auto; gap: 0; padding: 20px 16px 22px; }
+  .recovery-hero .hero-ad-intro { grid-column: 1; grid-row: 1; }
+  .recovery-hero .hero-ad .eyebrow { font-size: .61rem; letter-spacing: .055em; }
+  .recovery-hero .hero-ad h1 { margin-top: 13px; font-size: clamp(1.85rem, 7.5vw, 3.15rem); max-width: 600px; }
+  .recovery-hero .hero-ad-visual { grid-column: 1; grid-row: 2; width: calc(100% + 16px); margin: 10px -8px -4px; }
+  .recovery-hero .hero-ad-visual::before { content: ''; position: absolute; z-index: -1; left: -20px; right: -20px; top: 47%; bottom: 0; background: #fa8b25; }
+  .recovery-hero .hero-ad-diamond { width: 54px; height: 54px; border-width: 3px; right: 12px; bottom: -21px; }
+  .recovery-hero .hero-ad .hero-arrival { grid-column: 1; grid-row: 3; padding: 13px 70px 14px 0; min-height: 48px; font-size: 1rem; }
+  .recovery-hero .hero-ad-details { grid-column: 1; grid-row: 4; padding-top: 20px; }
+  .recovery-hero .hero-ad .hero-description { font-size: .875rem; line-height: 1.55; }
+  .recovery-hero .hero-ad .hero-availability { margin-top: 11px; }
+  .recovery-hero .hero-ad .hero-actions { display: grid; grid-template-columns: .86fr 1fr 1.14fr; margin-top: 16px; gap: 7px; }
+  .recovery-hero .hero-ad .hero-call-stack { display: contents; }
+  .recovery-hero .hero-ad .hero-phone-button { grid-column: 1 / -1; justify-self: start; font-size: .875rem; }
+  .recovery-hero .hero-ad .contact-cta { min-height: 46px; font-size: clamp(.67rem, 2.9vw, .875rem); gap: 5px; padding: 7px 5px; }
+  .recovery-hero .hero-ad .hero-location-full { display: none; }
+  .recovery-hero .hero-ad .hero-location-short { display: inline; }
 }
