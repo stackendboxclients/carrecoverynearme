@@ -237,7 +237,7 @@
 
 .hero-phone-button { min-height: 44px; font-size: .875rem; }
 
-/* A separate picture stays inside the hero; the page video continues below it. */
+/* Keep the night scene inside the text-and-actions area; the map area stays white. */
 .hero-night-background { position: absolute; z-index: -1; inset: 0; overflow: hidden; pointer-events: none; background: #09132b; }
 .hero-night-background img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; transform: scale(1.04); }
 @media (prefers-reduced-motion: no-preference) {
@@ -246,4 +246,26 @@
 @keyframes hero-night-drift {
   0%, 100% { transform: translate(-.35%, -.35%) scale(1.04); }
   50% { transform: translate(.35%, .35%) scale(1.055); }
+}
+
+
+body.has-site-video .recovery-hero { background: #fff; }
+.recovery-hero .hero-shell { display: block; width: 100%; padding: 0; }
+.recovery-hero .hero-copy {
+  position: relative; isolation: isolate; display: grid; gap: 10px; align-content: start;
+  min-height: 720px; padding: 28px max(24px, calc((100% - 1200px) / 2));
+}
+.hero-copy .hero-night-background { inset: 0; }
+.recovery-hero .hero-copy h1 { max-width: 900px; margin-block: 8px; font-size: clamp(2rem, 4vw, 3.6rem); }
+.recovery-hero .hero-description { max-width: 62ch; }
+.recovery-hero .hero-actions { width: fit-content; max-width: 100%; margin-top: 12px; }
+.recovery-hero .route-scene { width: min(670px, calc(100% - 32px)); max-width: none; margin: 24px auto; }
+@media (max-width: 900px) {
+  .recovery-hero .hero-copy { min-height: 640px; padding: 24px; }
+  .recovery-hero .hero-copy h1 { font-size: clamp(2rem, 5.4vw, 2.9rem); }
+}
+@media (max-width: 600px) {
+  .recovery-hero .hero-copy { min-height: 0; padding: 14px 16px 16px; }
+  .recovery-hero .hero-copy h1 { font-size: clamp(1.94rem, 8.4vw, 2.9rem); }
+  .recovery-hero .hero-actions { width: 100%; margin-top: 2px; }
 }
