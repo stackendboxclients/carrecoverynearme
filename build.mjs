@@ -297,6 +297,9 @@ await mkdir('dist', { recursive: true });
 await mkdir('dist/assets');
 await cp('site-background.mp4', 'dist/assets/site-background.mp4');
 await cp('site-background-poster.webp', 'dist/assets/site-background-poster.webp');
+for (const file of ['hero-dubai-gwagon-night.webp', 'hero-dubai-gwagon-night-mobile.webp']) {
+  await cp(file, `dist/assets/${file}`);
+}
 await cp('stackendbox-mark.webp', 'dist/assets/stackendbox-mark.webp');
 await cp('header-dubai-skyline.webp', 'dist/assets/header-dubai-skyline.webp');
 await cp('dubai-recovery-map.webp', 'dist/assets/dubai-recovery-map.webp');

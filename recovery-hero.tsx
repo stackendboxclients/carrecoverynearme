@@ -67,6 +67,10 @@ function Wheel({ x, y, radius }: { x: number; y: number; radius: number }) {
 export function RecoveryHero({ bookingHref, callHref, whatsappHref }: { bookingHref: string; callHref: string; whatsappHref: string }) {
   return (
     <section className="recovery-hero" data-playing="false" aria-labelledby="recovery-title">
+      <picture className="hero-night-background" aria-hidden="true">
+        <source media="(max-width: 850px)" srcSet="/assets/hero-dubai-gwagon-night-mobile.webp" />
+        <img src="/assets/hero-dubai-gwagon-night.webp" width="1672" height="941" alt="" fetchPriority="high" decoding="async" />
+      </picture>
       <div className="highway-background" aria-hidden="true"><canvas width="1" height="1" /></div>
       <div className="hero-shell">
         <div className="hero-copy">
