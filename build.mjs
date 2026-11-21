@@ -263,6 +263,9 @@ await mkdir('dist', { recursive: true });
 await mkdir('dist/assets');
 await cp('header-dubai-skyline.png', 'dist/assets/header-dubai-skyline.png');
 await cp('dubai-recovery-map.png', 'dist/assets/dubai-recovery-map.png');
+for (const file of ['truck-blue-porsche.png', 'truck-black-lamborghini.png']) {
+  await cp(file, `dist/assets/${file}`);
+}
 for (const file of [...brandWidths.map(width => `dcr-brand-${width}.webp`), 'dcr-master.svg', 'dcr-lockup-on-dark.svg', 'dcr-lockup-on-light.svg', 'dcr-lockup-monochrome.svg', 'dcr-symbol.svg', 'dcr-icon.svg']) {
   await cp(file, `dist/assets/${file}`);
 }

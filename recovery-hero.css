@@ -110,9 +110,10 @@
 .hero-description { margin: 0; color: #3e4b53; font-size: clamp(1rem, 1.45vw, 1.17rem); line-height: 1.58; max-width: 39ch; text-wrap: pretty; }
 .hero-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
 .hero-actions .contact-cta { min-height: 52px; }
-.hero-actions .hero-call { flex-direction: column; gap: 3px; }
-.hero-call-number { display: block; padding: 2px 5px; border-radius: 4px; background: #b3152b; color: #fff; font-size: clamp(.56rem, 2.45vw, .75rem); line-height: 1.2; white-space: nowrap; }
-.hero-call-label { display: inline-flex; align-items: center; justify-content: center; gap: 5px; }
+.hero-actions { align-items: end; }
+.hero-call-stack { display: grid; gap: 6px; min-width: 0; }
+.hero-phone-button { display: flex; align-items: center; justify-content: center; min-height: 32px; padding: 5px 7px; border: 1px solid #920e22; border-radius: 7px; background: #b3152b; color: #fff; font-size: clamp(.56rem, 2.45vw, .8rem); font-weight: 700; line-height: 1.2; text-decoration: none; white-space: nowrap; }
+.hero-phone-button:hover { background: #920e22; }
 .hero-location-short { display: none; }
 .hero-trust { display: flex; flex-wrap: wrap; gap: 9px 16px; padding: 0; margin: 18px 0 0; list-style: none; color: #3e4b53; font-size: .88rem; }
 .hero-trust li,.scene-caption span:first-child { display: inline-flex; align-items: center; gap: 7px; }
@@ -127,8 +128,8 @@
 .scene-footer a { text-decoration: underline; text-underline-offset: 3px; }
 .scene-footer :focus-visible { outline: 2px solid var(--orange-ink); outline-offset: 2px; }
 .scene-map { display: block; width: 100%; height: auto; }
-.map-journey .route-bed { stroke: #fff; stroke-width: 13; stroke-opacity: .95; }
-.map-journey .route-trace { stroke: var(--route-color); stroke-width: 7; }
+.map-road .route-bed { stroke: #fff; stroke-width: 13; stroke-opacity: .95; }
+.map-road .route-trace { stroke: var(--route-color); stroke-width: 7; }
 .map-journey .map-pin-ring { fill: #fff; stroke: var(--route-color); stroke-width: 4; }
 .map-journey .map-pin-core { fill: var(--route-color); }
 .map-journey[data-delivered=true] .map-pin-drop { fill: #d8f5e1; stroke: #247346; }

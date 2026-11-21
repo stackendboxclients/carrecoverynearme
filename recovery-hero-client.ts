@@ -8,8 +8,8 @@ function startHeroMotion(hero: HTMLElement) {
   const canvas = hero.querySelector<HTMLCanvasElement>(".highway-background canvas");
   const scene = hero.querySelector<HTMLElement>(".route-scene");
   const journeys = Array.from(hero.querySelectorAll<SVGGElement>(".map-journey")).flatMap((group, index) => {
-    const route = group.querySelector<SVGPathElement>(".route-bed");
-    const trace = group.querySelector<SVGPathElement>(".route-trace");
+    const trace = scene?.querySelector<SVGPathElement>(`.route-trace[data-route="${group.dataset.journey}"]`);
+    const route = trace;
     const truck = group.querySelector<SVGGElement>(".route-truck");
     const pulse = group.querySelector<SVGCircleElement>(".map-pin-pulse");
     if (!route || !trace || !truck || !pulse) return [];
