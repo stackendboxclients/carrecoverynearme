@@ -475,7 +475,7 @@
   content-visibility: visible; contain: none;
 }
 .recovery-kinetic[data-scroll-story] .adv-layout {
-  position: sticky; top: 0; height: 100svh; padding-block: 16px;
+  position: sticky; top: 0; height: 100svh; padding-block: 16px calc(88px + env(safe-area-inset-bottom));
   display: flex; flex-direction: column; width: min(900px, calc(100% - 32px)); gap: 10px;
 }
 .recovery-kinetic[data-scroll-story] .adv-intro { margin: 0; }

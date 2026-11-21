@@ -8,22 +8,6 @@ mobileMenu?.addEventListener('keydown', event => {
   mobileMenu.querySelector('summary').focus();
 });
 
-const mobileActions = document.querySelector('.mobile-actions');
-const heroActions = document.querySelector('.hero-actions');
-if (mobileActions && heroActions && 'IntersectionObserver' in window) {
-  const observer = new IntersectionObserver(([entry]) => {
-    const hidden = entry.boundingClientRect.bottom > 0;
-    if (mobileActions.hidden !== hidden) mobileActions.hidden = hidden;
-  }, { rootMargin: '0px 0px 1000px 0px' });
-  const mobile = matchMedia('(max-width: 590px)');
-  const syncObserver = () => {
-    observer.disconnect();
-    if (mobile.matches) observer.observe(heroActions);
-  };
-  mobile.addEventListener('change', syncObserver);
-  syncObserver();
-}
-
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
 const hero = document.querySelector('.hero');
 if (hero && !reducedMotion.matches) {
@@ -185,11 +169,8 @@ if (form) {
 
 
 const backgroundVideo = document.querySelector('.site-background-video');
-const backgroundToggle = document.querySelector('.site-video-toggle');
-if (backgroundVideo && backgroundToggle) {
-  const videoReduced = matchMedia('(prefers-reduced-motion: reduce)');
+if (backgroundVideo) {
   const boundary = document.querySelector('.service-tape') || document.querySelector('body > header');
-  let manuallyPaused = false;
   let videoFrame = 0;
   backgroundVideo.muted = true;
   backgroundVideo.defaultMuted = true;
@@ -202,22 +183,15 @@ if (backgroundVideo && backgroundToggle) {
   const scheduleBoundary = () => {
     if (!videoFrame) videoFrame = requestAnimationFrame(updateBoundary);
   };
-  const updateToggle = () => {
-    const paused = manuallyPaused || videoReduced.matches;
-    backgroundToggle.hidden = videoReduced.matches;
-    backgroundToggle.textContent = paused ? 'Play video' : 'Pause video';
-    backgroundToggle.setAttribute('aria-label', paused ? 'Play background video' : 'Pause background video');
-    backgroundToggle.setAttribute('aria-pressed', String(paused));
-  };
   const syncBackground = () => {
-    updateToggle();
-    if (document.hidden || videoReduced.matches || manuallyPaused) backgroundVideo.pause();
-    else backgroundVideo.play().catch(() => { manuallyPaused = true; updateToggle(); });
+    if (document.hidden) backgroundVideo.pause();
+    else backgroundVideo.play().catch(() => {
+      // The poster stays visible if the browser blocks autoplay.
+    });
   };
-  backgroundToggle.addEventListener('click', () => { manuallyPaused = !manuallyPaused; syncBackground(); });
-  backgroundVideo.addEventListener('error', () => { backgroundVideo.hidden = true; backgroundToggle.hidden = true; });
-  videoReduced.addEventListener('change', syncBackground);
+  backgroundVideo.addEventListener('error', () => { backgroundVideo.hidden = true; });
   document.addEventListener('visibilitychange', syncBackground);
+  document.addEventListener('pointerdown', syncBackground, { once: true, passive: true });
   window.addEventListener('scroll', scheduleBoundary, { passive: true });
   window.addEventListener('resize', scheduleBoundary);
   if (boundary) new ResizeObserver(scheduleBoundary).observe(boundary);
