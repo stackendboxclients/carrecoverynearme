@@ -110,6 +110,9 @@
 .hero-description { margin: 0; color: #3e4b53; font-size: clamp(1rem, 1.45vw, 1.17rem); line-height: 1.58; max-width: 39ch; text-wrap: pretty; }
 .hero-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
 .hero-actions .contact-cta { min-height: 52px; }
+.hero-actions .hero-call { flex-direction: column; gap: 3px; }
+.hero-call-number { display: block; padding: 2px 5px; border-radius: 4px; background: #b3152b; color: #fff; font-size: clamp(.56rem, 2.45vw, .75rem); line-height: 1.2; white-space: nowrap; }
+.hero-call-label { display: inline-flex; align-items: center; justify-content: center; gap: 5px; }
 .hero-location-short { display: none; }
 .hero-trust { display: flex; flex-wrap: wrap; gap: 9px 16px; padding: 0; margin: 18px 0 0; list-style: none; color: #3e4b53; font-size: .88rem; }
 .hero-trust li,.scene-caption span:first-child { display: inline-flex; align-items: center; gap: 7px; }

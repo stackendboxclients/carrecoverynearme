@@ -83,7 +83,7 @@ export function RecoveryHero({ bookingHref, callHref, whatsappHref }: { bookingH
           <h1 id="recovery-title"><span><b className="hero-chrome">Car towing &amp;</b></span><em><strong>recovery in Dubai.</strong></em></h1>
           <p className="hero-description">Stuck after a breakdown or need to move a vehicle? Share your pickup point and destination to arrange recovery across Dubai.</p>
           <div className="hero-actions" data-contact-count={Number(Boolean(callHref)) + Number(Boolean(whatsappHref)) + 1}>
-            {callHref && <a className="contact-cta contact-cta--call" href={callHref}><Phone size={18} aria-hidden="true" /> Call now</a>}
+            {callHref && <a className="contact-cta contact-cta--call hero-call" href={callHref}><span className="hero-call-number">{callHref.replace(/^tel:/, "")}</span><span className="hero-call-label"><Phone size={18} aria-hidden="true" /> Call now</span></a>}
             {whatsappHref && <a className="contact-cta contact-cta--whatsapp" href={whatsappHref}><MessageCircle size={18} aria-hidden="true" /> WhatsApp</a>}
             {!callHref && !whatsappHref && <a className="contact-cta contact-cta--call" href={bookingHref}>Request recovery <ArrowUpRight size={18} aria-hidden="true" /></a>}
             <a className="contact-cta contact-cta--location" href={bookingHref} data-use-pickup-location aria-label="Use my current location"><MapPin size={18} aria-hidden="true" /><span className="hero-location-full">Use my current location</span><span className="hero-location-short">My location</span></a>
