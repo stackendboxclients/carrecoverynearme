@@ -1,9 +1,10 @@
-import { useId } from "react";
-import { ArrowUpRight, Check, Flag, MapPin, MessageCircle, Phone, ShieldCheck, Truck } from "lucide-react";
+import { useId, type CSSProperties } from "react";
+import { ArrowUpRight, MapPin, MessageCircle, Phone, ShieldCheck, Truck } from "lucide-react";
 
-const route = "M126 346 H204 Q241 346 241 309 V274 Q241 237 278 237 H361 Q400 237 400 198 V172 Q400 135 437 135 H482 Q520 135 520 98 H553";
-const start = { x: 126, y: 346 };
-const finish = { x: 553, y: 98 };
+const journeys = [
+  { id: "marina", color: "#b84216", pickup: "Dubai Marina", destination: "Downtown Dubai", start: [410, 700], finish: [880, 445], path: "M410 700 Q435 677 460 637 L520 590 Q550 560 565 523 L620 454 L680 397 Q709 375 735 366 Q767 374 790 400 L835 429 L880 445" },
+  { id: "barsha", color: "#1263b7", pickup: "Al Barsha", destination: "Dubai Creek Harbour", start: [650, 735], finish: [1235, 410], path: "M650 735 L710 687 Q747 661 780 644 L930 625 L1060 584 L1160 554 L1280 534 Q1303 510 1285 482 L1260 447 L1235 410" },
+];
 
 function RouteScene() {
   const prefix = useId();
@@ -11,57 +12,54 @@ function RouteScene() {
     <figure className="route-scene">
       <figcaption className="scene-caption">
         <span><MapPin size={15} /> Dubai, UAE</span>
-        <span>Illustrative route</span>
+        <span>Illustrative routes</span>
       </figcaption>
-      <svg className="scene-map" viewBox="0 0 660 430" aria-hidden="true">
+      <svg className="scene-map" viewBox="0 0 1448 1086" role="img" aria-label="Illustrative recovery journeys from Dubai Marina to Downtown Dubai and Al Barsha to Dubai Creek Harbour, with two recovery trucks.">
         <defs>
-          <pattern id={prefix + "-grid"} width="22" height="22" patternUnits="userSpaceOnUse">
-            <path d="M22 0H0V22" fill="none" stroke="#77888d" strokeOpacity=".10" />
-          </pattern>
-          <radialGradient id={prefix + "-light"}>
-            <stop stopColor="#de662c" stopOpacity=".19" />
-            <stop offset="1" stopColor="#de662c" stopOpacity="0" />
-          </radialGradient>
           <clipPath id={prefix + "-vehicle"} clipPathUnits="userSpaceOnUse">
             <path d="M40 251L50 226 56 184 88 172 163 157 225 135 283 128 385 129 447 142 503 178 525 193 590 202 592 184 614 174 657 163 705 162 735 176 757 203 773 228 791 235 796 246 813 260 824 278 831 301 829 321 817 337 805 359 786 368 769 361 759 344 727 351 681 354 524 381 506 408 486 420 458 422 429 411 414 388 376 394 221 408 166 427 143 412 134 390 123 385 130 370 143 366 142 309 118 305 82 298 48 290 40 276Z" />
           </clipPath>
         </defs>
-        <rect width="660" height="430" fill="#e4e9e9" />
-        <path d="M0 0H310l-45 33-48 14-35 43-44 12-39 56-51 27L0 205Z" fill="#c5d6dd" stroke="#6f8791" strokeOpacity=".55"/>
-        <rect width="660" height="430" fill={"url(#" + prefix + "-grid)"} />
-        <g className="map-roads">
-          <path d="M-20 275l105-57 50-48 88-32 61-75L389 9M0 330l107-64 59-50 99-36 56-65L451 39 493 0M0 401l98-60 92-49 74-36 67-67 77-39L556 12M70 430l87-62 81-31 100-71 82-55 88-48L660 37M216 430l76-61 60-60 98-61 102-57 108-92M371 430l56-55 90-53 81-75 62-33"/>
-          <path d="M68 188l45 80 83 67 76 95M172 109l48 81 64 56 45 92 77 92M263 52l58 68 81 68 65 93 41 83 69 66M382 0l72 100 50 63 51 67 60 89 45 25M506 0l45 58 53 51 56 20"/>
-        </g>
-        <ellipse cx="342" cy="252" rx="266" ry="182" fill={"url(#" + prefix + "-light)"} />
-        <path d={route} className="route-bed" />
-        <path d={route} className="route-trace" pathLength="1" strokeDasharray="1 1" strokeDashoffset="0" />
-        <circle cx={start.x} cy={start.y} r="10" className="map-pin-ring" />
-        <circle cx={start.x} cy={start.y} r="4" className="map-pin-core" />
-        <circle cx={finish.x} cy={finish.y} r="12" className="map-pin-ring map-pin-drop" />
-        <circle cx={finish.x} cy={finish.y} r="4" className="map-pin-core" />
-        <circle cx={finish.x} cy={finish.y} r="12" className="map-pin-pulse" fill="none" stroke="#2e784a" />
-        <g className="route-truck" transform={`translate(${start.x} ${start.y})`}>
-          <ellipse cx="0" cy="1" rx="64" ry="10" fill="#4e5356" opacity=".38" />
-          <svg x="-82" y="-77" width="174" height="98" viewBox="0 0 900 506" className="map-vehicle">
-            <image href="/flatbed.webp" width="900" height="506" clipPath={"url(#" + prefix + "-vehicle)"} />
-            <g className="route-wheel" data-center="463 376"><Wheel x={463} y={376} radius={23} /></g>
-            <g className="route-wheel" data-center="790 335"><Wheel x={790} y={335} radius={15} /></g>
-          </svg>
-        </g>
+        <image href="/assets/dubai-recovery-map.png" width="1448" height="1086" />
+        {journeys.map((journey, index) => (
+          <g key={journey.id} className="map-journey" data-journey={journey.id} data-delivered="false" style={{ "--route-color": journey.color } as CSSProperties}>
+            <path d={journey.path} className="route-bed" />
+            <path d={journey.path} className="route-trace" pathLength="1" strokeDasharray="1 1" strokeDashoffset="1" />
+            <circle cx={journey.start[0]} cy={journey.start[1]} r="13" className="map-pin-ring" />
+            <circle cx={journey.start[0]} cy={journey.start[1]} r="5" className="map-pin-core" />
+            <circle cx={journey.finish[0]} cy={journey.finish[1]} r="15" className="map-pin-ring map-pin-drop" />
+            <circle cx={journey.finish[0]} cy={journey.finish[1]} r="6" className="map-pin-core" />
+            <circle cx={journey.finish[0]} cy={journey.finish[1]} r="15" className="map-pin-pulse" fill="none" stroke="#2e784a" />
+            <g className="route-truck" transform={`translate(${journey.start[0]} ${journey.start[1]})`}>
+              {index === 0 ? <svg x="-125" y="-103" width="250" height="141" viewBox="0 0 900 506" className="map-vehicle">
+                <image href="/flatbed.webp" width="900" height="506" clipPath={"url(#" + prefix + "-vehicle)"} />
+                <g className="route-wheel" data-center="463 376"><Wheel x={463} y={376} radius={23} /></g>
+                <g className="route-wheel" data-center="790 335"><Wheel x={790} y={335} radius={15} /></g>
+              </svg> : <svg x="-116" y="-86" width="232" height="104" viewBox="0 0 232 104" className="map-vehicle" aria-hidden="true">
+                <ellipse cx="112" cy="91" rx="110" ry="10" fill="#263c4b" opacity=".25" />
+                <path d="M8 62H164V42H199L224 63V84H8Z" fill="#1263b7" stroke="#18394e" strokeWidth="3" />
+                <path d="M171 48H197L213 63H171Z" fill="#b9e7f4" stroke="#18394e" strokeWidth="2" />
+                <path d="M12 58H159V65H12Z" fill="#c6d3db" stroke="#273f50" strokeWidth="2" />
+                <path d="M28 43L43 22H101L126 40L143 44V56H22V46Z" fill="#f7fafc" stroke="#445b69" strokeWidth="3" />
+                <path d="M49 26H70V40H37ZM76 26H99L117 40H76Z" fill="#466c83" />
+                <circle cx="43" cy="55" r="10" fill="#1d2830" /><circle cx="120" cy="55" r="10" fill="#1d2830" />
+                <path d="M166 70H195M216 68H225" stroke="#f8d44a" strokeWidth="5" />
+                {[43, 145, 202].map(x => <g key={x}><circle cx={x} cy="83" r="14" fill="#1d2830" /><circle cx={x} cy="83" r="7" fill="#b9cbd6" /><g className="route-wheel" data-center={`${x} 83`}><Wheel x={x} y={83} radius={7} /></g></g>)}
+              </svg>}
+            </g>
+            <g className="map-stop-label" transform={`translate(${journey.start[0] + (index === 1 ? 30 : -155)} ${journey.start[1] + 24})`}>
+              <rect width="310" height="73" rx="12" />
+              <text x="14" y="29">Pickup {index + 1}</text><text x="14" y="57" className="map-stop-place">{journey.pickup}</text>
+            </g>
+            <g className="map-stop-label route-label-drop" transform={`translate(${journey.finish[0] - 135} ${journey.finish[1] - 100})`}>
+              <rect width="310" height="73" rx="12" />
+              <text x="14" y="29" className="route-drop-text">Drop-off {index + 1}</text><text x="14" y="29" className="route-delivered-text">Delivered {index + 1}</text>
+              <text x="14" y="57" className="map-stop-place">{journey.destination}</text>
+            </g>
+          </g>
+        ))}
       </svg>
-      <div className="route-label route-label-pickup"><MapPin size={16} /><span>Pickup</span></div>
-      <div className="route-label route-label-drop" data-delivered="false">
-        <Flag className="route-drop-icon" size={16} /><Check className="route-delivered-icon" size={16} />
-        <span className="route-drop-text">Drop-off</span><span className="route-delivered-text">Delivered</span>
-      </div>
-      <div className="scene-footer">
-        <span>
-          <a href="https://commons.wikimedia.org/wiki/File:Transport_autoturism_electric_pe_platforma_auto_de_tip_%22flatbed%22.jpg">Photo by Traiantkd</a>
-          {" · Cutout · "}
-          <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>
-        </span>
-      </div>
+      <div className="scene-footer"><span><a href="https://commons.wikimedia.org/wiki/File:Transport_autoturism_electric_pe_platforma_auto_de_tip_%22flatbed%22.jpg">Truck photo by Traiantkd</a>{" · Cutout · "}<a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></span></div>
     </figure>
   );
 }

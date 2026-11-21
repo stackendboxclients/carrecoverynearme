@@ -127,6 +127,18 @@
 .scene-footer a { text-decoration: underline; text-underline-offset: 3px; }
 .scene-footer :focus-visible { outline: 2px solid var(--orange-ink); outline-offset: 2px; }
 .scene-map { display: block; width: 100%; height: auto; }
+.map-journey .route-bed { stroke: #fff; stroke-width: 13; stroke-opacity: .95; }
+.map-journey .route-trace { stroke: var(--route-color); stroke-width: 7; }
+.map-journey .map-pin-ring { fill: #fff; stroke: var(--route-color); stroke-width: 4; }
+.map-journey .map-pin-core { fill: var(--route-color); }
+.map-journey[data-delivered=true] .map-pin-drop { fill: #d8f5e1; stroke: #247346; }
+.map-stop-label rect { fill: #fffffff2; stroke: var(--route-color); stroke-width: 2; }
+.map-stop-label text { fill: var(--route-color); font: 700 26px 'Instrument Sans', Arial, sans-serif; }
+.map-stop-label .map-stop-place { fill: #1b242b; font-size: 24px; font-weight: 600; }
+.map-journey[data-delivered=false] .route-delivered-text,
+.map-journey[data-delivered=true] .route-drop-text { display: none; }
+.map-journey[data-delivered=true] .route-delivered-text { fill: #247346; }
+
 .map-roads { fill: none; stroke: #637781; stroke-opacity: .42; stroke-width: 1.4; }
 .route-bed,.route-trace { fill: none; stroke-linecap: round; stroke-width: 4; }
 .route-bed { stroke: #9a4b2d; stroke-opacity: .65; }
@@ -153,8 +165,8 @@
   .recovery-hero .route-scene {
     width: 100%;
     justify-self: end;
-    /* Remove the caption, credit and padding, then apply the 660:430 map ratio. */
-    max-width: max(280px, calc((var(--hero-available-height) - 100px - 2 * var(--hero-vertical-padding)) * 660 / 430));
+    /* Remove the caption, credit and padding, then apply the 1448:1086 map ratio. */
+    max-width: max(280px, calc((var(--hero-available-height) - 100px - 2 * var(--hero-vertical-padding)) * 1448 / 1086));
   }
 }
 @media (max-width: 850px) {
