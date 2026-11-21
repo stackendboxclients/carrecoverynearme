@@ -568,7 +568,7 @@ a.pickup-channel:hover { border-color: var(--orange-ink); background: var(--warm
   overflow: hidden;
   display: block;
   min-width: 0;
-  height: clamp(202px, 18vw, 282px);
+  height: clamp(260px, 22vw, 330px);
   padding: clamp(14px, 1.8vw, 27px);
   border: 1px solid #7e8a91;
   border-radius: 17px;
@@ -612,6 +612,7 @@ a.pickup-channel:hover { border-color: var(--orange-ink); background: var(--warm
   text-transform: uppercase;
   text-wrap: balance;
 }
+.showcase-card-content p { margin: 7px 0 0; max-width: 32ch; color: #fff6ee; font-size: .8125rem; line-height: 1.35; text-shadow: 0 1px 4px #000, 0 0 8px #000; }
 .showcase-number { display: block; color: #ff9853; font: italic 700 1.13rem/1 var(--display); }
 .showcase-card:is(:hover, :focus-within) { border-color: #ff9b65; box-shadow: 0 0 24px #fd7c313a; }
 .showcase-card:is(:hover, :focus-within) .showcase-photo { transform: skewX(calc(0deg - var(--card-skew))) scale(1.035); }
@@ -653,7 +654,7 @@ a.pickup-channel:hover { border-color: var(--orange-ink); background: var(--warm
   .showcase-inner { width: calc(100% - 28px); }
   .showcase-road { height: 70%; }
   .showcase-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
-  .showcase-card { --card-skew: 0deg; height: clamp(168px, 44vw, 250px); border-radius: 14px; }
+  .showcase-card { --card-skew: 0deg; height: clamp(260px, 68vw, 320px); border-radius: 14px; }
 }
 
 

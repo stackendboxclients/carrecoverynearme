@@ -72,7 +72,7 @@ export function RecoveryHero({ bookingHref, callHref, whatsappHref }: { bookingH
         <div className="hero-copy">
           <p className="eyebrow"><span className="hero-icon"><MapPin size={15} /></span> Dubai, United Arab Emirates</p>
           <h1 id="recovery-title"><span><b className="hero-chrome">Car towing &amp;</b></span><em><strong>Car recovery in Dubai 24/7</strong></em></h1>
-          <p className="hero-description"><strong className="hero-service-list">Car towing, luxury &amp; sports car towing, flatbed car towing, roadside assistance, car breakdown recovery, desert &amp; off-road car recovery, motorcycle transport, accident car recovery, Full down and box recovery, Heavy bus towing</strong><span className="hero-availability">Call us. We are available 24 by 7.</span></p>
+          <p className="hero-description"><strong className="hero-service-list">Car towing, Luxury &amp; Sports car recovery/towing, Flatbed towing &amp; recovery, roadside assistance, car breakdown recovery, desert and off-road car recovery, motorcycle transport, accident car recovery, Full down and box recovery, Heavy bus towing</strong><span className="hero-availability">Call us. We are available 24 by 7.</span></p>
           <div className="hero-actions" data-contact-count={Number(Boolean(callHref)) + Number(Boolean(whatsappHref)) + 1}>
             {callHref && <div className="hero-call-stack"><a className="hero-phone-button" href={callHref}>{callHref.replace(/^tel:/, "")}</a><a className="contact-cta contact-cta--call" href={callHref}><Phone size={18} aria-hidden="true" /> Call now</a></div>}
             {whatsappHref && <a className="contact-cta contact-cta--whatsapp" href={whatsappHref}><MessageCircle size={18} aria-hidden="true" /> WhatsApp</a>}
@@ -80,8 +80,8 @@ export function RecoveryHero({ bookingHref, callHref, whatsappHref }: { bookingH
             <a className="contact-cta contact-cta--location" href={bookingHref} data-use-pickup-location aria-label="Use my current location"><MapPin size={18} aria-hidden="true" /><span className="hero-location-full">Use my current location</span><span className="hero-location-short">My location</span></a>
           </div>
           <ul className="hero-trust">
-            <li><span className="hero-icon"><Truck size={17} /></span> Breakdown recovery &amp; flatbed towing</li>
-            <li><span className="hero-icon"><ShieldCheck size={17} /></span> Luxury vehicle transport</li>
+            <li><span className="hero-icon"><Truck size={17} /></span> Breakdown recovery &amp; Flatbed towing &amp; recovery</li>
+            <li><span className="hero-icon"><ShieldCheck size={17} /></span> Luxury &amp; Sports car recovery/towing</li>
           </ul>
         </div>
         <RouteScene />
