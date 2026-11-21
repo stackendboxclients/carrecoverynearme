@@ -9,10 +9,10 @@ import { recoveryFeedback } from './recovery-feedback.mjs';
 const business = JSON.parse(await readFile('business.json', 'utf8'));
 const services = [
   ['car-towing', 'Car towing', 'Arrange transport to a garage, home, or another destination.', '01'],
-  ['emergency-recovery', 'Breakdown recovery', 'Arrange pickup when your vehicle can’t continue the journey.'],
-  ['flatbed-towing', 'Flatbed towing & recovery', 'Ask about flatbed transport for a vehicle that needs to be carried off the road.', '03'],
+  ['emergency-recovery', 'Breakdown car recovery', 'Arrange pickup when your vehicle can’t continue the journey.'],
+  ['flatbed-towing', 'Flatbed car towing & recovery', 'Ask about flatbed transport for a vehicle that needs to be carried off the road.', '03'],
   ['roadside-assistance', 'Roadside assistance', 'Describe the issue and your location so the team can assess the help you need.', '04'],
-  ['accident-recovery', 'Accident recovery', 'Discuss pickup for a damaged vehicle once the scene is safe.', '05'],
+  ['accident-recovery', 'Accident car recovery', 'Discuss pickup for a damaged vehicle once the scene is safe.', '05'],
   ['battery-assistance', 'Battery assistance', 'Describe the vehicle and symptoms so the team can assess jump-start assistance.', '06'],
   ['luxury-car-transport', 'Luxury & Sports car recovery/towing', 'Discuss Luxury & Sports car recovery/towing for specialist or low-clearance vehicles.'],
   ['tyre-assistance', 'Towing after tyre damage', 'Arrange a tow if tyre or wheel damage leaves the vehicle unable to continue.'],
@@ -21,10 +21,11 @@ const services = [
   ['motorcycle-towing', 'Motorcycle transport', 'Arrange pickup for a motorcycle or scooter.'],
   ['truck-recovery', 'Commercial vehicle recovery', 'Discuss recovery options for a van, truck, or commercial vehicle.'],
   ['passing-assistance', 'Vehicle inspection transport', 'Arrange transport to a vehicle inspection or testing location.'],
-  ['full-down-box-recovery', 'Full down and box recovery', 'Arrange recovery for a broken-down box truck.'],
+  ['full-down-box-recovery', 'Full down car and box recovery', 'Arrange recovery for a broken-down box truck.'],
   ['vehicle-recovery', 'Vehicle recovery', 'Arrange pickup and transport for a vehicle that cannot continue.'],
   ['car-recovery', 'Car recovery', 'Get your car from its breakdown location to a garage or destination.'],
   ['heavy-bus-towing', 'Heavy bus towing', 'Discuss towing for a broken-down bus or minibus.'],
+  ['emergency-car-recovery-towing', 'Emergency car recovery and towing', 'Request urgent recovery and towing for a stranded car.'],
 ];
 const name = business.name;
 const contactReady = Boolean(business.whatsapp || business.phone);
@@ -74,6 +75,7 @@ const serviceAdvice = [
   'Share the vehicle type, condition, pickup access, and destination so the team can assess recovery options.',
   'Share your car make and model, what happened, and whether it can roll, steer, or shift into neutral.',
   'Share the bus or minibus size, weight, location, and fault so the team can check suitable towing equipment.',
+  'Share your exact pickup point, car condition, and destination so the team can confirm urgent recovery arrangements.',
 ];
 const cards = services.map(([slug, title, description], index) => `<article class="service-card"><span class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${serviceIcons[index] ?? serviceIcons[11]}</svg></span><h3>${title}</h3><p>${description}</p><a href="/services/${slug}/">Explore service <span aria-hidden="true">↗</span></a></article>`).join('');
 const enquiryIcons = {
@@ -192,18 +194,19 @@ const booking = (heading) => `<section class="recovery-contact" id="request-reco
 const showcaseServices = [
   ['car-towing', 'Car towing'],
   ['roadside-assistance', 'Roadside assistance'],
-  ['emergency-recovery', 'Breakdown recovery'],
-  ['accident-recovery', 'Accident recovery'],
-  ['flatbed-towing', 'Flatbed towing & recovery'],
+  ['emergency-recovery', 'Breakdown car recovery'],
+  ['accident-recovery', 'Accident car recovery'],
+  ['flatbed-towing', 'Flatbed car towing & recovery'],
   ['desert-recovery', 'Desert and off-road car recovery'],
   ['luxury-car-transport', 'Luxury & Sports car recovery/towing'],
   ['motorcycle-towing', 'Motorcycle transport'],
-  ['full-down-box-recovery', 'Full down and box recovery'],
+  ['full-down-box-recovery', 'Full down car and box recovery'],
   ['vehicle-recovery', 'Vehicle recovery'],
   ['car-recovery', 'Car recovery'],
   ['heavy-bus-towing', 'Heavy bus towing'],
+  ['emergency-car-recovery-towing', 'Emergency car recovery and towing'],
 ];
-const newServiceSlugs = new Set(['full-down-box-recovery', 'vehicle-recovery', 'car-recovery', 'heavy-bus-towing']);
+const newServiceSlugs = new Set(['full-down-box-recovery', 'vehicle-recovery', 'car-recovery', 'heavy-bus-towing', 'emergency-car-recovery-towing']);
 const showcaseDescriptions = {
   'car-towing': 'Move your car to a garage or destination across Dubai.',
   'roadside-assistance': 'Get help with common roadside vehicle problems.',
@@ -217,6 +220,7 @@ const showcaseDescriptions = {
   'vehicle-recovery': 'Arrange recovery for a stranded vehicle.',
   'car-recovery': 'Take your broken-down car to a garage or destination.',
   'heavy-bus-towing': 'Arrange recovery for buses and compact minibuses.',
+  'emergency-car-recovery-towing': 'Request urgent pickup and towing for your car.',
 };
 
 const showcaseCards = showcaseServices.map(([slug, title], index) => {
@@ -268,7 +272,7 @@ ${recoveryFeedback(business)}
 ${faq}`;
 const guides = [
   ['dubai-breakdown-recovery-checklist', 'Dubai breakdown checklist', 'Once you’re somewhere safe, note the nearest exit, parking level, or landmark. Share your map pin, vehicle make and model, and whether it can roll and steer. Mention warning lights, leaks, or damage before arranging transport.'],
-  ['flatbed-luxury-vehicle-transport-dubai', 'Planning Flatbed towing & recovery', 'Mention low ground clearance, wheel locks, or a car that cannot go into neutral. Tell the team about ramps, basement entrances, and tight turns at both addresses. Confirm the pickup plan before moving the vehicle.'],
+  ['flatbed-luxury-vehicle-transport-dubai', 'Planning Flatbed car towing & recovery', 'Mention low ground clearance, wheel locks, or a car that cannot go into neutral. Tell the team about ramps, basement entrances, and tight turns at both addresses. Confirm the pickup plan before moving the vehicle.'],
   ['motorcycle-offroad-recovery-dubai', 'Motorcycle transport and desert and off-road car recovery', 'Share your bike type, approximate weight, and whether the wheels turn. For an off-road pickup, provide a map pin, terrain details, and the nearest point accessible by road. Ask the team what equipment is suitable.'],
 ];
 const pages = [

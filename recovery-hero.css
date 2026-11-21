@@ -225,3 +225,5 @@
   .hero-copy .hero-chrome { color: var(--ink); background: none; }
   .recovery-hero *, .recovery-hero *::before, .recovery-hero *::after { transition-duration: 0s !important; }
 }
+
+.hero-arrival { margin: 0 0 10px; color: #b74713; font-family: var(--display); font-size: clamp(1.1rem, 2vw, 1.45rem); font-weight: 700; line-height: 1.2; }

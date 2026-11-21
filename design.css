@@ -654,7 +654,7 @@ a.pickup-channel:hover { border-color: var(--orange-ink); background: var(--warm
   .showcase-inner { width: calc(100% - 28px); }
   .showcase-road { height: 70%; }
   .showcase-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
-  .showcase-card { --card-skew: 0deg; height: clamp(260px, 68vw, 320px); border-radius: 14px; }
+  .showcase-card { --card-skew: 0deg; height: clamp(210px, 56vw, 245px); padding: 12px; border-radius: 14px; }
 }
 
 
@@ -712,7 +712,7 @@ a:is(.contact-cta, .button, .pickup-channel)[href^="https://wa.me/"],
 
 /* Skip offscreen section rendering on phones until visitors scroll near it. */
 @media (max-width: 850px) {
-  html { scroll-behavior: auto; }
+  html { scroll-behavior: smooth; }
   .recovery-showcase { content-visibility: auto; contain-intrinsic-block-size: auto 1050px; }
   .recovery-kinetic { content-visibility: auto; contain-intrinsic-block-size: auto 745px; }
   .recovery-feedback { content-visibility: auto; contain-intrinsic-block-size: auto 680px; }
@@ -724,3 +724,10 @@ a:is(.contact-cta, .button, .pickup-channel)[href^="https://wa.me/"],
 @media (max-width: 600px) {
   .recovery-kinetic { contain-intrinsic-block-size: auto 485px; }
 }
+
+@media (max-width: 680px) {
+  .showcase-card h3 { font-size: .875rem; line-height: 1.1; }
+  .showcase-card-content p { margin-top: 5px; font-size: .75rem; line-height: 1.25; }
+  .showcase-number { font-size: .9rem; }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }

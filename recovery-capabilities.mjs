@@ -23,7 +23,7 @@ const definitions = [
   { id: 'luxury-car-transport', name: 'Luxury & Sports car recovery/towing', label: 'Luxury', compact: 'Sport', description: 'Transport for specialist vehicles.',
     outline: 'M3 25v4h6m7 0h14m7 0h4v-6l-10-3-6-6H14l-5 7-6 4Zm6 4a3.5 3.5 0 1 0 7 0 3.5 3.5 0 1 0-7 0Zm21 0a3.5 3.5 0 1 0 7 0 3.5 3.5 0 1 0-7 0ZM12 20h19M19 14v6',
     accent: 'M4 24l11-2h16l9 2' },
-  { id: 'flatbed-towing', name: 'Flatbed towing & recovery', label: 'Flatbed', compact: 'Deck', description: 'Platform-based vehicle transport.',
+  { id: 'flatbed-towing', name: 'Flatbed car towing & recovery', label: 'Flatbed', compact: 'Deck', description: 'Platform-based vehicle transport.',
     outline: 'M3 27h25v-9h7l5 6v5h-3m-8 0h-8m-8 0H3m24-4V12m7 10h3M13 29a4 4 0 1 0 8 0m8 0a4 4 0 1 0 8 0M6 23v-3l5-2 3-5h7l3 6v4m-12-5h10',
     accent: 'M3 24h24' },
 ];

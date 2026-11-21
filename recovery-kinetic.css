@@ -468,3 +468,35 @@
   .cap-key::after { transition: none; }
   .adv-pause:not([hidden]) { display: none; }
 }
+
+/* Keep the current panel in view while native page scroll advances the story. */
+.recovery-kinetic[data-scroll-story] {
+  height: 400svh; padding-block: 0; overflow: clip;
+  content-visibility: visible; contain: none;
+}
+.recovery-kinetic[data-scroll-story] .adv-layout {
+  position: sticky; top: 0; height: 100svh; padding-block: 16px;
+  display: flex; flex-direction: column; width: min(900px, calc(100% - 32px)); gap: 10px;
+}
+.recovery-kinetic[data-scroll-story] .adv-intro { margin: 0; }
+.recovery-kinetic[data-scroll-story] .adv-intro h2 { font-size: clamp(1.6rem, 3.6vw, 2.6rem); }
+.recovery-kinetic[data-scroll-story] .adv-lede { margin-top: 7px; font-size: .9rem; line-height: 1.35; }
+.recovery-kinetic[data-scroll-story] .adv-mobile-tabs {
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 5px; margin: 0;
+}
+.recovery-kinetic[data-scroll-story] .adv-mobile-tab {
+  min-height: 44px; padding: 5px 2px; border: 1px solid var(--control-border);
+  border-radius: 7px; background: var(--surface); color: var(--ink); font-size: .82rem; font-weight: 650;
+}
+.recovery-kinetic[data-scroll-story] .adv-mobile-tab[aria-pressed="true"] { background: #ffe3d1; border-color: var(--orange-ink); color: #713019; }
+.recovery-kinetic[data-scroll-story] .adv-stage { display: grid; grid-template-columns: minmax(0, 1fr); flex: 1; min-height: 0; transition: none; }
+.recovery-kinetic[data-scroll-story] .adv-stage .adv-panel { display: none; border: 0; min-height: 0; height: 100%; grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) auto; }
+.recovery-kinetic[data-scroll-story] .adv-stage .adv-panel[data-active] { display: grid; }
+.recovery-kinetic[data-scroll-story] .adv-stage .adv-panel .adv-scene { height: auto; min-height: 0; border: 0; border-bottom: 1px solid var(--adv-line); }
+.recovery-kinetic[data-scroll-story] .adv-copy { min-height: 0; padding: 13px 16px; align-self: stretch; }
+.recovery-kinetic[data-scroll-story] .adv-copy h3 { font-size: 1.15rem; }
+.recovery-kinetic[data-scroll-story] .adv-copy p { margin-top: 6px; font-size: .88rem; }
+.recovery-kinetic[data-scroll-story] .adv-select { display: none; }
+.recovery-kinetic[data-scroll-story] .adv-footer { margin: 0; }
+.recovery-kinetic[data-scroll-story] .cap-display { min-height: 0; padding: 10px; gap: 6px; }
+.recovery-kinetic[data-scroll-story] .cap-body { gap: 6px; }

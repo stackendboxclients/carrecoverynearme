@@ -9,12 +9,14 @@ if (section) {
   const buttons = panels.map(panel => panel.querySelector('.adv-select'));
   const mobileButtons = [...mobileTabs.querySelectorAll('.adv-mobile-tab')];
   const compact = matchMedia('(max-width: 600px)');
+  const storyMotion = matchMedia('(prefers-reduced-motion: no-preference) and (min-height: 640px)');
   const pause = section.querySelector('.adv-pause');
   const effects = new EventTarget();
   const events = new AbortController();
   const listen = { signal: events.signal };
 
   function choose(index) {
+    if (stage.dataset.selected === panels[index].dataset.panel && panels[index].hasAttribute('data-active')) return;
     stage.dataset.selected = panels[index].dataset.panel;
     panels.forEach((panel, i) => {
       const active = i === index;
@@ -22,6 +24,9 @@ if (section) {
       buttons[i].setAttribute('aria-pressed', String(active));
       mobileButtons[i].setAttribute('aria-pressed', String(active));
     });
+    if (section.hasAttribute('data-scroll-story')) {
+      panels[index].animate([{ opacity: .45, transform: 'translateY(8px)' }, { opacity: 1, transform: 'translateY(0)' }], { duration: 320, easing: 'ease-out' });
+    }
     effects.dispatchEvent(new Event('selection'));
   }
 
@@ -29,6 +34,12 @@ if (section) {
     const mobile = controls === mobileButtons;
     const select = index => {
       choose(index);
+      if (section.hasAttribute('data-scroll-story')) {
+        const top = section.getBoundingClientRect().top + window.scrollY;
+        const distance = section.offsetHeight - window.innerHeight;
+        window.scrollTo({ top: top + distance * (index + .12) / panels.length, behavior: 'smooth' });
+        return;
+      }
       if (!mobile) return;
       const panel = panels[index].getBoundingClientRect();
       const viewport = window.visualViewport?.height ?? window.innerHeight;
@@ -59,6 +70,30 @@ if (section) {
   bindControls(mobileButtons);
   section.setAttribute('data-tabs-ready', '');
   stage.dataset.enhanced = '';
+
+  // Native scrolling drives the pinned story, without trapping wheel or touch input.
+  let scrollFrame = 0;
+  function updateScrollStory() {
+    scrollFrame = 0;
+    if (!section.hasAttribute('data-scroll-story')) return;
+    const bounds = section.getBoundingClientRect();
+    const distance = section.offsetHeight - window.innerHeight;
+    if (bounds.top > 0 || bounds.bottom < window.innerHeight) return;
+    const progress = Math.max(0, Math.min(1, -bounds.top / Math.max(1, distance)));
+    choose(Math.min(panels.length - 1, Math.floor(progress * panels.length)));
+  }
+  function requestScrollStory() {
+    if (!scrollFrame) scrollFrame = requestAnimationFrame(updateScrollStory);
+  }
+  function configureScrollStory() {
+    section.toggleAttribute('data-scroll-story', storyMotion.matches);
+    requestScrollStory();
+  }
+  window.addEventListener('scroll', requestScrollStory, { passive: true, signal: events.signal });
+  window.addEventListener('resize', configureScrollStory, listen);
+  storyMotion.addEventListener('change', configureScrollStory, listen);
+  configureScrollStory();
+
 
   const service = panels.find(panel => panel.dataset.panel === 'services');
   service.addEventListener('change', event => {

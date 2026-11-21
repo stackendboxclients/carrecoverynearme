@@ -60,7 +60,7 @@ const arrangements = `
 
 const panels = [
   { key: 'contact', label: 'Enquiries', title: 'Prepare an enquiry 24/7.', description: 'Put your pickup location and vehicle details together whenever you need to.', visual: contact },
-  { key: 'services', label: 'Services', title: 'Eight ways to get help.', description: 'Car towing, Flatbed towing &amp; recovery, motorcycle transport, Luxury &amp; Sports car recovery/towing, and desert and off-road car recovery.' },
+  { key: 'services', label: 'Services', title: 'Eight ways to get help.', description: 'Car towing, Flatbed car towing &amp; recovery, motorcycle transport, Luxury &amp; Sports car recovery/towing, and desert and off-road car recovery.' },
   { key: 'handling', label: 'Handling', title: 'Recovery planned around your vehicle.', description: 'Tell us its condition, clearance and pickup access so we can discuss suitable transport.', visual: handling },
   { key: 'arrangements', label: 'Arrangements', title: 'Agree on the details before pickup.', description: 'Mention access limits like a basement ramp or narrow entrance so the team can check whether the recovery vehicle can reach you.', visual: arrangements },
 ];
