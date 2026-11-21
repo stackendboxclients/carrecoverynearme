@@ -1,6 +1,6 @@
 import { createHighway } from "./recovery-highway-background";
 
-const routeSamples = 48;
+const routeSamples = 96;
 const hero = document.querySelector<HTMLElement>(".recovery-hero");
 if (hero) startHeroMotion(hero);
 
@@ -14,7 +14,7 @@ function startHeroMotion(hero: HTMLElement) {
     const pulse = group.querySelector<SVGCircleElement>(".map-pin-pulse");
     if (!route || !trace || !truck || !pulse) return [];
     const length = route.getTotalLength();
-    return [{ group, trace, truck, pulse, delivered: false,
+    return [{ group, trace, truck, pulse, body: group.querySelector<SVGGElement>(".route-truck-body"), facingRight: true, delivered: false,
       positions: Array.from({ length: routeSamples + 1 }, (_, sample) => route.getPointAtLength(length * sample / routeSamples)),
       wheels: Array.from(group.querySelectorAll<SVGGElement>(".route-wheel")),
       cycle: 11000 + index * 2500, delay: index * 1400,
@@ -40,7 +40,17 @@ function startHeroMotion(hero: HTMLElement) {
     const fraction = index - whole;
     const x = point.x + (next.x - point.x) * fraction;
     const y = point.y + (next.y - point.y) * fraction;
-    journey.truck.setAttribute("transform", `translate(${x.toFixed(2)} ${y.toFixed(2)})`);
+    // Keep the wide truck artwork inside the map along roads near its edge.
+    const truckX = Math.max(127, Math.min(1321, x));
+    journey.truck.setAttribute("transform", `translate(${truckX.toFixed(2)} ${y.toFixed(2)})`);
+    const dx = next.x - point.x;
+    if (Math.abs(dx) > .05) {
+      const facingRight = dx > 0;
+      if (facingRight !== journey.facingRight) {
+        journey.body?.setAttribute("transform", facingRight ? "scale(1 1)" : "scale(-1 1)");
+        journey.facingRight = facingRight;
+      }
+    }
     journey.trace.setAttribute("stroke-dashoffset", String(1 - progress));
     for (const wheel of journey.wheels) {
       wheel.setAttribute("transform", `rotate(${progress * 1500} ${wheel.dataset.center})`);

@@ -2,9 +2,10 @@ import { useId, type CSSProperties } from "react";
 import { ArrowUpRight, MapPin, MessageCircle, Phone } from "lucide-react";
 
 const journeys = [
-  { id: "marina", color: "#b84216", pickup: "Dubai Marina", destination: "Downtown Dubai", start: [410, 700], finish: [880, 445], path: "M410 700 Q435 677 460 637 L520 590 Q550 560 565 523 L620 454 L680 397 Q709 375 735 366 Q767 374 790 400 L835 429 L880 445" },
-  { id: "barsha", color: "#1263b7", pickup: "Al Barsha", destination: "Dubai Creek Harbour", start: [650, 735], finish: [1235, 410], path: "M650 735 L710 687 Q747 661 780 644 L930 625 L1060 584 L1160 554 L1280 534 Q1303 510 1285 482 L1260 447 L1235 410" },
-  { id: "jebel-ali", color: "#654294", pickup: "Jebel Ali", destination: "Mall of the Emirates", start: [210, 895], finish: [618, 602], path: "M210 895 L250 840 L300 780 L360 752 Q390 740 410 700 L460 637 L520 590 Q550 575 575 585 L618 602" },
+  { id: "emirates-creek", color: "#b84216", pickup: "Mall of the Emirates (outside)", destination: "Dubai Creek Harbour", start: [650, 610], finish: [1235, 410], pickupLabel: [285, 540], dropLabel: [1080, 445], labelWidth: 350, vehicle: null, path: "M650 610 L680 632 L710 648 Q738 634 776 638 L930 625 L1060 584 L1160 554 L1280 534 Q1303 510 1285 482 L1260 447 L1235 410" },
+  { id: "jumeirah-barsha", color: "#1263b7", pickup: "Jumeirah", destination: "Al Barsha", start: [686, 340], finish: [590, 716], pickupLabel: [360, 280], dropLabel: [520, 745], labelWidth: 310, vehicle: "/assets/truck-blue-porsche.webp", path: "M686 340 L716 354 L748 366 Q742 384 721 404 L680 450 L620 510 L565 570 Q548 593 520 610 L485 641 Q474 653 468 670 L505 684 L550 704 L590 716" },
+  { id: "jebel-ali-deira", color: "#654294", pickup: "Jebel Ali", destination: "Deira", start: [210, 895], finish: [1025, 110], pickupLabel: [40, 938], dropLabel: [750, 145], labelWidth: 310, vehicle: "/assets/truck-black-lamborghini.webp", path: "M210 895 L250 840 L300 780 L360 752 Q390 740 410 700 L460 637 L520 590 Q550 560 565 523 L620 454 L680 397 L735 366 L770 318 L806 252 L843 183 Q851 160 870 146 L895 126 Q907 115 915 100 L950 110 L985 115 L1025 110" },
+  { id: "airport-e311", color: "#ba1839", pickup: "DXB airport (outside)", destination: "Sheikh Mohammed Rd (E311)", start: [1280, 325], finish: [1180, 780], pickupLabel: [1070, 170], dropLabel: [1060, 820], labelWidth: 370, vehicle: "/assets/truck-black-ferrari.webp", path: "M1280 325 L1320 340 L1375 360 Q1390 370 1400 379 L1388 430 L1370 480 L1354 540 L1330 608 L1303 684 Q1292 725 1268 750 L1220 772 L1180 780" },
 ];
 
 function RouteScene() {
@@ -15,7 +16,7 @@ function RouteScene() {
         <span><MapPin size={15} /> Dubai, UAE</span>
         <span>Illustrative routes</span>
       </figcaption>
-      <svg className="scene-map" viewBox="0 0 1448 1086" role="img" aria-label="Three illustrative recovery journeys: Dubai Marina to Downtown Dubai, Al Barsha to Dubai Creek Harbour, and Jebel Ali to Mall of the Emirates.">
+      <svg className="scene-map" viewBox="0 0 1448 1086" role="img" aria-label="Four illustrative road-aligned recovery journeys: outside Mall of the Emirates to Dubai Creek Harbour; Jumeirah to Al Barsha; Jebel Ali to Deira; and outside Dubai International Airport to Sheikh Mohammed bin Zayed Road, E311.">
         <defs>
           <clipPath id={prefix + "-vehicle"} clipPathUnits="userSpaceOnUse">
             <path d="M40 251L50 226 56 184 88 172 163 157 225 135 283 128 385 129 447 142 503 178 525 193 590 202 592 184 614 174 657 163 705 162 735 176 757 203 773 228 791 235 796 246 813 260 824 278 831 301 829 321 817 337 805 359 786 368 769 361 759 344 727 351 681 354 524 381 506 408 486 420 458 422 429 411 414 388 376 394 221 408 166 427 143 412 134 390 123 385 130 370 143 366 142 309 118 305 82 298 48 290 40 276Z" />
@@ -28,24 +29,28 @@ function RouteScene() {
         </g>)}
         {journeys.map((journey, index) => (
           <g key={journey.id} className="map-journey" data-journey={journey.id} data-delivered="false" style={{ "--route-color": journey.color } as CSSProperties}>
+            <line x1={journey.start[0]} y1={journey.start[1]} x2={Math.max(journey.pickupLabel[0] + 12, Math.min(journey.start[0], journey.pickupLabel[0] + journey.labelWidth - 12))} y2={journey.start[1] > journey.pickupLabel[1] + 73 ? journey.pickupLabel[1] + 73 : journey.pickupLabel[1]} stroke={journey.color} strokeWidth="2" strokeDasharray="5 5" />
+            <line x1={journey.finish[0]} y1={journey.finish[1]} x2={Math.max(journey.dropLabel[0] + 12, Math.min(journey.finish[0], journey.dropLabel[0] + journey.labelWidth - 12))} y2={journey.finish[1] > journey.dropLabel[1] + 73 ? journey.dropLabel[1] + 73 : journey.dropLabel[1]} stroke={journey.color} strokeWidth="2" strokeDasharray="5 5" />
             <circle cx={journey.start[0]} cy={journey.start[1]} r="13" className="map-pin-ring" />
             <circle cx={journey.start[0]} cy={journey.start[1]} r="5" className="map-pin-core" />
             <circle cx={journey.finish[0]} cy={journey.finish[1]} r="15" className="map-pin-ring map-pin-drop" />
             <circle cx={journey.finish[0]} cy={journey.finish[1]} r="6" className="map-pin-core" />
             <circle cx={journey.finish[0]} cy={journey.finish[1]} r="15" className="map-pin-pulse" fill="none" stroke="#2e784a" />
             <g className="route-truck" transform={`translate(${journey.start[0]} ${journey.start[1]})`}>
+              <g className="route-truck-body">
               {index === 0 ? <svg x="-125" y="-103" width="250" height="141" viewBox="0 0 900 506" className="map-vehicle">
                 <image href="/flatbed.webp" width="900" height="506" clipPath={"url(#" + prefix + "-vehicle)"} />
                 <g className="route-wheel" data-center="463 376"><Wheel x={463} y={376} radius={23} /></g>
                 <g className="route-wheel" data-center="790 335"><Wheel x={790} y={335} radius={15} /></g>
-              </svg> : <image href={index === 1 ? "/assets/truck-blue-porsche.webp" : "/assets/truck-black-lamborghini.webp"} x="-125" y="-98" width="250" height="112" className="map-vehicle" />}
+              </svg> : <image href={journey.vehicle ?? ""} x="-125" y="-98" width="250" height="112" className="map-vehicle" />}
+              </g>
             </g>
-            <g className="map-stop-label" transform={`translate(${journey.start[0] + (index === 1 ? 30 : -155)} ${journey.start[1] + (index === 2 ? 50 : 24)})`}>
-              <rect width="310" height="73" rx="12" />
-              <text x="14" y="29">Pickup {index + 1}</text><text x="14" y="57" className="map-stop-place">{journey.pickup}</text>
+            <g className="map-stop-label" transform={`translate(${journey.pickupLabel[0]} ${journey.pickupLabel[1]})`}>
+              <rect width={journey.labelWidth} height="73" rx="12" />
+              <text x="14" y="29">Pickup {index + 1}</text><text x="14" y="57" className="map-stop-place" style={index === 0 ? { fontSize: 21 } : undefined}>{journey.pickup}</text>
             </g>
-            <g className="map-stop-label route-label-drop" transform={`translate(${journey.finish[0] - 135} ${journey.finish[1] - 100})`}>
-              <rect width="310" height="73" rx="12" />
+            <g className="map-stop-label route-label-drop" transform={`translate(${journey.dropLabel[0]} ${journey.dropLabel[1]})`}>
+              <rect width={journey.labelWidth} height="73" rx="12" />
               <text x="14" y="29" className="route-drop-text">Drop-off {index + 1}</text><text x="14" y="29" className="route-delivered-text">Delivered {index + 1}</text>
               <text x="14" y="57" className="map-stop-place">{journey.destination}</text>
             </g>

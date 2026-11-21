@@ -303,7 +303,7 @@ for (const file of ['hero-dubai-gwagon-night.webp', 'hero-dubai-gwagon-night-mob
 await cp('stackendbox-mark.webp', 'dist/assets/stackendbox-mark.webp');
 await cp('header-dubai-skyline.webp', 'dist/assets/header-dubai-skyline.webp');
 await cp('dubai-recovery-map.webp', 'dist/assets/dubai-recovery-map.webp');
-for (const file of ['truck-blue-porsche.webp', 'truck-black-lamborghini.webp']) {
+for (const file of ['truck-blue-porsche.webp', 'truck-black-lamborghini.webp', 'truck-black-ferrari.webp']) {
   await cp(file, `dist/assets/${file}`);
 }
 for (const file of [...brandWidths.map(width => `dcr-brand-${width}.webp`), 'dcr-master.svg', 'dcr-lockup-on-dark.svg', 'dcr-lockup-on-light.svg', 'dcr-lockup-monochrome.svg', 'dcr-symbol.svg', 'dcr-icon.svg']) {
