@@ -7,7 +7,7 @@ export function recoveryEditorial(services, descriptions, icon) {
     ['Your destination.', 'Choose a recovery service and add your pickup location if you know it. The recovery team confirms availability and pricing before dispatch.', '/assets/standard-art/night-960.webp', 'Dubai roads and skyline at night'],
   ];
   const featured = ['flatbed-towing', 'luxury-car-transport', 'desert-recovery', 'basement-car-recovery'];
-  const statement = 'Vehicle pickup in Dubai, with delivery across all seven UAE emirates.';
+  const statement = 'Vehicle pickup in Dubai, with delivery anywhere within Dubai or across the UAE.';
   return `<section class="recovery-editorial" id="recovery-in-focus" aria-labelledby="editorial-heading">
   <div class="ed-cover ed-motion">
     <picture class="ed-cover-image ed-image">

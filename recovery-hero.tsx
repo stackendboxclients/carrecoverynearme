@@ -76,7 +76,7 @@ export function RecoveryHero({ bookingHref, callHref, whatsappHref }: { bookingH
       <div className="hero-shell">
         <div className="hero-copy hero-ad">
           <div className="hero-ad-intro">
-          <p className="eyebrow"><span className="hero-icon"><MapPin size={15} /></span> <span>Vehicle pickup in Dubai, with delivery across all seven UAE emirates.</span></p>
+          <p className="eyebrow"><span className="hero-icon"><MapPin size={15} /></span> <span>Vehicle pickup in Dubai, with delivery anywhere within Dubai or across the UAE.</span></p>
           <h1 id="recovery-title"><span><b className="hero-chrome">Car towing &amp;</b></span><em><strong>Car recovery in Dubai 24/7</strong></em></h1>
           <p className="hero-arrival"><span>Within Dubai arrival time 15 minutes</span></p>
           </div>
