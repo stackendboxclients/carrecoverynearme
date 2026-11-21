@@ -21,7 +21,7 @@ function startHeroMotion(hero: HTMLElement) {
     }];
   });
   if (!canvas || !scene || !journeys.length) return;
-  const highway = createHighway(canvas);
+  const highway = document.body.classList.contains("has-site-video") ? null : createHighway(canvas);
   const reduced = matchMedia("(prefers-reduced-motion: reduce)");
   const compact = matchMedia("(max-width: 850px)");
   const step = 1000 / 30;

@@ -182,3 +182,45 @@ if (form) {
   locationButton.disabled = false;
   form.querySelector('.pickup-submit').disabled = false;
 }
+
+
+const backgroundVideo = document.querySelector('.site-background-video');
+const backgroundToggle = document.querySelector('.site-video-toggle');
+if (backgroundVideo && backgroundToggle) {
+  const videoReduced = matchMedia('(prefers-reduced-motion: reduce)');
+  const boundary = document.querySelector('.service-tape') || document.querySelector('body > header');
+  let manuallyPaused = false;
+  let videoFrame = 0;
+  backgroundVideo.muted = true;
+  backgroundVideo.defaultMuted = true;
+  backgroundVideo.volume = 0;
+  const updateBoundary = () => {
+    videoFrame = 0;
+    const top = Math.max(0, Math.min(innerHeight, boundary?.getBoundingClientRect().bottom ?? 0));
+    document.documentElement.style.setProperty('--video-start', `${top}px`);
+  };
+  const scheduleBoundary = () => {
+    if (!videoFrame) videoFrame = requestAnimationFrame(updateBoundary);
+  };
+  const updateToggle = () => {
+    const paused = manuallyPaused || videoReduced.matches;
+    backgroundToggle.hidden = videoReduced.matches;
+    backgroundToggle.textContent = paused ? 'Play video' : 'Pause video';
+    backgroundToggle.setAttribute('aria-label', paused ? 'Play background video' : 'Pause background video');
+    backgroundToggle.setAttribute('aria-pressed', String(paused));
+  };
+  const syncBackground = () => {
+    updateToggle();
+    if (document.hidden || videoReduced.matches || manuallyPaused) backgroundVideo.pause();
+    else backgroundVideo.play().catch(() => { manuallyPaused = true; updateToggle(); });
+  };
+  backgroundToggle.addEventListener('click', () => { manuallyPaused = !manuallyPaused; syncBackground(); });
+  backgroundVideo.addEventListener('error', () => { backgroundVideo.hidden = true; backgroundToggle.hidden = true; });
+  videoReduced.addEventListener('change', syncBackground);
+  document.addEventListener('visibilitychange', syncBackground);
+  window.addEventListener('scroll', scheduleBoundary, { passive: true });
+  window.addEventListener('resize', scheduleBoundary);
+  if (boundary) new ResizeObserver(scheduleBoundary).observe(boundary);
+  updateBoundary();
+  syncBackground();
+}
