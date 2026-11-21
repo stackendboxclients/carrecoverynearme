@@ -197,7 +197,7 @@ footer{--metal-angle:113deg;--metal-light-x:36%;background:var(--metal-foundatio
   body { padding-bottom: calc(61px + env(safe-area-inset-bottom)); }
   .header-inner { position: relative; flex-direction: row; align-items: center; justify-content: space-between; gap: 8px; min-height: 0; padding-block: 8px; }
   .desktop-nav,.header-contact,.pickup-channels { display: none; }
-  .brand--header { width: 178px; }
+  .brand--header { width: 140px; }
   footer.wrap { flex-direction: column; justify-content: center; gap: 12px; }
   footer.wrap div { justify-content: center; }
   .header-inner nav a { display: inline-flex; align-items: center; min-height: 44px; }
@@ -608,7 +608,7 @@ a.pickup-channel:hover { border-color: var(--orange-ink); background: var(--warm
   text-transform: uppercase;
   text-wrap: balance;
 }
-.showcase-card-content p { margin: 7px 0 0; max-width: 32ch; color: #fff6ee; font-size: .8125rem; line-height: 1.35; text-shadow: 0 1px 4px #000, 0 0 8px #000; }
+.showcase-card-content p { margin: 7px 0 0; max-width: 32ch; color: #fff6ee; font-size: .8125rem; line-height: 1.35; text-shadow: none; -webkit-text-stroke: .45px #000; paint-order: stroke fill; }
 .showcase-number { display: block; color: #ff9853; font: italic 700 1.13rem/1 var(--display); }
 .showcase-card:is(:hover, :focus-within) { border-color: #ff9b65; box-shadow: 0 0 24px #fd7c313a; }
 .showcase-card:is(:hover, :focus-within) .showcase-photo { transform: skewX(calc(0deg - var(--card-skew))) scale(1.035); }
@@ -753,21 +753,21 @@ body.has-site-video footer { background: transparent; box-shadow: none; }
 body.has-site-video main :is(h1, h2, h3):not(:where(.showcase-card *, .service-card *, .adv-panel *, .pickup-form *, .feedback-card *, .recovery-faq-list *, .steps *)),
 body.has-site-video main :is(h1, h2, h3):not(:where(.showcase-card *, .service-card *, .adv-panel *, .pickup-form *, .feedback-card *, .recovery-faq-list *, .steps *)) :is(em, strong, b) {
   color: #ff7900 !important; background: none !important; font-weight: 700;
-  -webkit-text-stroke: 1.2px #000; paint-order: stroke fill;
-  text-shadow: -1px -1px #000, 1px -1px #000, -1px 1px #000, 1px 1px #000;
+  -webkit-text-stroke: 1px #000; paint-order: stroke fill;
+  text-shadow: none;
   animation: none !important;
 }
 body.has-site-video :is(.hero-description, .hero-availability, .hero-copy > .eyebrow, .pickup-intro > p, .showcase-intro > p, .adv-lede, .recovery-faq-intro > p, .feedback-intro p, .feedback-preview-stats dt, .feedback-preview-stats dd, .feedback-disclosure, .section > p, .back-link, .showcase-all, footer > div a) {
-  color: #fff; font-weight: 650; -webkit-text-stroke: .35px #000; paint-order: stroke fill;
-  text-shadow: -1px -1px #000, 1px -1px #000, -1px 1px #000, 1px 1px #000, 0 2px 3px #000;
+  color: #fff; font-weight: 650; -webkit-text-stroke: .65px #000; paint-order: stroke fill;
+  text-shadow: none;
 }
 body.has-site-video .hero-service-list {
-  color: #fff; font-weight: 700; -webkit-text-stroke: .45px #000; paint-order: stroke fill;
-  text-shadow: -1px -1px #000, 1px -1px #000, -1px 1px #000, 1px 1px #000;
+  color: #fff; font-weight: 700; -webkit-text-stroke: .7px #000; paint-order: stroke fill;
+  text-shadow: none;
 }
 body.has-site-video .hero-arrival, body.has-site-video footer .developer-credit {
-  color: #ff7900; font-weight: 700; -webkit-text-stroke: .5px #000; paint-order: stroke fill;
-  text-shadow: -1px -1px #000, 1px -1px #000, -1px 1px #000, 1px 1px #000;
+  color: #ff7900; font-weight: 700; -webkit-text-stroke: .65px #000; paint-order: stroke fill;
+  text-shadow: none;
 }
 /* Keep both contact actions on screen from the hero through the footer. */
 body { padding-bottom: calc(80px + env(safe-area-inset-bottom)); }
@@ -807,6 +807,6 @@ body { padding-bottom: calc(80px + env(safe-area-inset-bottom)); }
   94%, 100% { background-position: -150% 0, 0 0, 0 0; }
 }
 @keyframes text-glint {
-  0%, 76%, 100% { filter: brightness(1); }
-  85% { filter: brightness(1.15) drop-shadow(0 0 1px #ffffff50); }
+  0%, 76%, 100% { opacity: 1; }
+  85% { opacity: .96; }
 }

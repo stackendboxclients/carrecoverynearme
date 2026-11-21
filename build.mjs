@@ -40,7 +40,7 @@ const brandSource = width => `/assets/dcr-brand-${width}.webp`;
 const brandSources = brandWidths.map(width => `${brandSource(width)} ${width}w`).join(', ');
 const brand = (placement) => {
   const inHeader = placement === 'header';
-  const sizes = inHeader ? '(max-width: 590px) 178px, (max-width: 1067px) 192px, (max-width: 1289px) 18vw, 232px' : '(max-width: 1055px) 232px, (max-width: 1200px) 22vw, 264px';
+  const sizes = inHeader ? '(max-width: 590px) 140px, (max-width: 1067px) 192px, (max-width: 1289px) 18vw, 232px' : '(max-width: 1055px) 232px, (max-width: 1200px) 22vw, 264px';
   return `<a class="brand brand--${placement}" href="/" aria-label="Dubai Car Recovery Near Me home"><img src="${brandSource(480)}" srcset="${brandSources}" sizes="${sizes}" width="960" height="315" alt="" decoding="async"${inHeader ? '' : ' loading="lazy" fetchpriority="low"'}></a>`;
 };
 const serviceIcons = [
