@@ -259,9 +259,7 @@ const serviceShowcase = `<section class="recovery-showcase" id="services" aria-l
   </svg>
   <div class="showcase-inner">
     <div class="showcase-intro">
-      <p class="showcase-eyebrow">${enquiryIcon('pin')} <span>Dubai Car Recovery <b>/ Our services</b></span></p>
-      <h2 id="showcase-heading">Recovery, <em>reengineered.</em></h2>
-      <p>Towing, vehicle transport, and roadside assistance across Dubai.</p>
+      <h2 id="showcase-heading">${enquiryIcon('pin')} <span>Dubai Car Recovery <b>/ Our Services</b></span></h2>
     </div>
     <div class="showcase-grid">${showcaseCards.join('')}</div>
     <a class="showcase-all" href="/services/">View all recovery services ${enquiryIcon('arrow')}</a>

@@ -531,26 +531,14 @@ a.pickup-channel:hover { border-color: var(--orange-ink); background: var(--warm
 }
 .showcase-inner { width: min(1570px, calc(100% - 64px)); margin-inline: auto; }
 .showcase-intro { text-align: center; margin: 0 auto clamp(22px, 3vw, 42px); }
-.showcase-eyebrow {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 9px;
-  margin: 0 0 10px;
-  color: var(--orange-ink);
-  font: italic 700 clamp(.72rem, 1.2vw, 1rem)/1.2 var(--display);
-  text-transform: uppercase;
-}
-.showcase-eyebrow b { color: var(--ink); font-weight: 550; }
 .showcase-intro h2 {
-  margin: 0;
-  font: italic 700 clamp(1.8rem, 4.1vw, 4rem)/1.04 var(--display);
-  letter-spacing: -.05em;
-  text-transform: uppercase;
-  text-wrap: balance;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  margin: 0; color: #ff7900;
+  font: 700 clamp(1.65rem, 4.1vw, 4rem)/1.12 var(--display);
+  letter-spacing: -.045em; text-transform: none; text-wrap: balance;
 }
-.showcase-intro h2 em { color: var(--orange-ink); }
-.showcase-intro > p:last-child { margin: 10px 0 0; color: var(--muted); }
+.showcase-intro h2 b { font-weight: 700; }
+.showcase-intro h2 .enquiry-icon { flex: none; width: 24px; height: 24px; }
 .showcase-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
