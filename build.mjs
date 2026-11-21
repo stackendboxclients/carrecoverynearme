@@ -5,6 +5,7 @@ import { build, transform } from 'esbuild';
 import { buildRecoveryHero } from './recovery-hero-build.mjs';
 import { recoveryKinetic } from './recovery-kinetic.mjs';
 import { recoveryFeedback } from './recovery-feedback.mjs';
+import { recoveryEditorial } from './recovery-editorial.mjs';
 
 const business = JSON.parse(await readFile('business.json', 'utf8'));
 const services = [
@@ -272,6 +273,7 @@ ${booking('h2')}
 ${serviceShowcase}
 ${recoveryKinetic(enquiryIcon, services)}
 ${recoveryFeedback(business)}
+${recoveryEditorial(showcaseServices, showcaseDescriptions, enquiryIcon)}
 ${faq}`;
 const guides = [
   ['dubai-breakdown-recovery-checklist', 'Dubai breakdown checklist', 'Once you’re somewhere safe, note the nearest exit, parking level, or landmark. Share your map pin, vehicle make and model, and whether it can roll and steer. Mention warning lights, leaks, or damage before arranging transport.'],
@@ -333,7 +335,7 @@ for (const file of ['advantage-loading-540.webp', 'advantage-loading-960.webp', 
 const assetUrls = {};
 const homepageStyles = [];
 const kineticScript = await build({ entryPoints: ['recovery-kinetic.js'], bundle: true, minify: true, write: false, legalComments: 'inline' });
-for (const [name, extension] of [['design', 'css'], ['recovery-hero', 'css'], ['site', 'js'], ['recovery-kinetic', 'css'], ['recovery-kinetic', 'js'], ['recovery-feedback', 'css'], ['recovery-feedback', 'js']]) {
+for (const [name, extension] of [['design', 'css'], ['recovery-hero', 'css'], ['site', 'js'], ['recovery-kinetic', 'css'], ['recovery-kinetic', 'js'], ['recovery-feedback', 'css'], ['recovery-feedback', 'js'], ['recovery-editorial', 'css'], ['recovery-editorial', 'js']]) {
   let contents = name === 'recovery-kinetic' && extension === 'js'
     ? kineticScript.outputFiles[0].contents
     : await readFile(`${name}.${extension}`);
@@ -342,7 +344,7 @@ for (const [name, extension] of [['design', 'css'], ['recovery-hero', 'css'], ['
     contents = result.code;
     homepageStyles.push(contents);
     if (name !== 'design') continue;
-  } else if (name === 'site') {
+  } else if (name === 'site' || name === 'recovery-editorial') {
     const result = await transform(contents.toString(), { loader: 'js', minify: true });
     contents = result.code;
   }
@@ -355,7 +357,7 @@ const homeCSS = homepageStyles.join('\n');
 const homepageAssets = `<link rel="preload" href="/assets/hero-space-grotesk.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/hero-instrument-sans.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="modulepreload" href="${heroMotionSrc}" fetchpriority="low">
-<meta name="hero-motion" content="${heroMotionSrc}"><meta name="kinetic-motion" content="${assetUrls['recovery-kinetic.js']}"><meta name="feedback-motion" content="${assetUrls['recovery-feedback.js']}"><style>${homeCSS}</style>`;
+<meta name="hero-motion" content="${heroMotionSrc}"><meta name="kinetic-motion" content="${assetUrls['recovery-kinetic.js']}"><meta name="feedback-motion" content="${assetUrls['recovery-feedback.js']}"><meta name="editorial-motion" content="${assetUrls['recovery-editorial.js']}"><style>${homeCSS}</style>`;
 for (const [path, title, description, content] of pages) {
   const directory = `dist${path}`;
   await mkdir(directory, { recursive: true });

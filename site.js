@@ -41,6 +41,7 @@ const deferredSections = new Map([
   ['.recovery-hero', document.querySelector('meta[name="hero-motion"]')?.content],
   ['.recovery-kinetic', document.querySelector('meta[name="kinetic-motion"]')?.content],
   ['.feedback-deck', document.querySelector('meta[name="feedback-motion"]')?.content],
+  ['.recovery-editorial', document.querySelector('meta[name="editorial-motion"]')?.content],
 ].filter(([, source]) => source));
 if (deferredSections.size) {
   const targets = new Map();
