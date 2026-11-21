@@ -1,5 +1,5 @@
 import { useId, type CSSProperties } from "react";
-import { ArrowUpRight, MapPin, MessageCircle, Phone, ShieldCheck, Truck } from "lucide-react";
+import { ArrowUpRight, MapPin, MessageCircle, Phone } from "lucide-react";
 
 const journeys = [
   { id: "marina", color: "#b84216", pickup: "Dubai Marina", destination: "Downtown Dubai", start: [410, 700], finish: [880, 445], path: "M410 700 Q435 677 460 637 L520 590 Q550 560 565 523 L620 454 L680 397 Q709 375 735 366 Q767 374 790 400 L835 429 L880 445" },
@@ -52,7 +52,7 @@ function RouteScene() {
           </g>
         ))}
       </svg>
-      <div className="scene-footer"><span><a href="https://commons.wikimedia.org/wiki/File:Transport_autoturism_electric_pe_platforma_auto_de_tip_%22flatbed%22.jpg">Truck photo by Traiantkd</a>{" · Cutout · "}<a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></span></div>
+      <figcaption className="route-photo-credit"><span><a href="https://commons.wikimedia.org/wiki/File:Transport_autoturism_electric_pe_platforma_auto_de_tip_%22flatbed%22.jpg">Truck photo by Traiantkd</a>{" · Cutout · "}<a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></span></figcaption>
     </figure>
   );
 }
@@ -80,10 +80,6 @@ export function RecoveryHero({ bookingHref, callHref, whatsappHref }: { bookingH
             {!callHref && !whatsappHref && <a className="contact-cta contact-cta--call" href={bookingHref}>Request recovery <ArrowUpRight size={18} aria-hidden="true" /></a>}
             <a className="contact-cta contact-cta--location" href={bookingHref} data-use-pickup-location aria-label="Use my current location"><MapPin size={18} aria-hidden="true" /><span className="hero-location-full">Use my current location</span><span className="hero-location-short">My location</span></a>
           </div>
-          <ul className="hero-trust">
-            <li><span className="hero-icon"><Truck size={17} /></span> Breakdown car recovery &amp; Flatbed car towing &amp; recovery</li>
-            <li><span className="hero-icon"><ShieldCheck size={17} /></span> Luxury &amp; Sports car recovery/towing</li>
-          </ul>
         </div>
         <RouteScene />
       </div>
