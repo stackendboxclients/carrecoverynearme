@@ -170,10 +170,12 @@ if (form) {
 
 const backgroundVideo = document.querySelector('.site-background-video');
 if (backgroundVideo) {
-  const boundary = document.querySelector('.recovery-hero') || document.querySelector('body > header');
+  const heroBoundary = document.querySelector('.recovery-hero');
+  const boundary = heroBoundary || document.querySelector('body > header');
   let videoFrame = 0;
   let previousTop = -1;
   let backgroundStarted = false;
+  let backgroundQueued = false;
   let backgroundCovered = true;
   backgroundVideo.muted = true;
   backgroundVideo.defaultMuted = true;
@@ -182,6 +184,7 @@ if (backgroundVideo) {
     videoFrame = 0;
     const top = Math.max(0, Math.min(innerHeight, boundary?.getBoundingClientRect().bottom ?? 0));
     backgroundCovered = top >= innerHeight;
+    if (!backgroundStarted && (!heroBoundary || window.scrollY > 0)) queueBackground();
     if (top !== previousTop) {
       document.documentElement.style.setProperty('--video-start', `${top}px`);
       previousTop = top;
@@ -209,8 +212,10 @@ if (backgroundVideo) {
     backgroundVideo.load();
     syncBackground();
   };
-  // Give the hero image and essential page assets priority over background media.
+  // Let the hero load first. Start warming the video when visitors begin scrolling.
   const queueBackground = () => {
+    if (backgroundQueued || (heroBoundary && window.scrollY === 0) || document.readyState !== 'complete') return;
+    backgroundQueued = true;
     if ('requestIdleCallback' in window) requestIdleCallback(startBackground, { timeout: 2000 });
     else setTimeout(startBackground, 0);
   };
