@@ -108,6 +108,8 @@
 .hero-copy .hero-trust { animation-delay: .39s; }
 @keyframes hero-reveal { from { opacity: .25; transform: translateY(12px); } to { opacity: 1; transform: none; } }
 .hero-description { margin: 0; color: #3e4b53; font-size: clamp(1rem, 1.45vw, 1.17rem); line-height: 1.58; max-width: 39ch; text-wrap: pretty; }
+.hero-service-list { color: #000; font-weight: 700; }
+.hero-availability { display: block; margin-top: 8px; }
 .hero-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
 .hero-actions .contact-cta { min-height: 52px; }
 .hero-actions { align-items: end; }
