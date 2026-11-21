@@ -12,6 +12,14 @@
       "headers": [{ "key": "Cache-Control", "value": "public, max-age=3600" }]
     },
     {
+      "source": "/assets/service-art/:name.webp",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=86400" }]
+    },
+    {
+      "source": "/assets/site-background.mp4",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=86400" }]
+    },
+    {
       "source": "/flatbed.webp",
       "headers": [{ "key": "Cache-Control", "value": "public, max-age=3600" }]
     }

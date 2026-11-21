@@ -500,3 +500,8 @@
 .recovery-kinetic[data-scroll-story] .adv-footer { margin: 0; }
 .recovery-kinetic[data-scroll-story] .cap-display { min-height: 0; padding: 10px; gap: 6px; }
 .recovery-kinetic[data-scroll-story] .cap-body { gap: 6px; }
+
+@media (max-width: 600px) {
+  .recovery-kinetic[data-scroll-story] .adv-layout { padding-bottom: calc(88px + env(safe-area-inset-bottom)); }
+  .recovery-kinetic[data-tabs-ready] .adv-mobile-tab { min-width: 0; font-size: clamp(.625rem, 2.8vw, .82rem); overflow-wrap: anywhere; }
+}

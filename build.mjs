@@ -26,6 +26,7 @@ const services = [
   ['car-recovery', 'Car recovery', 'Get your car from its breakdown location to a garage or destination.'],
   ['heavy-bus-towing', 'Heavy bus towing', 'Discuss towing for a broken-down bus or minibus.'],
   ['emergency-car-recovery-towing', 'Emergency car recovery and towing', 'Request urgent recovery and towing for a stranded car.'],
+  ['basement-car-recovery', 'Basement car recovery', 'Arrange recovery from basement and underground parking.'],
 ];
 const name = business.name;
 const contactReady = Boolean(business.whatsapp || business.phone);
@@ -76,6 +77,7 @@ const serviceAdvice = [
   'Share your car make and model, what happened, and whether it can roll, steer, or shift into neutral.',
   'Share the bus or minibus size, weight, location, and fault so the team can check suitable towing equipment.',
   'Share your exact pickup point, car condition, and destination so the team can confirm urgent recovery arrangements.',
+  'Share the parking level, ceiling height, ramp access, and whether your car can roll and steer so suitable recovery equipment can be arranged.',
 ];
 const cards = services.map(([slug, title, description], index) => `<article class="service-card"><span class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${serviceIcons[index] ?? serviceIcons[11]}</svg></span><h3>${title}</h3><p>${description}</p><a href="/services/${slug}/">Explore service <span aria-hidden="true">↗</span></a></article>`).join('');
 const enquiryIcons = {
@@ -205,8 +207,8 @@ const showcaseServices = [
   ['car-recovery', 'Car recovery'],
   ['heavy-bus-towing', 'Heavy bus towing'],
   ['emergency-car-recovery-towing', 'Emergency car recovery and towing'],
+  ['basement-car-recovery', 'Basement car recovery'],
 ];
-const newServiceSlugs = new Set(['full-down-box-recovery', 'vehicle-recovery', 'car-recovery', 'heavy-bus-towing', 'emergency-car-recovery-towing']);
 const showcaseDescriptions = {
   'car-towing': 'Move your car to a garage or destination across Dubai.',
   'roadside-assistance': 'Get help with common roadside vehicle problems.',
@@ -221,10 +223,11 @@ const showcaseDescriptions = {
   'car-recovery': 'Take your broken-down car to a garage or destination.',
   'heavy-bus-towing': 'Arrange recovery for buses and compact minibuses.',
   'emergency-car-recovery-towing': 'Request urgent pickup and towing for your car.',
+  'basement-car-recovery': 'Recover a car from basement parking with clearance checked first.',
 };
 
 const showcaseCards = showcaseServices.map(([slug, title], index) => {
-  const image = `<img class="showcase-photo" src="/assets/service-art/${slug}.${newServiceSlugs.has(slug) ? 'png' : 'webp'}" alt="" loading="lazy" decoding="async">`;
+  const image = `<img class="showcase-photo" src="/assets/service-art/${slug}.webp" alt="" loading="lazy" decoding="async">`;
   const heading = `<span class="showcase-number" aria-hidden="true">${String(index + 1).padStart(2, '0')} /</span><h3>${title}</h3>`;
   return `<a class="showcase-card" href="/services/${slug}/">
     ${image}
@@ -294,10 +297,10 @@ await mkdir('dist', { recursive: true });
 await mkdir('dist/assets');
 await cp('site-background.mp4', 'dist/assets/site-background.mp4');
 await cp('site-background-poster.webp', 'dist/assets/site-background-poster.webp');
-await cp('stackendbox-mark.png', 'dist/assets/stackendbox-mark.png');
-await cp('header-dubai-skyline.png', 'dist/assets/header-dubai-skyline.png');
-await cp('dubai-recovery-map.png', 'dist/assets/dubai-recovery-map.png');
-for (const file of ['truck-blue-porsche.png', 'truck-black-lamborghini.png']) {
+await cp('stackendbox-mark.webp', 'dist/assets/stackendbox-mark.webp');
+await cp('header-dubai-skyline.webp', 'dist/assets/header-dubai-skyline.webp');
+await cp('dubai-recovery-map.webp', 'dist/assets/dubai-recovery-map.webp');
+for (const file of ['truck-blue-porsche.webp', 'truck-black-lamborghini.webp']) {
   await cp(file, `dist/assets/${file}`);
 }
 for (const file of [...brandWidths.map(width => `dcr-brand-${width}.webp`), 'dcr-master.svg', 'dcr-lockup-on-dark.svg', 'dcr-lockup-on-light.svg', 'dcr-lockup-monochrome.svg', 'dcr-symbol.svg', 'dcr-icon.svg']) {
@@ -314,7 +317,7 @@ const serviceTape = `<div class="service-tape">
 await cp('expressway.webp', 'dist/assets/expressway.webp');
 await mkdir('dist/assets/service-art');
 for (const name of [...showcaseServices.map(([slug]) => slug), 'overpass', 'skyline']) {
-  const extension = newServiceSlugs.has(name) ? 'png' : 'webp';
+  const extension = 'webp';
   await cp(`service-${name}.${extension}`, `dist/assets/service-art/${name}.${extension}`);
 }
 await mkdir('dist/assets/standard-art');
@@ -351,7 +354,7 @@ for (const [path, title, description, content] of pages) {
   const directory = `dist${path}`;
   await mkdir(directory, { recursive: true });
   const canonical = business.domain + path;
-  await writeFile(directory + 'index.html', `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${path === '/' ? title : title + ' | ' + name}</title><meta name="description" content="${description}"><meta name="robots" content="${indexable ? 'index,follow' : 'noindex,nofollow'}"><link rel="canonical" href="${canonical}"><link rel="icon" href="/assets/dcr-icon.svg" type="image/svg+xml" sizes="any"><script src="${assetUrls['site.js']}" defer></script>${path === '/' ? homepageAssets : `<link rel="stylesheet" href="${assetUrls['design.css']}">`}</head><body class="has-site-video"><div class="site-video-layer" aria-hidden="true"><video class="site-background-video" autoplay muted loop playsinline preload="auto" poster="/assets/site-background-poster.webp" tabindex="-1"><source src="/assets/site-background.mp4" type="video/mp4"></video></div><button type="button" class="site-video-toggle" aria-label="Pause background video" aria-pressed="false" hidden>Pause video</button><a class="skip" href="#main">Skip to content</a><header><div class="wrap header-inner">${brand('header')}<nav class="desktop-nav" aria-label="Main">${mainNav}</nav><details class="mobile-menu"><summary>${enquiryIcon('menu')}<span>Menu</span></summary><nav aria-label="Main">${mainNav}</nav></details><div class="header-contact">${directContact || '<a class="button" href="/book/">Plan a pickup ↗</a>'}</div></div></header><main id="main">${path === '/' ? content.replace('<!-- recovery-hero -->', serviceTape + recoveryHero) : content}</main><footer class="wrap">${brand('footer')}<div><a href="/services/">Services</a><a href="/contact/">Contact</a><a href="/blogs/">Guides</a><a href="/privacy/">Privacy</a></div><a class="developer-credit" href="https://www.stackendbox.com/"><img src="/assets/stackendbox-mark.png" width="30" height="33" alt="" loading="lazy"><span>Developed by StackEndBox</span></a></footer><aside class="mobile-actions" aria-label="Recovery actions"${path === '/' ? ' hidden' : ''}>${directContact}</aside></body></html>`);
+  await writeFile(directory + 'index.html', `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${path === '/' ? title : title + ' | ' + name}</title><meta name="description" content="${description}"><meta name="robots" content="${indexable ? 'index,follow' : 'noindex,nofollow'}"><link rel="canonical" href="${canonical}"><link rel="icon" href="/assets/dcr-icon.svg" type="image/svg+xml" sizes="any"><script src="${assetUrls['site.js']}" defer></script>${path === '/' ? homepageAssets : `<link rel="stylesheet" href="${assetUrls['design.css']}">`}</head><body class="has-site-video"><div class="site-video-layer" aria-hidden="true"><video class="site-background-video" autoplay muted loop playsinline preload="auto" poster="/assets/site-background-poster.webp" tabindex="-1"><source src="/assets/site-background.mp4" type="video/mp4"></video></div><button type="button" class="site-video-toggle" aria-label="Pause background video" aria-pressed="false" hidden>Pause video</button><a class="skip" href="#main">Skip to content</a><header><div class="wrap header-inner">${brand('header')}<nav class="desktop-nav" aria-label="Main">${mainNav}</nav><details class="mobile-menu"><summary>${enquiryIcon('menu')}<span>Menu</span></summary><nav aria-label="Main">${mainNav}</nav></details><div class="header-contact">${directContact || '<a class="button" href="/book/">Plan a pickup ↗</a>'}</div></div></header><main id="main">${path === '/' ? content.replace('<!-- recovery-hero -->', serviceTape + recoveryHero) : content}</main><footer class="wrap">${brand('footer')}<div><a href="/services/">Services</a><a href="/contact/">Contact</a><a href="/blogs/">Guides</a><a href="/privacy/">Privacy</a></div><a class="developer-credit" href="https://www.stackendbox.com/"><img src="/assets/stackendbox-mark.webp" width="30" height="33" alt="" loading="lazy"><span>Developed by StackEndBox</span></a></footer><aside class="mobile-actions" aria-label="Recovery actions"${path === '/' ? ' hidden' : ''}>${directContact}</aside></body></html>`);
 }
 await writeFile('dist/robots.txt', indexable ? `User-agent: *\nAllow: /\nSitemap: ${business.domain}/sitemap.xml\n` : 'User-agent: *\nAllow: /\n');
 await writeFile('dist/sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${pages.map(([path]) => `<url><loc>${business.domain}${path}</loc></url>`).join('')}</urlset>`);

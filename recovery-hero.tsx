@@ -21,7 +21,7 @@ function RouteScene() {
             <path d="M40 251L50 226 56 184 88 172 163 157 225 135 283 128 385 129 447 142 503 178 525 193 590 202 592 184 614 174 657 163 705 162 735 176 757 203 773 228 791 235 796 246 813 260 824 278 831 301 829 321 817 337 805 359 786 368 769 361 759 344 727 351 681 354 524 381 506 408 486 420 458 422 429 411 414 388 376 394 221 408 166 427 143 412 134 390 123 385 130 370 143 366 142 309 118 305 82 298 48 290 40 276Z" />
           </clipPath>
         </defs>
-        <image href="/assets/dubai-recovery-map.png" width="1448" height="1086" />
+        <image href="/assets/dubai-recovery-map.webp" width="1448" height="1086" />
         {journeys.map(journey => <g key={journey.id} className="map-road" style={{ "--route-color": journey.color } as CSSProperties}>
           <path d={journey.path} className="route-bed" />
           <path d={journey.path} className="route-trace" data-route={journey.id} pathLength="1" strokeDasharray="1 1" strokeDashoffset="1" />
@@ -38,7 +38,7 @@ function RouteScene() {
                 <image href="/flatbed.webp" width="900" height="506" clipPath={"url(#" + prefix + "-vehicle)"} />
                 <g className="route-wheel" data-center="463 376"><Wheel x={463} y={376} radius={23} /></g>
                 <g className="route-wheel" data-center="790 335"><Wheel x={790} y={335} radius={15} /></g>
-              </svg> : <image href={index === 1 ? "/assets/truck-blue-porsche.png" : "/assets/truck-black-lamborghini.png"} x="-125" y="-98" width="250" height="112" className="map-vehicle" />}
+              </svg> : <image href={index === 1 ? "/assets/truck-blue-porsche.webp" : "/assets/truck-black-lamborghini.webp"} x="-125" y="-98" width="250" height="112" className="map-vehicle" />}
             </g>
             <g className="map-stop-label" transform={`translate(${journey.start[0] + (index === 1 ? 30 : -155)} ${journey.start[1] + (index === 2 ? 50 : 24)})`}>
               <rect width="310" height="73" rx="12" />
@@ -73,7 +73,7 @@ export function RecoveryHero({ bookingHref, callHref, whatsappHref }: { bookingH
           <p className="eyebrow"><span className="hero-icon"><MapPin size={15} /></span> Dubai, United Arab Emirates</p>
           <h1 id="recovery-title"><span><b className="hero-chrome">Car towing &amp;</b></span><em><strong>Car recovery in Dubai 24/7</strong></em></h1>
           <p className="hero-arrival">Arrival within 15 minutes</p>
-          <p className="hero-description"><strong className="hero-service-list">Car towing, Luxury &amp; Sports car recovery/towing, Flatbed car towing &amp; recovery, roadside assistance, car breakdown recovery, desert and off-road car recovery, motorcycle transport, accident car recovery, Full down car and box recovery, Heavy bus towing, emergency car recovery and towing</strong><span className="hero-availability">Call us. We are available 24 by 7.</span></p>
+          <p className="hero-description"><strong className="hero-service-list">Car towing, Luxury &amp; Sports car recovery/towing, Flatbed car towing &amp; recovery, roadside assistance, car breakdown recovery, desert and off-road car recovery, motorcycle transport, accident car recovery, Full down car and box recovery, Heavy bus towing, emergency car recovery and towing, Basement car recovery</strong><span className="hero-availability">Call us. We are available 24 by 7.</span></p>
           <div className="hero-actions" data-contact-count={Number(Boolean(callHref)) + Number(Boolean(whatsappHref)) + 1}>
             {callHref && <div className="hero-call-stack"><a className="hero-phone-button" href={callHref}>{callHref.replace(/^tel:/, "")}</a><a className="contact-cta contact-cta--call" href={callHref}><Phone size={18} aria-hidden="true" /> Call now</a></div>}
             {whatsappHref && <a className="contact-cta contact-cta--whatsapp" href={whatsappHref}><MessageCircle size={18} aria-hidden="true" /> WhatsApp</a>}
