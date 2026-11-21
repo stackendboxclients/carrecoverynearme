@@ -78,7 +78,7 @@ export function RecoveryHero({ bookingHref, callHref, whatsappHref }: { bookingH
       <picture className="hero-night-background" aria-hidden="true">
         <img src="/assets/hero-dubai-gwagon-night-mobile.webp" width="887" height="1774" alt="" fetchPriority="high" decoding="async" />
       </picture>
-          <p className="eyebrow"><span className="hero-icon"><MapPin size={15} /></span> Dubai, United Arab Emirates</p>
+          <p className="eyebrow"><span className="hero-icon"><MapPin size={15} /></span> <span>Vehicle pickup in Dubai, with delivery across all seven UAE emirates.</span></p>
           <h1 id="recovery-title"><span><b className="hero-chrome">Car towing &amp;</b></span><em><strong>Car recovery in Dubai 24/7</strong></em></h1>
           <p className="hero-arrival">Arrival within 15 minutes</p>
           <p className="hero-description"><strong className="hero-service-list">Car towing, Luxury &amp; Sports car recovery/towing, Flatbed car towing &amp; recovery, roadside assistance, car breakdown recovery, desert and off-road car recovery, motorcycle transport, accident car recovery, Full down car and box recovery, Heavy bus towing, emergency car recovery and towing, Basement car recovery</strong><span className="hero-availability">Call us. We are available 24 by 7.</span></p>

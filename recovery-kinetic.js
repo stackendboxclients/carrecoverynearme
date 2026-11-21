@@ -1,4 +1,5 @@
 import { gsap } from 'gsap';
+import { createAutoCycle } from './recovery-auto-cycle.mjs';
 
 const section = document.querySelector('.recovery-kinetic');
 
@@ -9,8 +10,7 @@ if (section) {
   const buttons = panels.map(panel => panel.querySelector('.adv-select'));
   const mobileButtons = [...mobileTabs.querySelectorAll('.adv-mobile-tab')];
   const compact = matchMedia('(max-width: 600px)');
-  const storyMotion = matchMedia('(prefers-reduced-motion: no-preference) and (min-height: 640px)');
-  const pause = section.querySelector('.adv-pause');
+  const transitionMotion = matchMedia('(prefers-reduced-motion: no-preference)');
   const effects = new EventTarget();
   const events = new AbortController();
   const listen = { signal: events.signal };
@@ -24,30 +24,14 @@ if (section) {
       buttons[i].setAttribute('aria-pressed', String(active));
       mobileButtons[i].setAttribute('aria-pressed', String(active));
     });
-    if (section.hasAttribute('data-scroll-story')) {
-      panels[index].animate([{ opacity: .45, transform: 'translateY(8px)' }, { opacity: 1, transform: 'translateY(0)' }], { duration: 320, easing: 'ease-out' });
+    if (transitionMotion.matches) {
+      panels[index].animate([{ opacity: .45, transform: 'translateX(-16px)' }, { opacity: 1, transform: 'translateX(0)' }], { duration: 320, easing: 'ease-out' });
     }
     effects.dispatchEvent(new Event('selection'));
   }
 
   function bindControls(controls) {
-    const mobile = controls === mobileButtons;
-    const select = index => {
-      choose(index);
-      if (section.hasAttribute('data-scroll-story')) {
-        const top = section.getBoundingClientRect().top + window.scrollY;
-        const distance = section.offsetHeight - window.innerHeight;
-        window.scrollTo({ top: top + distance * (index + .12) / panels.length, behavior: 'smooth' });
-        return;
-      }
-      if (!mobile) return;
-      const panel = panels[index].getBoundingClientRect();
-      const viewport = window.visualViewport?.height ?? window.innerHeight;
-      const required = Math.min(panel.height / 2, viewport / 3);
-      if (panel.top + required > viewport) {
-        mobileTabs.scrollIntoView({ block: 'start' });
-      }
-    };
+    const select = index => cycle.select(index);
     controls.forEach((button, index) => {
       button.hidden = false;
       button.addEventListener('click', () => select(index), listen);
@@ -60,45 +44,22 @@ if (section) {
         else return;
         event.preventDefault();
         select(next);
-        controls[next].focus({ preventScroll: mobile });
+        controls[next].focus({ preventScroll: true });
       }, listen);
     });
   }
 
-  choose(0);
+  section.setAttribute('data-tabs-ready', '');
+  section.setAttribute('data-auto-rotate', '');
+  stage.dataset.enhanced = '';
+  const cycle = createAutoCycle({ durations: [3000, 2000, 3000, 3000], onSelect: choose });
   bindControls(buttons);
   bindControls(mobileButtons);
-  section.setAttribute('data-tabs-ready', '');
-  stage.dataset.enhanced = '';
-
-  // Native scrolling drives the pinned story, without trapping wheel or touch input.
-  let scrollFrame = 0;
-  function updateScrollStory() {
-    scrollFrame = 0;
-    if (!section.hasAttribute('data-scroll-story')) return;
-    const bounds = section.getBoundingClientRect();
-    const distance = section.offsetHeight - window.innerHeight;
-    if (bounds.top > 0 || bounds.bottom < window.innerHeight) return;
-    const progress = Math.max(0, Math.min(1, -bounds.top / Math.max(1, distance)));
-    choose(Math.min(panels.length - 1, Math.floor(progress * panels.length)));
-  }
-  function requestScrollStory() {
-    if (!scrollFrame) scrollFrame = requestAnimationFrame(updateScrollStory);
-  }
-  function configureScrollStory() {
-    section.toggleAttribute('data-scroll-story', storyMotion.matches);
-    requestScrollStory();
-  }
-  window.addEventListener('scroll', requestScrollStory, { passive: true, signal: events.signal });
-  window.addEventListener('resize', configureScrollStory, listen);
-  storyMotion.addEventListener('change', configureScrollStory, listen);
-  configureScrollStory();
-
 
   const service = panels.find(panel => panel.dataset.panel === 'services');
   service.addEventListener('change', event => {
-    if (event.target.name === 'recovery-capability' && stage.dataset.selected !== 'services') {
-      choose(panels.indexOf(service));
+    if (event.target.name === 'recovery-capability') {
+      cycle.select(panels.indexOf(service));
     }
   }, listen);
 
@@ -119,11 +80,10 @@ if (section) {
       const pending = new Set();
       const started = new Set();
       let selected = stage.dataset.selected;
-      let paused = false;
       let revealed = false;
 
       function sync() {
-        const canPlay = !paused && !document.hidden;
+        const canPlay = !document.hidden;
         const canPlayPanel = panel => canPlay && activePanels.has(panel) && (!compact.matches || panel.dataset.panel === selected);
         const onScreen = panels.some(canPlayPanel);
         ambient.paused(!onScreen || compact.matches);
@@ -139,7 +99,6 @@ if (section) {
           } else if (started.has(panel) && reveal.progress() < 1) reveal.resume();
         }
         stage.toggleAttribute('data-playing', onScreen);
-        stage.toggleAttribute('data-paused', paused);
       }
 
       const observer = new IntersectionObserver(entries => {
@@ -152,7 +111,7 @@ if (section) {
             }
           } else activePanels.delete(target);
         }
-        if (!revealed && activePanels.size && !paused) {
+        if (!revealed && activePanels.size) {
           revealed = true;
           const entering = compact.matches ? [...activePanels] : panels;
           gsap.fromTo(entering.map(panel => panel.querySelector('.adv-scene')), { opacity: .78 }, { opacity: 1, duration: .62, stagger: .06 });
@@ -160,7 +119,6 @@ if (section) {
         sync();
       }, { threshold: [0, .25] });
       panels.forEach(panel => observer.observe(panel));
-      pause.hidden = false;
 
       effects.addEventListener('selection', () => {
         selected = stage.dataset.selected;
@@ -180,7 +138,7 @@ if (section) {
         if (panel === service) continue;
         if (contextual.has(panel)) {
           const requestReveal = () => {
-            if (paused || !activePanels.has(panel)) return;
+            if (!activePanels.has(panel)) return;
             const { reveal } = contextual.get(panel);
             if (started.has(panel) && reveal.progress() < 1) return;
             pending.add(panel);
@@ -202,16 +160,11 @@ if (section) {
           middle = bounds.left + bounds.width / 2;
         }, motionListen);
         panel.addEventListener('pointermove', event => {
-          if (paused || selected !== panel.dataset.panel || !finePointer.matches || event.pointerType === 'touch') return;
+          if (selected !== panel.dataset.panel || !finePointer.matches || event.pointerType === 'touch') return;
           nudge(gsap.utils.clamp(-3, 3, (event.clientX - middle) * .025));
         }, motionListen);
-        panel.addEventListener('pointerleave', () => { if (!paused) nudge(0); }, motionListen);
+        panel.addEventListener('pointerleave', () => nudge(0), motionListen);
       }
-      pause.addEventListener('click', () => {
-        paused = !paused;
-        pause.setAttribute('aria-label', paused ? 'Resume section animations' : 'Pause section animations');
-        sync();
-      }, motionListen);
       document.addEventListener('visibilitychange', sync, motionListen);
       compact.addEventListener('change', sync, motionListen);
 
@@ -219,10 +172,7 @@ if (section) {
         observer.disconnect();
         capability.cleanup();
         motionEvents.abort();
-        pause.hidden = true;
-        pause.setAttribute('aria-label', 'Pause section animations');
         stage.removeAttribute('data-playing');
-        stage.removeAttribute('data-paused');
       };
     }, section);
   }
