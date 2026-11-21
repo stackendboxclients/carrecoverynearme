@@ -41,7 +41,6 @@ body > header nav a:hover { color: #542005; }
 body > header :focus-visible { outline-color: #542005; }
 .header-inner,footer{display:flex;align-items:center;justify-content:space-between;gap:24px;min-height:79px}
 .header-inner { padding-block: 6px; }
-.header-contact { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
 .contact-cta {
   display: inline-flex;
   align-items: center;
@@ -63,9 +62,6 @@ body > header :focus-visible { outline-color: #542005; }
 .contact-cta--whatsapp:hover { background: #0c5036; }
 .contact-cta--location { color: var(--ink); background: #f7fafc; border-color: var(--control-border); }
 .contact-cta--location:hover { background: #e8eef1; }
-@media (max-width: 860px) {
-  .header-inner { flex-wrap: wrap; justify-content: center; gap: 8px 20px; }
-}
 .brand {
   display: block;
   flex: none;
@@ -781,3 +777,36 @@ body { padding-bottom: calc(80px + env(safe-area-inset-bottom)); }
   background: #16212a; border-top: 1px solid #52616e;
 }
 .mobile-actions .contact-cta { flex: 1; max-width: 320px; min-height: 48px; padding-inline: 8px; gap: 6px; white-space: nowrap; }
+
+/* Keep the logo and navigation at opposite ends without changing the skyline. */
+.header-inner { flex-wrap: nowrap; justify-content: space-between; }
+.header-inner .desktop-nav { margin-left: auto; justify-content: flex-end; }
+.header-inner .mobile-menu { margin-left: auto; }
+/* Opt out of automatic browser darkening and keep explicit site colors. */
+:root { color-scheme: only light; }
+@media (prefers-reduced-motion: no-preference) {
+  :is(.contact-cta, .button, .pickup-channel, #pickup-map, .adv-cta,
+      button:not(.adv-select, .adv-mobile-tab), .mobile-menu summary, .pickup-extra summary) {
+    background-size: 250% 100%, 100% 100%, 100% 100%;
+    background-repeat: no-repeat;
+    animation: action-sheen 9s ease-in-out infinite;
+  }
+  .hero-phone-button {
+    background-image: linear-gradient(117deg, transparent 30%, #ffffff30 48%, transparent 65%), linear-gradient(#b3152b, #b3152b);
+    background-size: 250% 100%, 100% 100%; background-repeat: no-repeat;
+    animation: action-sheen 9s ease-in-out infinite;
+  }
+  body.has-site-video main :is(h1, h2, h3, p:not(.hero-description)),
+  body.has-site-video :is(.hero-service-list, .hero-arrival, .hero-availability),
+  .adv-mobile-tab, .recovery-faq-item summary {
+    animation: text-glint 9s ease-in-out infinite !important;
+  }
+}
+@keyframes action-sheen {
+  0%, 76% { background-position: 150% 0, 0 0, 0 0; }
+  94%, 100% { background-position: -150% 0, 0 0, 0 0; }
+}
+@keyframes text-glint {
+  0%, 76%, 100% { filter: brightness(1); }
+  85% { filter: brightness(1.15) drop-shadow(0 0 1px #ffffff50); }
+}
