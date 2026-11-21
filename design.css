@@ -34,9 +34,7 @@ a{color:inherit} button,input,select,textarea{font:inherit}
 .skip:focus{top:10px}.narrow{max-width:760px}
 body > header {
   color: #281508;
-  background:
-    linear-gradient(180deg, #fff4e085, #ffdcba12 43%, #782b091c),
-    linear-gradient(124deg, #d87533 0%, #ed8d44 20%, #ffc18b 37%, #ffdcad 44%, #ffb071 53%, #ed8947 74%, #ffbd80 100%);
+  background: url("/assets/header-dubai-skyline.png") center center / 100% 100% no-repeat;
   border-bottom: 1px solid #9e4e24;
 }
 body > header nav a:hover { color: #542005; }
