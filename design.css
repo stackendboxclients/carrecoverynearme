@@ -766,7 +766,7 @@ body.has-site-video :is(.hero-description, .hero-availability, .hero-copy > .eye
   text-shadow: -1px -1px #000, 1px -1px #000, -1px 1px #000, 1px 1px #000, 0 2px 3px #000;
 }
 body.has-site-video .hero-service-list {
-  color: #ff3030; font-weight: 700; -webkit-text-stroke: .45px #000; paint-order: stroke fill;
+  color: #fff; font-weight: 700; -webkit-text-stroke: .45px #000; paint-order: stroke fill;
   text-shadow: -1px -1px #000, 1px -1px #000, -1px 1px #000, 1px 1px #000;
 }
 body.has-site-video .hero-arrival, body.has-site-video footer .developer-credit {
