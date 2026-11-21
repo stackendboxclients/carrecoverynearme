@@ -170,25 +170,52 @@ if (form) {
 
 const backgroundVideo = document.querySelector('.site-background-video');
 if (backgroundVideo) {
-  const boundary = document.querySelector('.service-tape') || document.querySelector('body > header');
+  const boundary = document.querySelector('.recovery-hero') || document.querySelector('body > header');
   let videoFrame = 0;
+  let previousTop = -1;
+  let backgroundStarted = false;
+  let backgroundCovered = true;
   backgroundVideo.muted = true;
   backgroundVideo.defaultMuted = true;
   backgroundVideo.volume = 0;
   const updateBoundary = () => {
     videoFrame = 0;
     const top = Math.max(0, Math.min(innerHeight, boundary?.getBoundingClientRect().bottom ?? 0));
-    document.documentElement.style.setProperty('--video-start', `${top}px`);
+    backgroundCovered = top >= innerHeight;
+    if (top !== previousTop) {
+      document.documentElement.style.setProperty('--video-start', `${top}px`);
+      previousTop = top;
+      syncBackground();
+    }
   };
   const scheduleBoundary = () => {
     if (!videoFrame) videoFrame = requestAnimationFrame(updateBoundary);
   };
   const syncBackground = () => {
-    if (document.hidden) backgroundVideo.pause();
-    else backgroundVideo.play().catch(() => {
+    if (!backgroundStarted) return;
+    if (document.hidden || backgroundCovered) backgroundVideo.pause();
+    else if (backgroundVideo.paused) backgroundVideo.play().catch(() => {
       // The poster stays visible if the browser blocks autoplay.
     });
   };
+  const startBackground = () => {
+    if (backgroundStarted) return;
+    const source = backgroundVideo.querySelector('source[data-src]');
+    if (!source) return;
+    backgroundStarted = true;
+    backgroundVideo.preload = 'auto';
+    source.src = source.dataset.src;
+    source.removeAttribute('data-src');
+    backgroundVideo.load();
+    syncBackground();
+  };
+  // Give the hero image and essential page assets priority over background media.
+  const queueBackground = () => {
+    if ('requestIdleCallback' in window) requestIdleCallback(startBackground, { timeout: 2000 });
+    else setTimeout(startBackground, 0);
+  };
+  if (document.readyState === 'complete') queueBackground();
+  else window.addEventListener('load', queueBackground, { once: true });
   backgroundVideo.addEventListener('error', () => { backgroundVideo.hidden = true; });
   document.addEventListener('visibilitychange', syncBackground);
   document.addEventListener('pointerdown', syncBackground, { once: true, passive: true });

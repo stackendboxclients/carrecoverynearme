@@ -16,7 +16,7 @@
       "headers": [{ "key": "Cache-Control", "value": "public, max-age=86400" }]
     },
     {
-      "source": "/assets/site-background.mp4",
+      "source": "/assets/site-background-dubai-road.mp4",
       "headers": [{ "key": "Cache-Control", "value": "public, max-age=86400" }]
     },
     {
