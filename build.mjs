@@ -304,6 +304,7 @@ for (const file of ['hero-dubai-gwagon-night.webp', 'hero-dubai-gwagon-night-mob
 }
 for (const width of [640, 1280]) {
   await cp(`hero-orange-recovery-${width}.webp`, `dist/assets/hero-orange-recovery-${width}.webp`);
+  await cp(`hero-bugatti-recovery-${width}.webp`, `dist/assets/hero-bugatti-recovery-${width}.webp`);
 }
 await cp('stackendbox-mark.webp', 'dist/assets/stackendbox-mark.webp');
 await cp('header-dubai-skyline.webp', 'dist/assets/header-dubai-skyline.webp');

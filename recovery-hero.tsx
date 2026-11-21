@@ -78,12 +78,12 @@ export function RecoveryHero({ bookingHref, callHref, whatsappHref }: { bookingH
           <div className="hero-ad-intro">
           <p className="eyebrow"><span className="hero-icon"><MapPin size={15} /></span> <span>Vehicle pickup in Dubai, with delivery across all seven UAE emirates.</span></p>
           <h1 id="recovery-title"><span><b className="hero-chrome">Car towing &amp;</b></span><em><strong>Car recovery in Dubai 24/7</strong></em></h1>
+          <p className="hero-arrival"><span>Within Dubai arrival time 15 minutes</span></p>
           </div>
           <figure className="hero-ad-visual">
-            <img className="hero-ad-truck" src="/assets/hero-orange-recovery-1280.webp" srcSet="/assets/hero-orange-recovery-640.webp 640w, /assets/hero-orange-recovery-1280.webp 1280w" sizes="(max-width: 700px) 100vw, 55vw" width="1536" height="1024" alt="Silver luxury SUV secured on a charcoal flatbed recovery truck with orange trim" fetchPriority="high" decoding="async" />
-            <span className="hero-ad-diamond" aria-hidden="true"><img src="/assets/hero-orange-recovery-640.webp" width="640" height="427" alt="" decoding="async" /></span>
+            <img className="hero-ad-truck" src="/assets/hero-bugatti-recovery-1280.webp" srcSet="/assets/hero-bugatti-recovery-640.webp 640w, /assets/hero-bugatti-recovery-1280.webp 1280w" sizes="(max-width: 700px) 100vw, 55vw" width="1536" height="1024" alt="Unbranded black and red Bugatti secured on a charcoal flatbed recovery truck with orange trim" fetchPriority="high" decoding="async" />
+            <span className="hero-ad-diamond" aria-hidden="true"><img src="/assets/hero-bugatti-recovery-640.webp" width="640" height="427" alt="" decoding="async" /></span>
           </figure>
-          <p className="hero-arrival"><span>Arrival within 15 minutes</span></p>
           <div className="hero-ad-details">
           <p className="hero-description"><strong className="hero-service-list">Car towing, Luxury &amp; Sports car recovery/towing, Flatbed car towing &amp; recovery, roadside assistance, car breakdown recovery, desert and off-road car recovery, motorcycle transport, accident car recovery, Full down car and box recovery, Heavy bus towing, emergency car recovery and towing, Basement car recovery</strong><span className="hero-availability">Call us. We are available 24 by 7.</span></p>
           <div className="hero-actions" data-contact-count={Number(Boolean(callHref)) + Number(Boolean(whatsappHref)) + 1}>
@@ -94,7 +94,7 @@ export function RecoveryHero({ bookingHref, callHref, whatsappHref }: { bookingH
           </div>
           </div>
         </div>
-        <RouteScene />
+        <div className="hero-map-surround"><RouteScene /></div>
       </div>
     </section>
   );
