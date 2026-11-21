@@ -772,17 +772,19 @@ body { padding-bottom: calc(80px + env(safe-area-inset-bottom)); }
 .header-inner .mobile-menu { margin-left: auto; }
 /* Opt out of automatic browser darkening and keep explicit site colors. */
 :root { color-scheme: only light; }
+/* Keep the shine inside each control, with no effect on its pointer events. */
+:where(button:not(.adv-select), [role="button"], .contact-cta, .button, .pickup-channel,
+    #pickup-map, .adv-cta, .hero-phone-button, summary, .cap-key, .ed-link) {
+  position: relative; overflow: hidden; isolation: isolate;
+}
 @media (prefers-reduced-motion: no-preference) {
-  :is(.contact-cta, .button, .pickup-channel, #pickup-map, .adv-cta,
-      button:not(.adv-select, .adv-mobile-tab), .mobile-menu summary, .pickup-extra summary) {
-    background-size: 250% 100%, 100% 100%, 100% 100%;
-    background-repeat: no-repeat;
-    animation: action-sheen 9s ease-in-out infinite;
-  }
-  .hero-phone-button {
-    background-image: linear-gradient(117deg, transparent 30%, #ffffff30 48%, transparent 65%), linear-gradient(#b3152b, #b3152b);
-    background-size: 250% 100%, 100% 100%; background-repeat: no-repeat;
-    animation: action-sheen 9s ease-in-out infinite;
+  :is(button:not(.adv-select), [role="button"], .contact-cta, .button, .pickup-channel,
+      #pickup-map, .adv-cta, .hero-phone-button, summary, .cap-key, .ed-link)::before {
+    content: ''; position: absolute; z-index: 3; top: 0; bottom: 0; left: 0; width: 28%;
+    pointer-events: none;
+    background: linear-gradient(90deg, transparent 20%, #ffffff12 39%, #ffffff59 48%, #ffffffb3 50%, #ffffff59 52%, #ffcf9926 61%, transparent 80%);
+    transform: translateX(-150%) skewX(-20deg);
+    animation: action-shine 2s ease-in-out infinite;
   }
   body.has-site-video main :is(h1, h2, h3, p:not(.hero-description)),
   body.has-site-video :is(.hero-service-list, .hero-arrival, .hero-availability),
@@ -790,9 +792,9 @@ body { padding-bottom: calc(80px + env(safe-area-inset-bottom)); }
     animation: text-glint 9s ease-in-out infinite !important;
   }
 }
-@keyframes action-sheen {
-  0%, 76% { background-position: 150% 0, 0 0, 0 0; }
-  94%, 100% { background-position: -150% 0, 0 0, 0 0; }
+@keyframes action-shine {
+  0%, 10% { transform: translateX(-150%) skewX(-20deg); }
+  45%, 100% { transform: translateX(470%) skewX(-20deg); }
 }
 @keyframes text-glint {
   0%, 76%, 100% { opacity: 1; }
