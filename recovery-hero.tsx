@@ -82,7 +82,14 @@ export function RecoveryHero({ bookingHref, callHref, whatsappHref }: { bookingH
           </div>
           <figure className="hero-ad-visual">
             <div className="hero-drive"><img className="hero-ad-truck" src="/assets/hero-bugatti-recovery-1280.webp" srcSet="/assets/hero-bugatti-recovery-640.webp 640w, /assets/hero-bugatti-recovery-1280.webp 1280w" sizes="(max-width: 700px) 100vw, 55vw" width="1536" height="1024" alt="Unbranded black and red Bugatti secured on a charcoal flatbed recovery truck with orange trim" fetchPriority="high" decoding="async" /><svg className="hero-wheel-overlay" viewBox="0 0 1280 853" aria-hidden="true" preserveAspectRatio="xMidYMid meet">
-              {[[142, 614, 19, 46], [539, 685, 39, 66]].map(([x,y,rx,ry],i) => <svg key={i} x={x-rx} y={y-ry} width={rx*2} height={ry*2} viewBox="-1 -1 2 2" overflow="hidden"><defs><clipPath id={'hero-rim-'+i}><circle r=".98" /></clipPath></defs><g clipPath={'url(#hero-rim-'+i+')'}><g className="hero-rim-spin"><image href="/assets/hero-bugatti-recovery-1280.webp" x={-x/rx} y={-y/ry} width={1280/rx} height={853/ry} /></g></g></svg>)}
+              {[[143, 614, 15, 38], [540, 687, 29, 53]].map(([x, y, rx, ry], i) => (
+                <g key={i} transform={`translate(${x} ${y}) scale(${rx} ${ry})`}>
+                  <defs><clipPath id={'hero-rim-' + i} clipPathUnits="userSpaceOnUse"><circle r="1" /></clipPath></defs>
+                  <g clipPath={'url(#hero-rim-' + i + ')'}><g className="hero-rim-spin">
+                    <image href="/assets/hero-bugatti-recovery-1280.webp" x={-x / rx} y={-y / ry} width={1280 / rx} height={853 / ry} />
+                  </g></g>
+                </g>
+              ))}
             </svg></div>
             <span className="hero-ad-diamond" aria-hidden="true"><img src="/assets/hero-bugatti-recovery-640.webp" width="640" height="427" alt="" decoding="async" /></span>
           </figure>

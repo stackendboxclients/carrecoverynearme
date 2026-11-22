@@ -2,7 +2,33 @@ import { createHighway } from "./recovery-highway-background";
 
 const routeSamples = 96;
 const hero = document.querySelector<HTMLElement>(".recovery-hero");
-if (hero) startHeroMotion(hero);
+if (hero) {
+  startTruckEntrance(hero);
+  startHeroMotion(hero);
+}
+
+function startTruckEntrance(hero: HTMLElement) {
+  const visual = hero.querySelector<HTMLElement>(".hero-ad-visual");
+  const drive = hero.querySelector<HTMLElement>(".hero-drive");
+  if (!visual || !drive || !("IntersectionObserver" in window)) return;
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)");
+  let armed = false;
+  // Observe the fixed figure, not the moving truck, so its entrance cannot
+  // retrigger its own observer. Fully leaving the viewport arms one replay.
+  new IntersectionObserver(entries => {
+    const entry = entries[0];
+    if (!entry.isIntersecting) { armed = true; return; }
+    if (entry.intersectionRatio < .2 || !armed) return;
+    armed = false;
+    if (reduced.matches) return;
+    for (const element of [drive, ...drive.querySelectorAll<SVGGElement>(".hero-rim-spin")]) {
+      for (const animation of element.getAnimations()) {
+        animation.currentTime = 0;
+        animation.play();
+      }
+    }
+  }, { threshold: [0, .2] }).observe(visual);
+}
 
 function startHeroMotion(hero: HTMLElement) {
   const canvas = hero.querySelector<HTMLCanvasElement>(".highway-background canvas");
