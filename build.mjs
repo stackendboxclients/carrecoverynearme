@@ -271,7 +271,7 @@ ${booking('h2')}
 ${serviceShowcase}
 ${recoveryKinetic(enquiryIcon, services)}
 ${recoveryFeedback(business)}
-${recoveryEditorial(showcaseServices, showcaseDescriptions, enquiryIcon)}
+${recoveryEditorial(services, showcaseDescriptions, enquiryIcon)}
 ${faq}`;
 const guides = [
   ['dubai-breakdown-recovery-checklist', 'Dubai breakdown checklist', 'Once you’re somewhere safe, note the nearest exit, parking level, or landmark. Share your map pin, vehicle make and model, and whether it can roll and steer. Mention warning lights, leaks, or damage before arranging transport.'],
@@ -303,6 +303,12 @@ for (const file of ['hero-dubai-gwagon-night.webp', 'hero-dubai-gwagon-night-mob
 for (const width of [640, 1280]) {
   await cp(`hero-orange-recovery-${width}.webp`, `dist/assets/hero-orange-recovery-${width}.webp`);
   await cp(`hero-bugatti-recovery-${width}.webp`, `dist/assets/hero-bugatti-recovery-${width}.webp`);
+}
+for (const name of ['gwagen', 'rolls', 'lamborghini', 'bugatti']) {
+  for (const suffix of ['.mp4', '-poster.webp']) {
+    const file = 'turntable-' + name + suffix;
+    await cp(file, 'dist/assets/' + file);
+  }
 }
 await cp('stackendbox-mark.webp', 'dist/assets/stackendbox-mark.webp');
 await cp('header-dubai-skyline.webp', 'dist/assets/header-dubai-skyline.webp');

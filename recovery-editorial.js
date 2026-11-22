@@ -1,79 +1,77 @@
-const section = document.querySelector('.recovery-editorial');
+const section = document.querySelector('.recovery-turntable');
 if (section && 'IntersectionObserver' in window) {
-  const motion = matchMedia('(prefers-reduced-motion: no-preference)');
-  const finePointer = matchMedia('(hover: hover) and (pointer: fine)');
-  const scenes = [...section.querySelectorAll('.ed-motion')];
-  const visible = new Set();
-  const pointer = new Map();
+  const preference = matchMedia('(prefers-reduced-motion: no-preference)');
+  const enoughHeight = matchMedia('(min-height: 641px)');
+  const active = new Set();
+  const scenes = [...section.querySelectorAll('.rt-story')].map(element => ({ element, video: element.querySelector('video'), progress: 0, time: 0, loaded: false }));
   let frame = 0;
+  let lastFrame = 0;
+  const enabled = () => preference.matches && enoughHeight.matches;
   const clamp = value => Math.max(0, Math.min(1, value));
-
   function requestFrame() {
-    if (!frame && motion.matches && !document.hidden && visible.size) frame = requestAnimationFrame(render);
+    if (!frame && enabled() && !document.hidden && active.size) frame = requestAnimationFrame(render);
   }
-  function render() {
+  function seek(scene) {
+    const video = scene.video;
+    if (video.readyState < 2 || video.seeking || !Number.isFinite(video.duration)) return;
+    const time = Math.min(video.duration - 1 / 24, scene.time * video.duration);
+    if (Math.abs(video.currentTime - time) >= 1 / 48) video.currentTime = time;
+  }
+  function load(scene) {
+    if (scene.loaded || !enabled()) return;
+    scene.loaded = true;
+    scene.video.src = scene.video.dataset.src;
+    scene.video.load();
+  }
+  function render(now) {
     frame = 0;
-    if (!motion.matches || document.hidden) return;
-    // Read geometry together, then update only visible scenes. Native scrolling stays untouched.
-    const views = [...visible].map(scene => ({ scene, rect: scene.getBoundingClientRect(), imageHeight: scene.querySelector('.ed-photo')?.clientHeight }));
+    if (!enabled() || document.hidden) return;
+    const delta = Math.min(50, now - (lastFrame || now - 16));
+    lastFrame = now;
+    const ease = 1 - Math.exp(-delta / 90);
     let settling = false;
-    for (const { scene, rect, imageHeight } of views) {
-      const progress = clamp((innerHeight - rect.top) / (innerHeight + rect.height));
-      const point = pointer.get(scene);
-      if (point) {
-        point.x += (point.targetX - point.x) * .13;
-        point.y += (point.targetY - point.y) * .13;
-        scene.style.setProperty('--ed-x', `${point.x.toFixed(2)}px`);
-        scene.style.setProperty('--ed-y', `${point.y.toFixed(2)}px`);
-        if (Math.abs(point.targetX - point.x) + Math.abs(point.targetY - point.y) > .05) settling = true;
-      }
-      scene.style.setProperty('--ed-scroll', `${((progress - .5) * Math.min(36, (imageHeight || rect.height) * .06)).toFixed(2)}px`);
-      const entered = clamp((innerHeight * .94 - rect.top) / (innerHeight * .48));
-      scene.style.setProperty('--ed-opacity', String(.45 + entered * .55));
-      scene.style.setProperty('--ed-rise', `${((1 - entered) * 26).toFixed(2)}px`);
-      if (scene.classList.contains('ed-statement')) {
-        const words = [...scene.querySelectorAll('span')];
-        const fill = clamp((innerHeight * .85 - rect.top) / (rect.height + innerHeight * .15));
-        words.forEach((word, index) => {
-          word.style.opacity = String(.28 + .72 * clamp(fill * (words.length + 2) - index));
-        });
-      }
+    const geometry = [...active].map(scene => ({ scene, rect: scene.element.getBoundingClientRect() }));
+    for (const { scene, rect } of geometry) {
+      const target = clamp(-rect.top / Math.max(1, rect.height - innerHeight));
+      scene.progress += (target - scene.progress) * ease;
+      if (Math.abs(target - scene.progress) < .0004) scene.progress = target;
+      else settling = true;
+      // Settle on a source view so the vehicle remains crisp when scrolling stops.
+      scene.time = scene.progress === target ? Math.round(scene.progress * 16) / 16 : scene.progress;
+      seek(scene);
+      scene.element.style.setProperty('--rt-progress', scene.progress.toFixed(4));
+      scene.element.style.setProperty('--rt-scale', (1 + Math.sin(scene.progress * Math.PI) * .085).toFixed(4));
+      scene.element.style.setProperty('--rt-rise', `${(-Math.sin(scene.progress * Math.PI * 2) * 10).toFixed(2)}px`);
     }
     if (settling) requestFrame();
   }
   const observer = new IntersectionObserver(entries => {
     for (const entry of entries) {
-      if (entry.isIntersecting) visible.add(entry.target);
-      else visible.delete(entry.target);
+      const scene = scenes.find(item => item.element === entry.target);
+      if (entry.isIntersecting) { active.add(scene); load(scene); }
+      else active.delete(scene);
     }
     requestFrame();
-  }, { rootMargin: '80px 0px' });
+  }, { rootMargin: '120px 0px' });
   scenes.forEach(scene => {
-    observer.observe(scene);
-    pointer.set(scene, { x: 0, y: 0, targetX: 0, targetY: 0 });
-    scene.addEventListener('pointermove', event => {
-      if (!motion.matches || !finePointer.matches || event.pointerType === 'touch') return;
-      const rect = scene.getBoundingClientRect();
-      const point = pointer.get(scene);
-      point.targetX = (clamp((event.clientX - rect.left) / rect.width) - .5) * 14;
-      point.targetY = (clamp((event.clientY - rect.top) / rect.height) - .5) * 10;
-      requestFrame();
-    }, { passive: true });
-    scene.addEventListener('pointerleave', () => {
-      const point = pointer.get(scene);
-      point.targetX = 0;
-      point.targetY = 0;
-      requestFrame();
-    }, { passive: true });
+    observer.observe(scene.element);
+    scene.video.addEventListener('loadeddata', requestFrame);
+    scene.video.addEventListener('seeked', () => { if (active.has(scene) && enabled()) seek(scene); });
+    scene.video.addEventListener('error', () => {
+      // Retain the poster when a media request or decoder fails.
+      scene.video.removeAttribute('src');
+      scene.video.load();
+    }, { once: true });
   });
-  const configure = () => {
-    section.toggleAttribute('data-motion', motion.matches);
-    if (!motion.matches) section.querySelectorAll('.ed-statement span').forEach(word => word.style.removeProperty('opacity'));
+  function configure() {
+    section.toggleAttribute('data-motion', enabled());
+    if (enabled()) active.forEach(load);
     requestFrame();
-  };
+  }
   window.addEventListener('scroll', requestFrame, { passive: true });
-  window.addEventListener('resize', requestFrame, { passive: true });
+  window.addEventListener('resize', configure, { passive: true });
   document.addEventListener('visibilitychange', requestFrame);
-  motion.addEventListener('change', configure);
+  preference.addEventListener('change', configure);
+  enoughHeight.addEventListener('change', configure);
   configure();
 }
