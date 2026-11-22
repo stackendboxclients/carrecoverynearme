@@ -6,6 +6,7 @@ import { buildRecoveryHero } from './recovery-hero-build.mjs';
 import { recoveryKinetic } from './recovery-kinetic.mjs';
 import { recoveryFeedback } from './recovery-feedback.mjs';
 import { recoveryEditorial } from './recovery-editorial.mjs';
+import { buildRecoveryModels } from './recovery-model-build.mjs';
 
 const business = JSON.parse(await readFile('business.json', 'utf8'));
 const services = [
@@ -227,18 +228,12 @@ const showcaseDescriptions = {
   'basement-car-recovery': 'Recover a car from basement parking with clearance checked first.',
 };
 
-const showcaseCards = showcaseServices.map(([slug, title], index) => {
-  const image = `<img class="showcase-photo" src="/assets/service-art/${slug}.webp" alt="" loading="lazy" decoding="async">`;
-  const heading = `<span class="showcase-number" aria-hidden="true">${String(index + 1).padStart(2, '0')} /</span><h3>${title}</h3>`;
-  return `<a class="showcase-card" href="/services/${slug}/">
-    ${image}
-    <div class="showcase-card-content">${heading}<p>${showcaseDescriptions[slug]}</p></div>
-    <svg class="showcase-frame" viewBox="0 0 300 240" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-      <rect class="showcase-frame-glow" x="2" y="2" width="296" height="236" rx="16" pathLength="100" vector-effect="non-scaling-stroke"/>
-      <rect class="showcase-frame-light" x="2" y="2" width="296" height="236" rx="16" pathLength="100" vector-effect="non-scaling-stroke"/>
-    </svg>
-  </a>`;
-});
+const showcaseCards = showcaseServices.map(([slug, title], index) => `<article class="showcase-card" data-service="${slug}">
+  <img class="showcase-photo" src="/assets/service-art/${slug}.webp" alt="" loading="lazy" decoding="async">
+  <div class="showcase-card-content"><span class="showcase-number" aria-hidden="true">${String(index + 1).padStart(2, '0')} / 14</span><h3>${title}</h3><p>${showcaseDescriptions[slug]}</p></div>
+  <button class="showcase-open" type="button" aria-label="Explore ${title}" aria-expanded="false" aria-controls="service-detail-${slug}"></button>
+  <div class="showcase-detail" id="service-detail-${slug}" hidden><a href="/services/${slug}/">View service ${enquiryIcon('arrow')}</a><span>Tap the card again to return</span></div>
+</article>`);
 
 const serviceShowcase = `<section class="recovery-showcase" id="services" aria-labelledby="showcase-heading">
   <svg class="showcase-road" viewBox="0 0 1440 700" preserveAspectRatio="xMidYMax slice" aria-hidden="true" focusable="false">
@@ -261,7 +256,7 @@ const serviceShowcase = `<section class="recovery-showcase" id="services" aria-l
     <div class="showcase-intro">
       <h2 id="showcase-heading">${enquiryIcon('pin')} <span>Dubai Car Recovery <b>/ Our Services</b></span></h2>
     </div>
-    <div class="showcase-grid">${showcaseCards.join('')}</div>
+    <div class="showcase-grid" tabindex="0" aria-label="14 recovery services. Swipe left or right, or use the arrow keys.">${showcaseCards.join('')}</div><p class="showcase-position"><span data-service-position>01 / 14</span><span>Swipe to explore. Tap a card for details.</span></p>
     <a class="showcase-all" href="/services/">View all recovery services ${enquiryIcon('arrow')}</a>
   </div>
 </section>`;
@@ -295,6 +290,7 @@ const pages = [
 await rm('dist', { recursive: true, force: true });
 await mkdir('dist', { recursive: true });
 await mkdir('dist/assets');
+await buildRecoveryModels();
 await cp('site-background-dubai-road.mp4', 'dist/assets/site-background-dubai-road.mp4');
 await cp('site-background-dubai-road-poster.webp', 'dist/assets/site-background-dubai-road-poster.webp');
 for (const file of ['hero-dubai-gwagon-night.webp', 'hero-dubai-gwagon-night-mobile.webp']) {
@@ -305,7 +301,7 @@ for (const width of [640, 1280]) {
   await cp(`hero-bugatti-recovery-${width}.webp`, `dist/assets/hero-bugatti-recovery-${width}.webp`);
 }
 for (const name of ['gwagen', 'rolls', 'lamborghini', 'bugatti']) {
-  for (const suffix of ['.mp4', '-poster.webp']) {
+  for (const suffix of ['-poster.webp']) {
     const file = 'turntable-' + name + suffix;
     await cp(file, 'dist/assets/' + file);
   }
@@ -349,7 +345,10 @@ for (const [name, extension] of [['design', 'css'], ['recovery-hero', 'css'], ['
     contents = result.code;
     homepageStyles.push(contents);
     if (name !== 'design') continue;
-  } else if (name === 'site' || name === 'recovery-editorial') {
+  } else if (name === 'recovery-editorial') {
+    const result = await build({ entryPoints: ['recovery-editorial.js'], bundle: true, minify: true, format: 'esm', write: false });
+    contents = result.outputFiles[0].contents;
+  } else if (name === 'site') {
     const result = await transform(contents.toString(), { loader: 'js', minify: true });
     contents = result.code;
   }
