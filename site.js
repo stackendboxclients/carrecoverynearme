@@ -170,7 +170,7 @@ if (form) {
 
 
 const backgroundVideo = document.querySelector('.site-background-video');
-if (backgroundVideo) {
+if (backgroundVideo && document.body.classList.contains('is-home')) {
   const heroBoundary = document.querySelector('.recovery-hero');
   const boundary = heroBoundary || document.querySelector('body > header');
   let videoFrame = 0;

@@ -825,6 +825,34 @@ body { padding-bottom: calc(80px + env(safe-area-inset-bottom)); }
 .showcase-controls svg { width: 18px; height: 18px; }
 .showcase-controls [data-service-prev] svg { rotate: 180deg; }
 .showcase-controls button:focus-visible { outline: 2px solid #ffb67e; outline-offset: 3px; }
+
+/* Continuous wallpaper below the hero. Keep foreground maps, photos and forms intact. */
+body.has-recovery-wallpaper {
+  --recovery-wallpaper: url('/assets/recovery-orange-metal-wallpaper.webp');
+  background: #45484a var(--recovery-wallpaper) center top / 100% auto repeat-y;
+}
+body.has-recovery-wallpaper .wallpaper-content {
+  display: flow-root;
+  position: relative;
+  isolation: isolate;
+  background: #45484a var(--recovery-wallpaper) center top / 100% auto repeat-y;
+}
+body.has-recovery-wallpaper .wallpaper-content > :is(section, .section) { background: transparent; }
+body.has-recovery-wallpaper .wallpaper-content .stories-background { display: none; }
+body.has-recovery-wallpaper .wallpaper-content .recovery-map { padding: clamp(14px, 3vw, 40px); }
+body.has-recovery-wallpaper .wallpaper-content .recovery-map .route-scene {
+  border: 1px solid #c6c9cb80;
+  border-radius: 12px;
+}
+body.has-recovery-wallpaper:not(.is-home) .site-video-layer {
+  background: #45484a var(--recovery-wallpaper) center top / 100% auto repeat-y;
+}
+body.has-recovery-wallpaper:not(.is-home) .site-background-video { display: none; }
+body.has-recovery-wallpaper > footer.wrap {
+  width: 100%;
+  padding-inline: max(24px, calc((100% - 1280px) / 2));
+  background: #45484a var(--recovery-wallpaper) center top / 100% auto repeat-y;
+}
 .showcase-all { display: table; margin: 20px auto 0; }
 @media(max-width:600px) {
   .showcase-grid[data-deck] { height: 340px; margin-top: 28px; }
