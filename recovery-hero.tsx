@@ -96,7 +96,8 @@ export function RecoveryHero({ bookingHref, callHref, whatsappHref }: { bookingH
             {callHref && <div className="hero-call-stack"><a className="hero-phone-button" href={callHref}>{callHref.replace(/^tel:/, "")}</a><a className="contact-cta contact-cta--call" href={callHref}><Phone size={18} aria-hidden="true" /> Call now</a></div>}
             {whatsappHref && <a className="contact-cta contact-cta--whatsapp" href={whatsappHref}><MessageCircle size={18} aria-hidden="true" /> WhatsApp</a>}
             {!callHref && !whatsappHref && <a className="contact-cta contact-cta--call" href={bookingHref}>Request recovery <ArrowUpRight size={18} aria-hidden="true" /></a>}
-            <a className="contact-cta contact-cta--location" href={bookingHref} data-use-pickup-location aria-label="Use my current location"><MapPin size={18} aria-hidden="true" /><span className="hero-location-full">Use my current location</span><span className="hero-location-short">My location</span></a>
+            <a className="contact-cta contact-cta--location" href={whatsappHref || bookingHref} data-location-whatsapp={whatsappHref} aria-label="Use my current location" aria-describedby="hero-location-status"><MapPin size={18} aria-hidden="true" /><span className="hero-location-full">Use my current location</span><span className="hero-location-short">My location</span></a>
+            <p id="hero-location-status" className="hero-location-status" role="status">Opens WhatsApp with your current map pin, ready to send.</p>
           </div>
           </div>
         </div>

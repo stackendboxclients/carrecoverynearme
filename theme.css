@@ -323,3 +323,8 @@ body.has-recovery-wallpaper::before { content: ''; position: fixed; inset: 0; z-
 body.has-site-video .wallpaper-content .recovery-stories,
 body.has-site-video .wallpaper-content #services { background-size: cover; background-repeat: no-repeat; }
 @media(max-width:600px) { body.has-recovery-wallpaper::before { background-size: 100% 100%; } }
+body.has-recovery-wallpaper.is-home:not(.wallpaper-ready)::before { background-image: none; }
+body.has-recovery-wallpaper footer > div { background: #171b1f; padding: 10px 14px; border-radius: 8px; }
+.recovery-hero .hero-actions .hero-location-status { grid-column: 1 / -1; width: 100%; margin: 8px 0 0; padding: 8px 10px; font: 650 .82rem/1.45 var(--display); color: #fff !important; background: #101417; border-radius: 7px; text-shadow: none !important; }
+.hero-location-status[hidden] { display: none !important; }
+[data-location-whatsapp][aria-busy="true"] { opacity: .75; cursor: progress; }

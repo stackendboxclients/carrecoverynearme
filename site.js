@@ -135,10 +135,6 @@ if (form) {
         : 'Could not get your location. Retry or enter a landmark or map link.';
     }, { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 });
   });
-  document.querySelector('[data-use-pickup-location]')?.addEventListener('click', event => {
-    if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
-    locationButton.click();
-  });
   const sendStatus = form.querySelector('#pickup-send-status');
   const preparedMessage = form.querySelector('#pickup-message');
   form.addEventListener('invalid', event => {
@@ -255,4 +251,16 @@ if (serviceDeck) {
   new IntersectionObserver(entries => { visible = entries[0].isIntersecting; schedule(); }, { threshold: .15 }).observe(serviceDeck);
   document.addEventListener('visibilitychange', () => schedule());
   reducedMotion.addEventListener('change', () => schedule());
+}
+
+// Load the detailed wallpaper only as visitors approach a section that uses it.
+if (document.body.classList.contains('is-home')) {
+  const revealWallpaper = () => document.body.classList.add('wallpaper-ready');
+  if ('IntersectionObserver' in window) {
+    const wallpaperObserver = new IntersectionObserver(entries => {
+      if (!entries.some(entry => entry.isIntersecting)) return;
+      revealWallpaper(); wallpaperObserver.disconnect();
+    }, {rootMargin:'200px'});
+    document.querySelectorAll('.recovery-map,.recovery-contact,.recovery-kinetic,.recovery-feedback,.recovery-faq,.closing-recovery,footer').forEach(element => wallpaperObserver.observe(element));
+  } else revealWallpaper();
 }
