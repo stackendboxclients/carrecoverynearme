@@ -228,7 +228,7 @@ if (backgroundVideo) {
   syncBackground();
 }
 
-// Cutout vehicles move around a shallow horizontal orbit, with one service in focus.
+// Only the active service is visible; the next vehicle moves into the foreground.
 const serviceDeck = document.querySelector('.showcase-grid');
 if (serviceDeck) {
   const cards = [...serviceDeck.querySelectorAll('.showcase-card')];
@@ -244,14 +244,15 @@ if (serviceDeck) {
       let offset = wrap(index - current);
       if (offset > cards.length / 2) offset -= cards.length;
       const depth = Math.abs(offset);
-      const show = depth <= 2;
+      const show = depth === 0;
+      if (depth <= 1) card.querySelector('.showcase-photo').loading = 'eager';
       card.style.setProperty('--deck-x', `${offset * 64}%`);
       card.style.setProperty('--deck-y', `${depth * 18}px`);
       card.style.setProperty('--deck-z', `${-depth * 180}px`);
       card.style.setProperty('--deck-angle', `${offset * -18}deg`);
       card.style.setProperty('--deck-scale', String(depth === 0 ? 1 : depth === 1 ? .72 : .5));
       card.style.zIndex = String(5 - depth);
-      card.style.opacity = show ? String(depth === 0 ? 1 : depth === 1 ? .66 : .25) : '0';
+      card.style.opacity = show ? '1' : '0';
       card.style.visibility = show ? 'visible' : 'hidden';
       card.inert = offset !== 0;
       card.dataset.active = String(offset === 0);
