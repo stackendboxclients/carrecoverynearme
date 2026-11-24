@@ -436,7 +436,7 @@ body.has-recovery-wallpaper footer[data-footer-visible="true"] :is(.footer-links
   body.has-recovery-wallpaper footer .footer-contact-details { padding: 20px 16px; }
 }
 
-body.has-recovery-wallpaper > footer.wrap { background-image: linear-gradient(27deg,#151515 5px,transparent 5px),linear-gradient(207deg,#151515 5px,transparent 5px),linear-gradient(27deg,#9a4b1e 5px,transparent 5px),linear-gradient(207deg,#713a1c 5px,transparent 5px),linear-gradient(90deg,#1b1b1b 10px,transparent 10px),linear-gradient(#292929 25%,#1b1b1b 25%,#1b1b1b 50%,transparent 50%,transparent 75%,#704324 75%); background-position: 0 5px,10px 0,0 10px,10px 5px,0 0,0 0; background-size: 20px 20px; }
+body.has-recovery-wallpaper > footer.wrap,body.has-site-video .wallpaper-content .recovery-map { background-color: #151515; background-image: linear-gradient(27deg,#151515 5px,transparent 5px),linear-gradient(207deg,#151515 5px,transparent 5px),linear-gradient(27deg,#9a4b1e 5px,transparent 5px),linear-gradient(207deg,#713a1c 5px,transparent 5px),linear-gradient(90deg,#1b1b1b 10px,transparent 10px),linear-gradient(#292929 25%,#1b1b1b 25%,#1b1b1b 50%,transparent 50%,transparent 75%,#704324 75%); background-position: 0 5px,10px 0,0 10px,10px 5px,0 0,0 0; background-size: 20px 20px; }
 
 body.has-site-video #customer-feedback .feedback-summary-note { margin: 10px 0 0; font-size: .75rem; font-weight: 600; color: #515860 !important; line-height: 1.4; }
 #customer-feedback .feedback-summary-note + blockquote { margin-top: 8px; padding-top: 10px; }
