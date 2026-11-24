@@ -264,8 +264,6 @@ ${recoveryStories(showcaseServices, showcaseDescriptions, enquiryIcon, serviceDe
 ${booking('h2')}
 ${serviceShowcase}
 ${recoveryKinetic(enquiryIcon, services)}
-${recoveryFeedback(business)}
-${faq}
 <section class="closing-recovery" id="closing-recovery" aria-labelledby="closing-recovery-heading">
   <div class="closing-recovery-heading"><h2 id="closing-recovery-heading">Why choose us?</h2><p>Six reasons to choose Dubai Car Recovery.</p></div>
   <div class="recovery-care-diagram">
@@ -284,6 +282,9 @@ ${faq}
     </div>
   </div>
 </section>
+${recoveryFeedback(business)}
+${faq}
+
 </div>`;
 const guides = [
   ['dubai-breakdown-recovery-checklist', 'Dubai breakdown checklist', 'Once you’re somewhere safe, note the nearest exit, parking level, or landmark. Share your map pin, vehicle make and model, and whether it can roll and steer. Mention warning lights, leaks, or damage before arranging transport.'],
