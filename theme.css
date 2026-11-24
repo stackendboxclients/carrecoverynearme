@@ -32,8 +32,8 @@ body.has-site-video .wallpaper-content :is(input,textarea)::placeholder { color:
 body.has-site-video .wallpaper-content .pickup-form :is(label,p) { color: #20262d; }
 body.has-site-video .wallpaper-content .pickup-form :is(input,select,textarea):focus { outline: 2px solid var(--accent); outline-offset: 2px; border-color: var(--accent); }
 
-/* The first section below the hero has a plain background, without wallpaper. */
-body.has-site-video .wallpaper-content .recovery-stories { background: #20262d; color: #fff; }
+/* Nearly black tread texture stays subtle behind the photo gallery. */
+body.has-site-video .wallpaper-content .recovery-stories { background: linear-gradient(#0005,#0005), url('/assets/stories-black-tread.webp') center / 560px 560px repeat; background-color: #08090a; color: #fff; }
 body.has-site-video .recovery-stories .stories-background { display: none; }
 body.has-site-video .recovery-stories .stories-header h2 { color: #fff !important; }
 body.has-site-video .recovery-stories .stories-header p:first-child { color: #fff !important; }

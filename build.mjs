@@ -292,6 +292,7 @@ await mkdir('dist/assets');
 await cp('site-background-dubai-road.mp4', 'dist/assets/site-background-dubai-road.mp4');
 await cp('site-background-dubai-road-poster.webp', 'dist/assets/site-background-dubai-road-poster.webp');
 await cp('recovery-orange-metal-wallpaper.webp', 'dist/assets/recovery-orange-metal-wallpaper.webp');
+await cp('stories-black-tread.webp', 'dist/assets/stories-black-tread.webp');
 for (const file of ['service-honeycomb-wide.webp', 'service-honeycomb-mobile.webp']) await cp(file, `dist/assets/${file}`);
 for (const file of ['hero-dubai-gwagon-night.webp', 'hero-dubai-gwagon-night-mobile.webp']) {
   await cp(file, `dist/assets/${file}`);
