@@ -323,9 +323,6 @@ body.has-site-video .wallpaper-content #services { background-size: cover; backg
 @media(max-width:600px) { body.has-recovery-wallpaper::before { background-size: 100% 100%; } }
 body.has-recovery-wallpaper.is-home:not(.wallpaper-ready)::before { background-image: none; }
 body.has-recovery-wallpaper footer > div { background: #171b1f; padding: 10px 14px; border-radius: 8px; }
-.recovery-hero .hero-actions .hero-location-status { grid-column: 1 / -1; width: 100%; margin: 8px 0 0; padding: 8px 10px; font: 650 .82rem/1.45 var(--display); color: #fff !important; background: #101417; border-radius: 7px; text-shadow: none !important; }
-.hero-location-status[hidden] { display: none !important; }
-[data-location-whatsapp][aria-busy="true"] { opacity: .75; cursor: progress; }
 body.has-site-video footer > div a { -webkit-text-stroke: 0 !important; }
 /* Stronger white lettering for the closing truck callouts on both layouts. */
 body.has-site-video #closing-recovery .recovery-care-note :is(strong,span) { color: #fff !important; font-weight: 800; text-shadow: 0 2px 3px #000,0 0 6px #000,0 0 12px #000 !important; }
@@ -415,7 +412,6 @@ body.has-site-video .recovery-contact .pickup-form { margin: 0; padding: 10px 18
 .recovery-contact .pickup-form label { gap: 5px; font-size: .85rem; }
 .recovery-contact .pickup-form :is(input,select,textarea) { min-height: 44px; padding: 8px 10px; }
 .recovery-contact .pickup-location p { margin-block: 5px; }
-.recovery-contact #location-status:empty { display: none; }
 /* Centered footer, dark carbon panels and dusty orange woven trim. */
 body.has-recovery-wallpaper > footer.wrap { display: grid; grid-template-columns: minmax(0,1fr); justify-items: center; gap: 20px; border-top: 0; padding-top: 32px; background-color: #151515; background-image: repeating-linear-gradient(0deg,#0002 0 1px,transparent 1px 4px),repeating-linear-gradient(135deg,#151515 0 7px,#272727 7px 14px,#9e480f 14px 16px,#c65d17 16px 19px,#1b1b1b 19px 26px); background-size: auto; }
 body.has-recovery-wallpaper footer .brand--footer { grid-column: 1; justify-self: center; width: clamp(270px,30vw,350px); max-width: 100%; margin: 0; }

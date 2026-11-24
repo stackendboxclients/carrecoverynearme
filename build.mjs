@@ -119,7 +119,7 @@ const recoveryQuestions = [
   ['What if my car is stuck in sand or off-road?', 'Share a map pin, the nearest road or track, and a photo of the terrain if you can take one safely. This helps the team assess access and what recovery equipment may be needed.'],
   ['Can I arrange towing after an accident?', 'Once the scene is safe and the vehicle can be moved, tell the team where it is, which parts are damaged, and whether the wheels and steering still move. Share the body shop or other drop-off address if you have it.'],
   ['Can I choose the drop-off point or schedule a pickup?', 'Use the pickup form’s optional details to add a garage, testing centre, or other destination. Choose scheduled pickup to include your preferred date and time, then confirm the arrangements with the recovery team.'],
-  ['Can I enter my location without sharing GPS?', 'Yes. Enter a map link, nearby landmark, road exit, or parking level. If the address is hard to find, add the entrance or other access details.'],
+  ['How do I provide my pickup location?', 'Enter an address, map link, nearby landmark, road exit, or parking level in the optional pickup field. If the address is hard to find, add the entrance or other access details.'],
 ];
 
 const faq = `<section class="recovery-faq" id="faq" aria-label="Frequently asked questions">
@@ -160,13 +160,7 @@ const booking = (heading) => `<section class="recovery-contact" id="request-reco
       <label><span>${enquiryIcon('person')} Your name <span aria-hidden="true">*</span></span><input name="name" autocomplete="name" maxlength="100" placeholder="Full name" required></label>
       <label><span>${enquiryIcon('phone')} Phone number <span aria-hidden="true">*</span></span><input name="phone" type="tel" autocomplete="tel" maxlength="30" minlength="7" placeholder="Include country code" required></label>
       <label class="pickup-wide"><span>${enquiryIcon('truck')} Recovery service <span aria-hidden="true">*</span></span><select name="service" required><option value="">Choose a service</option>${services.map(([slug, title]) => `<option value="${slug}">${title}</option>`).join('')}</select></label>
-      <label class="pickup-wide"><span>${enquiryIcon('pin')} Pickup location (optional)</span><input name="pickup" maxlength="300" placeholder="Area, landmark, or map link" aria-describedby="pickup-location-help"></label>
-    </div>
-    <div class="pickup-location">
-      <button type="button" id="location" disabled>${enquiryIcon('locate')} Use my current location</button>
-      <a id="pickup-map" target="_blank" rel="noopener noreferrer" hidden>Check map pin ↗</a>
-      <p id="pickup-location-help">Opens WhatsApp with your current map pin, ready to send. You can also enter a landmark or map link.</p>
-      <p id="location-status" role="status"></p>
+      <label class="pickup-wide"><span>${enquiryIcon('pin')} Pickup location (optional)</span><input name="pickup" maxlength="300" placeholder="Area, landmark, or map link"></label>
     </div>
     <details class="pickup-extra">
       <summary>${enquiryIcon('sliders')}<span>Vehicle, destination, and timing <small>Optional</small></span><span class="pickup-expand">${enquiryIcon('plus')}</span></summary>
@@ -298,7 +292,7 @@ const pages = [
   ['/book/', 'Request recovery', 'Share pickup and vehicle details with the recovery team.', booking('h1')],
   ['/about/', 'About', 'How Dubai Car Recovery Near Me handles vehicle recovery enquiries.', `<section class="section wrap narrow"><h1>About Dubai Car Recovery Near Me</h1><p>Tell us what happened, where your vehicle is, and where it needs to go. The recovery team uses those details to confirm what help is available and what it will cost.</p><a class="button" href="/services/">Explore services ↗</a></section>`],
   ['/contact/', 'Contact', 'Contact Dubai Car Recovery Near Me.', `<section class="section wrap narrow"><h1>Contact</h1>${contactReady ? `<div class="actions">${phone}${whatsapp}</div>` : '<p>Business contact details will be added before launch.</p>'}</section>`],
-  ['/privacy/', 'Privacy', 'How this website handles enquiry details.', '<section class="section wrap narrow"><h1>Privacy</h1><p>Pickup and contact details entered in the form stay in your browser until you choose to open WhatsApp. If you allow location access, either current-location button opens WhatsApp with your current map pin ready to send. The pickup form also keeps the pin in its pickup field. This is a single location pin, not continuous Live Location tracking. Your GPS position is not stored by this website. WhatsApp handles the message when you choose to send it.</p><h2>Public reviews</h2><p>When you submit a review, your display name, rating, review text and submission date are stored using Vercel and published on this website. Do not include phone numbers, addresses or other private information in your review. A short-lived hashed network identifier is used to limit repeated submissions. Contact the recovery team if you need a review corrected or removed.</p></section>'],
+  ['/privacy/', 'Privacy', 'How this website handles enquiry details.', '<section class="section wrap narrow"><h1>Privacy</h1><p>Pickup and contact details entered in the form stay in your browser until you choose to open WhatsApp. Type your pickup address, landmark or map link manually in the optional pickup field. This website does not request your GPS location. WhatsApp handles the message when you choose to send it.</p><h2>Public reviews</h2><p>When you submit a review, your display name, rating, review text and submission date are stored using Vercel and published on this website. Do not include phone numbers, addresses or other private information in your review. A short-lived hashed network identifier is used to limit repeated submissions. Contact the recovery team if you need a review corrected or removed.</p></section>'],
   ['/terms/', 'Terms', 'How recovery enquiries are handled.', '<section class="section wrap narrow"><h1>Terms</h1><p>Submitting an enquiry starts a conversation. The recovery team confirms the pickup plan, price, and availability directly.</p></section>'],
   ['/disclaimer/', 'Disclaimer', 'About service availability and site photography.', '<section class="section wrap narrow"><h1>Disclaimer</h1><p>Service descriptions are general guidance. Ask the team to confirm availability for your vehicle and pickup location. The website photography is illustrative.</p></section>'],
   ['/blogs/', 'Recovery guides', 'Pickup guidance for drivers and riders in Dubai.', `<section class="section wrap"><h1>Recovery guides</h1><div class="service-grid">${guides.map(([slug,title]) => `<article class="service-card">${servicePhoto(['emergency-recovery','flatbed-towing','motorcycle-towing'][guides.findIndex(g => g[0] === slug)],title)}<h2>${title}</h2><a href="/blogs/${slug}/">Read guide ↗</a></article>`).join('')}</div></section>`],
@@ -361,7 +355,7 @@ for (const file of ['advantage-loading-540.webp', 'advantage-loading-960.webp', 
 const assetUrls = {};
 const homepageStyles = [];
 const kineticScript = await build({ entryPoints: ['recovery-kinetic.js'], bundle: true, minify: true, write: false, legalComments: 'inline' });
-for (const [name, extension] of [['design', 'css'], ['recovery-hero', 'css'], ['site', 'js'], ['location-whatsapp', 'js'], ['recovery-kinetic', 'css'], ['recovery-kinetic', 'js'], ['recovery-feedback', 'css'], ['recovery-feedback', 'js'], ['recovery-stories', 'css'], ['recovery-stories', 'js'], ['theme', 'css']]) {
+for (const [name, extension] of [['design', 'css'], ['recovery-hero', 'css'], ['site', 'js'], ['recovery-kinetic', 'css'], ['recovery-kinetic', 'js'], ['recovery-feedback', 'css'], ['recovery-feedback', 'js'], ['recovery-stories', 'css'], ['recovery-stories', 'js'], ['theme', 'css']]) {
   let contents = name === 'recovery-kinetic' && extension === 'js'
     ? kineticScript.outputFiles[0].contents
     : await readFile(`${name}.${extension}`);
@@ -380,7 +374,7 @@ for (const [name, extension] of [['design', 'css'], ['recovery-hero', 'css'], ['
   assetUrls[`${name}.${extension}`] = url;
 }
 const homeCSS = homepageStyles.join('\n');
-const homepageAssets = `<script src="${assetUrls['location-whatsapp.js']}" defer></script>
+const homepageAssets = `
 <link rel="preload" href="/assets/hero-space-grotesk.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/hero-instrument-sans.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="modulepreload" href="${heroMotionSrc}" fetchpriority="low">
