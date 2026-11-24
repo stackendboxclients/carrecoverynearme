@@ -135,3 +135,12 @@ body.has-site-video #services .showcase-controls button { background: #20262d !i
   body.has-site-video .wallpaper-content #services { background-image: url('/assets/service-honeycomb-mobile.webp'); }
   body.has-site-video #services .showcase-position { max-width: 90%; }
 }
+
+/* The complete truck image sits between the FAQs and the footer. */
+.closing-recovery { padding: 32px 24px 56px; text-align: center; }
+.closing-recovery-image { display: block; width: auto; height: auto; max-width: 100%; max-height: min(900px,76svh); object-fit: contain; margin: 0 auto; }
+.closing-recovery-brand { display: flex; flex-direction: column; align-items: center; gap: 14px; margin-top: 24px; }
+body.has-site-video #closing-recovery h2 { margin: 0; color: #fff !important; font-size: clamp(1.8rem,4vw,3rem); text-shadow: 0 2px 5px #000 !important; }
+.closing-recovery-brand .brand--closing { width: min(280px,75vw); }
+body.viewing-closing-recovery .mobile-actions { visibility: hidden; opacity: 0; pointer-events: none; }
+@media(max-width:600px) { .closing-recovery { padding: 24px 16px 40px; } .closing-recovery-image { max-height: 70svh; } }

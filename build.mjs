@@ -266,6 +266,10 @@ ${serviceShowcase}
 ${recoveryKinetic(enquiryIcon, services)}
 ${recoveryFeedback(business)}
 ${faq}
+<section class="closing-recovery" id="closing-recovery" aria-labelledby="closing-recovery-title">
+  <img class="closing-recovery-image" src="/assets/closing-recovery-truck.webp" alt="Overhead view of a luxury sports car secured on a recovery truck" width="1024" height="1536" loading="lazy" decoding="async">
+  <div class="closing-recovery-brand"><h2 id="closing-recovery-title">Dubai Car Recovery</h2>${brand('closing')}</div>
+</section>
 </div>`;
 const guides = [
   ['dubai-breakdown-recovery-checklist', 'Dubai breakdown checklist', 'Once you’re somewhere safe, note the nearest exit, parking level, or landmark. Share your map pin, vehicle make and model, and whether it can roll and steer. Mention warning lights, leaks, or damage before arranging transport.'],
@@ -293,6 +297,7 @@ await cp('site-background-dubai-road.mp4', 'dist/assets/site-background-dubai-ro
 await cp('site-background-dubai-road-poster.webp', 'dist/assets/site-background-dubai-road-poster.webp');
 await cp('recovery-orange-metal-wallpaper.webp', 'dist/assets/recovery-orange-metal-wallpaper.webp');
 await cp('stories-black-tread.webp', 'dist/assets/stories-black-tread.webp');
+await cp('closing-recovery-truck.webp', 'dist/assets/closing-recovery-truck.webp');
 for (const file of ['service-honeycomb-wide.webp', 'service-honeycomb-mobile.webp']) await cp(file, `dist/assets/${file}`);
 for (const file of ['hero-dubai-gwagon-night.webp', 'hero-dubai-gwagon-night-mobile.webp']) {
   await cp(file, `dist/assets/${file}`);

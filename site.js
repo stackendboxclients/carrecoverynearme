@@ -9,6 +9,12 @@ mobileMenu?.addEventListener('keydown', event => {
 });
 
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+const closingImage = document.querySelector('.closing-recovery-image');
+if (closingImage && 'IntersectionObserver' in window) {
+  new IntersectionObserver(entries => {
+    document.body.classList.toggle('viewing-closing-recovery', entries[0].isIntersecting);
+  }).observe(closingImage);
+}
 const hero = document.querySelector('.hero');
 if (hero && !reducedMotion.matches) {
   const motion = document.createElement('button');
