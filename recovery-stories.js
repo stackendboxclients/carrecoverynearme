@@ -42,7 +42,7 @@ if (section) {
     image.alt = card.querySelector('strong').textContent;
     dialog.querySelector('#story-dialog-title').textContent = image.alt;
     dialog.querySelector('#story-dialog-description').textContent = card.dataset.detail;
-    dialog.querySelector('.story-dialog-route').replaceChildren(card.querySelector('.story-route').cloneNode(true));
+    dialog.querySelector('.story-dialog-highlights').replaceChildren(card.querySelector('.story-service-highlights').cloneNode(true));
     dialog.showModal();
     popupTimer = setTimeout(closePopup, 5000);
   }
@@ -74,7 +74,7 @@ if (section) {
     if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') { event.preventDefault(); move(event.key === 'ArrowRight' ? 1 : -1,true); }
     if (event.key === ' ' && event.target === rail) { event.preventDefault(); paused = !paused; schedule(); }
   });
-  new IntersectionObserver(entries => { visible = entries[0].isIntersecting; schedule(); }, {threshold:.15}).observe(rail);
+  new IntersectionObserver(entries => { visible = entries[0].isIntersecting; section.dataset.inView = String(visible); schedule(); }, {threshold:.15}).observe(rail);
   document.addEventListener('visibilitychange', () => schedule());
   reduced.addEventListener('change', () => schedule());
   paint(0);

@@ -34,6 +34,10 @@ const contactReady = Boolean(business.whatsapp || business.phone);
 const indexable = business.launchReady && Boolean(business.whatsapp);
 const callHref = business.phone ? `tel:${business.phone}` : '';
 const whatsappHref = business.whatsapp ? `https://wa.me/${business.whatsapp}` : '';
+const email = typeof business.email === 'string' && /^[^\s@<>"]+@[^\s@<>"]+\.[^\s@<>"]+$/.test(business.email) ? business.email : '';
+const emailHref = email ? 'mailto:' + email : '';
+const emailNav = emailHref ? `<a href="${emailHref}">Email</a>` : '';
+const footerContacts = `<address class="footer-contact-details"><p><span>Contact</span><a href="${callHref}">${business.phone}</a></p><p><span>WhatsApp</span><a href="${whatsappHref}">${business.phone}</a></p>${email ? `<p><span>Email</span><a href="${emailHref}">${email}</a></p>` : ''}<p><span>Service area</span><span>Dubai, UAE</span></p></address>`;
 const phone = callHref ? `<a class="button outline" href="${callHref}">Call now</a>` : '';
 const whatsapp = business.whatsapp ? `<a class="button outline" href="https://wa.me/${business.whatsapp}">WhatsApp</a>` : '';
 const brandWidths = [240, 384, 480, 640, 960];
@@ -102,7 +106,7 @@ const enquiryIcons = {
   copy: '<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/>',
 };
 const enquiryIcon = (name) => `<svg class="enquiry-icon" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round">${enquiryIcons[name]}</svg>`;
-const mainNav = '<a href="/services/">Services</a><a href="/#faq">FAQs</a><a href="/about/">About</a><a href="/contact/">Contact</a>';
+const mainNav = `<a href="/services/">Services</a><a href="/#faq">FAQs</a><a href="/about/">About</a><a href="/contact/">Contact</a>${emailNav}`;
 const directContact = [
   callHref && `<a class="contact-cta contact-cta--call" href="${callHref}">${enquiryIcon('phone')} Call now</a>`,
   whatsappHref && `<a class="contact-cta contact-cta--whatsapp" href="${whatsappHref}">${enquiryIcon('whatsapp')} WhatsApp</a>`,
@@ -265,13 +269,14 @@ ${faq}
 <section class="closing-recovery" id="closing-recovery" aria-labelledby="closing-recovery-heading">
   <div class="closing-recovery-heading"><h2 id="closing-recovery-heading">Why choose us?</h2><p>Six reasons to choose Dubai Car Recovery.</p></div>
   <div class="recovery-care-diagram">
-    <svg class="recovery-care-lines" viewBox="0 0 1000 700" preserveAspectRatio="none" aria-hidden="true"><defs><marker id="care-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M1 1L7 4L1 7" fill="none" stroke="white" stroke-width="1.6"/></marker></defs><g fill="none" stroke="white" stroke-width="1.6" marker-end="url(#care-arrow)"><path d="M255 105L315 105L411 160"/><path d="M255 330L320 330L400 275"/><path d="M255 575L315 575L390 530"/><path d="M745 110L690 110L595 215"/><path d="M745 345L690 345L610 375"/><path d="M745 575L690 575L595 590"/></g></svg>
+    <svg class="recovery-care-lines recovery-care-lines-desktop" viewBox="0 0 1000 700" preserveAspectRatio="none" aria-hidden="true"><defs><marker id="care-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M1 1L7 4L1 7" fill="none" stroke="white" stroke-width="1.6"/></marker></defs><g fill="none" stroke="white" stroke-width="1.6" marker-end="url(#care-arrow)"><path d="M255 105L315 105L411 160"/><path d="M255 330L320 330L400 275"/><path d="M255 575L315 575L390 530"/><path d="M745 110L690 110L595 215"/><path d="M745 345L690 345L610 375"/><path d="M745 575L690 575L595 590"/></g></svg>
+    <svg class="recovery-care-lines recovery-care-lines-mobile" viewBox="0 0 1000 700" preserveAspectRatio="none" aria-hidden="true"><defs><marker id="care-arrow-mobile" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M1 1L7 4L1 7" fill="none" stroke="white" stroke-width="1.6"/></marker></defs><g fill="none" stroke="white" stroke-width="1.8" marker-end="url(#care-arrow-mobile)"><path d="M255 105L315 105L411 275"/><path d="M255 330L320 330L400 335"/><path d="M255 575L315 575L390 480"/><path d="M745 110L690 110L595 315"/><path d="M745 345L690 345L610 400"/><path d="M745 575L690 575L595 495"/></g></svg>
     <div class="recovery-care-notes recovery-care-notes-left">
       <div class="recovery-care-note"><strong>Secure wheel belts</strong><span>Straps hold your car in place.</span></div>
       <div class="recovery-care-note"><strong>Careful loading</strong><span>Clearance checked as we load.</span></div>
       <div class="recovery-care-note"><strong>Suitable recovery trucks</strong><span>Transport planned for your vehicle.</span></div>
     </div>
-    <img class="closing-recovery-image" src="/assets/closing-recovery-truck.webp" alt="Overhead view of a luxury sports car secured on a recovery truck" width="1024" height="1536" loading="lazy" decoding="async">
+    <img class="closing-recovery-image" src="/assets/closing-recovery-white-truck-clean.webp" alt="Dark luxury sports car secured on a white recovery truck with a black grille" width="1024" height="1536" loading="lazy" decoding="async">
     <div class="recovery-care-notes recovery-care-notes-right">
       <div class="recovery-care-note"><strong>Steady transport</strong><span>Careful driving helps limit jolts.</span></div>
       <div class="recovery-care-note"><strong>Vehicle protection</strong><span>Attentive handling from pickup to drop-off.</span></div>
@@ -307,6 +312,7 @@ await mkdir('dist/assets');
 await cp('recovery-sharp-metal.webp', 'dist/assets/recovery-sharp-metal.webp');
 await cp('service-editorial', 'dist/assets/service-editorial', { recursive: true });
 await cp('enhanced-black-honeycomb.webp', 'dist/assets/enhanced-black-honeycomb.webp');
+await cp('closing-recovery-white-truck-clean.webp', 'dist/assets/closing-recovery-white-truck-clean.webp');
 await cp('closing-recovery-truck.webp', 'dist/assets/closing-recovery-truck.webp');
 for (const file of ['service-honeycomb-slim-wide.webp', 'service-honeycomb-slim-mobile.webp']) await cp(file, `dist/assets/${file}`);
 for (const file of ['hero-dubai-gwagon-night.webp', 'hero-dubai-gwagon-night-mobile.webp']) {
@@ -319,6 +325,7 @@ for (const width of [640, 1280]) {
 await cp('stackendbox-mark.webp', 'dist/assets/stackendbox-mark.webp');
 await cp('header-dubai-skyline.webp', 'dist/assets/header-dubai-skyline.webp');
 await cp('dubai-recovery-map.webp', 'dist/assets/dubai-recovery-map.webp');
+await cp('map-orange-box-recovery.webp', 'dist/assets/map-orange-box-recovery.webp');
 for (const file of ['truck-blue-porsche.webp', 'truck-black-lamborghini.webp', 'truck-black-ferrari.webp']) {
   await cp(file, `dist/assets/${file}`);
 }
@@ -380,7 +387,7 @@ for (const [path, title, description, content] of pages) {
   const directory = `dist${path}`;
   await mkdir(directory, { recursive: true });
   const canonical = business.domain + path;
-  await writeFile(directory + 'index.html', `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>${path === '/' ? title : title + ' | ' + name}</title><meta name="description" content="${description}"><meta name="robots" content="${indexable ? 'index,follow' : 'noindex,nofollow'}"><link rel="canonical" href="${canonical}"><link rel="icon" href="/assets/dcr-icon.svg" type="image/svg+xml" sizes="any"><script src="${assetUrls['site.js']}" defer></script>${path === '/' ? homepageAssets : `<link rel="stylesheet" href="${assetUrls['design.css']}"><link rel="stylesheet" href="${assetUrls['theme.css']}">`}</head><body class="has-site-video has-recovery-wallpaper${path === '/' ? ' is-home' : ''}"><a class="skip" href="#main">Skip to content</a><header><div class="wrap header-inner">${brand('header')}<nav class="desktop-nav" aria-label="Main">${mainNav}</nav><details class="mobile-menu"><summary>${enquiryIcon('menu')}<span>Menu</span></summary><nav aria-label="Main">${mainNav}</nav></details></div></header><main id="main"${path === '/' ? '' : ' class="wallpaper-content"'}>${path === '/' ? content.replace('<!-- recovery-hero -->', serviceTape + recoveryHero).replace('<!-- recovery-map -->', recoveryMap) : content}</main><footer class="wrap">${brand('footer')}<div><a href="/services/">Services</a><a href="/contact/">Contact</a><a href="/blogs/">Guides</a><a href="/privacy/">Privacy</a></div><a class="developer-credit" href="https://www.stackendbox.com/"><img src="/assets/stackendbox-mark.webp" width="30" height="33" alt="" loading="lazy"><span>Developed by Stack and Box</span></a></footer><aside class="mobile-actions" aria-label="Recovery actions">${directContact}</aside></body></html>`);
+  await writeFile(directory + 'index.html', `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>${path === '/' ? title : title + ' | ' + name}</title><meta name="description" content="${description}"><meta name="robots" content="${indexable ? 'index,follow' : 'noindex,nofollow'}"><link rel="canonical" href="${canonical}"><link rel="icon" href="/assets/dcr-icon.svg" type="image/svg+xml" sizes="any"><script src="${assetUrls['site.js']}" defer></script>${path === '/' ? homepageAssets : `<link rel="stylesheet" href="${assetUrls['design.css']}"><link rel="stylesheet" href="${assetUrls['theme.css']}">`}</head><body class="has-site-video has-recovery-wallpaper${path === '/' ? ' is-home' : ''}"><a class="skip" href="#main">Skip to content</a><header><div class="wrap header-inner">${brand('header')}<nav class="desktop-nav" aria-label="Main">${mainNav}</nav><details class="mobile-menu"><summary>${enquiryIcon('menu')}<span>Menu</span></summary><nav aria-label="Main">${mainNav}</nav></details></div></header><main id="main"${path === '/' ? '' : ' class="wallpaper-content"'}>${path === '/' ? content.replace('<!-- recovery-hero -->', serviceTape + recoveryHero).replace('<!-- recovery-map -->', recoveryMap) : content}</main><footer class="wrap">${brand('footer')}<div><a href="/services/">Services</a><a href="/contact/">Contact</a><a href="/blogs/">Guides</a><a href="/privacy/">Privacy</a>${emailNav}</div>${footerContacts}<a class="developer-credit" href="https://www.stackendbox.com/"><img src="/assets/stackendbox-mark.webp" width="30" height="33" alt="" loading="lazy"><span>developed by stackendbox</span></a></footer><aside class="mobile-actions" aria-label="Recovery actions">${directContact}</aside></body></html>`);
 }
 await writeFile('dist/robots.txt', indexable ? `User-agent: *\nAllow: /\nSitemap: ${business.domain}/sitemap.xml\n` : 'User-agent: *\nAllow: /\n');
 await writeFile('dist/sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${pages.map(([path]) => `<url><loc>${business.domain}${path}</loc></url>`).join('')}</urlset>`);

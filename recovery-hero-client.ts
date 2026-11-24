@@ -1,4 +1,3 @@
-import { createHighway } from "./recovery-highway-background";
 
 const routeSamples = 96;
 const hero = document.querySelector<HTMLElement>(".recovery-hero");
@@ -31,7 +30,6 @@ function startTruckEntrance(hero: HTMLElement) {
 }
 
 function startHeroMotion(hero: HTMLElement) {
-  const canvas = hero.querySelector<HTMLCanvasElement>(".highway-background canvas");
   const scene = document.querySelector<HTMLElement>(".recovery-map .route-scene");
   const journeys = Array.from(document.querySelectorAll<SVGGElement>(".recovery-map .map-journey")).flatMap((group, index) => {
     const trace = scene?.querySelector<SVGPathElement>(`.route-trace[data-route="${group.dataset.journey}"]`);
@@ -46,17 +44,14 @@ function startHeroMotion(hero: HTMLElement) {
       cycle: 11000 + index * 2500, delay: index * 1400,
     }];
   });
-  if (!canvas || !scene || !journeys.length) return;
-  const highway = document.body.classList.contains("has-site-video") ? null : createHighway(canvas);
+  if (!scene || !journeys.length) return;
   const reduced = matchMedia("(prefers-reduced-motion: reduce)");
-  const compact = matchMedia("(max-width: 850px)");
   const step = 1000 / 30;
   let heroVisible = false;
   let mapVisible = false;
   let phase = 0;
   let frame = 0;
   let previous = 0;
-  let roadElapsed = 0;
 
   function drawRoute(journey: typeof journeys[number], progress: number, showPulse: boolean) {
     const index = progress * (journey.positions.length - 1);
@@ -95,13 +90,6 @@ function startHeroMotion(hero: HTMLElement) {
     if (now - previous >= step - 1) {
       const elapsed = Math.min(now - previous, 100);
       previous = now;
-      if (heroVisible) {
-        roadElapsed += elapsed;
-        if (roadElapsed >= 64) {
-          highway?.advance(roadElapsed);
-          roadElapsed = 0;
-        }
-      }
       if (mapVisible) {
         phase += elapsed;
         for (const journey of journeys) {
@@ -136,10 +124,6 @@ function startHeroMotion(hero: HTMLElement) {
     sync();
   }
 
-  const resize = () => highway?.resize(canvas!.clientWidth, canvas!.clientHeight, compact.matches);
-  resize();
-  new ResizeObserver(resize).observe(hero);
-  compact.addEventListener("change", resize);
   reduced.addEventListener("change", updateMotion);
   document.addEventListener("visibilitychange", sync);
 
