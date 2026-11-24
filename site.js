@@ -95,7 +95,7 @@ if (form) {
   const pickup = form.elements.namedItem('pickup');
   const locationButton = form.querySelector('#location');
   const pickupMap = form.querySelector('#pickup-map');
-  const maxPickupAccuracy = 100;
+  const maxPickupAccuracy = 1000;
   let pickupEditVersion = 0;
   pickup.addEventListener('input', () => {
     pickupEditVersion += 1;
@@ -103,14 +103,27 @@ if (form) {
     status.textContent = '';
   });
   locationButton.addEventListener('click', () => {
+    if (locationButton.disabled) return;
     if (!navigator.geolocation) {
       status.textContent = 'Location is unavailable in this browser. Enter a landmark or map link.';
+      return;
+    }
+    if (!/^\d{7,15}$/.test(form.dataset.whatsapp || '')) {
+      status.textContent = 'WhatsApp contact is unavailable. Please use the Call now link.';
       return;
     }
     const requestVersion = pickupEditVersion;
     locationButton.disabled = true;
     status.textContent = 'Looking for your location...';
-    navigator.geolocation.getCurrentPosition(({coords}) => {
+    const failed = error => {
+      locationButton.disabled = false;
+      if (pickupEditVersion !== requestVersion) return;
+      status.textContent = error?.code === 1
+        ? 'Location access was denied. Allow access and retry, or share a map pin in WhatsApp.'
+        : error?.code === 3 ? 'Finding your location timed out. Retry outdoors or share a landmark in WhatsApp.'
+        : 'Could not get your location. Retry or enter a landmark or map link.';
+    };
+    try { navigator.geolocation.getCurrentPosition(({coords = {}}) => {
       locationButton.disabled = false;
       if (pickupEditVersion !== requestVersion) return;
       const { latitude, longitude, accuracy } = coords;
@@ -125,15 +138,12 @@ if (form) {
       pickup.value = mapUrl;
       pickupMap.href = mapUrl;
       pickupMap.hidden = false;
-      status.textContent = 'Location added. Estimated accuracy: ' + Math.ceil(accuracy) +
-        ' m. Check the map pin before sending.';
-    }, error => {
-      locationButton.disabled = false;
-      if (pickupEditVersion !== requestVersion) return;
-      status.textContent = error.code === 1
-        ? 'Location access was denied. Allow access and retry, or enter a landmark or map link.'
-        : 'Could not get your location. Retry or enter a landmark or map link.';
-    }, { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 });
+      const target = new URL('https://wa.me/' + form.dataset.whatsapp);
+      target.searchParams.set('text', 'Hello Dubai Car Recovery, I need vehicle recovery.\nMy current pickup location:\n' + mapUrl + '\nEstimated location accuracy: ' + Math.ceil(accuracy) + ' m.');
+      status.textContent = 'Opening WhatsApp. Tap Send there to share your map pin.';
+      window.location.assign(target.href);
+    }, failed, { enableHighAccuracy: true, maximumAge: 0, timeout: 15000 });
+    } catch { failed(); }
   });
   const sendStatus = form.querySelector('#pickup-send-status');
   const preparedMessage = form.querySelector('#pickup-message');
@@ -263,4 +273,12 @@ if (document.body.classList.contains('is-home')) {
     }, {rootMargin:'200px'});
     document.querySelectorAll('.recovery-map,.recovery-contact,.recovery-kinetic,.recovery-feedback,.recovery-faq,.closing-recovery,footer').forEach(element => wallpaperObserver.observe(element));
   } else revealWallpaper();
+}
+
+// Footer finishes animate only while the footer is visible.
+const footerSurface = document.querySelector('footer');
+if (footerSurface && 'IntersectionObserver' in window) {
+  new IntersectionObserver(([entry]) => {
+    footerSurface.dataset.footerVisible = String(entry.isIntersecting);
+  }).observe(footerSurface);
 }

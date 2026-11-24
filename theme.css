@@ -403,3 +403,37 @@ body.has-site-video #customer-feedback .feedback-rating { color: #946000; font-w
 @media(max-width:600px) { body.has-site-video #customer-feedback .feedback-layout { width: calc(100% - 28px); gap: 16px; } #customer-feedback .feedback-card { flex-basis: 100%; } }
 
 #customer-feedback .review-controls[hidden] { display: none; }
+
+/* A compact, connected pickup heading and form. */
+body.has-site-video .recovery-contact .recovery-contact-layout { display: grid; grid-template-columns: minmax(0,1fr); gap: 0; max-width: 760px; padding: 0; background: #fff; border: 1px solid #d4d8dc; border-radius: 14px; overflow: hidden; }
+body.has-site-video .recovery-contact .pickup-intro { margin: 0; padding: 18px 18px 8px; border: 0; border-radius: 0; background: transparent; }
+.recovery-contact .pickup-intro .eyebrow { margin: 0 0 7px; }
+.recovery-contact .pickup-intro :is(h1,h2) { margin: 0; font-size: clamp(1.55rem,2.5vw,2rem); }
+.recovery-contact .pickup-backdrop { display: none; }
+body.has-site-video .recovery-contact .pickup-form { margin: 0; padding: 10px 18px 18px; border: 0; border-radius: 0; background: transparent; box-shadow: none; gap: 10px; }
+.recovery-contact .pickup-fields { gap: 10px; }
+.recovery-contact .pickup-form label { gap: 5px; font-size: .85rem; }
+.recovery-contact .pickup-form :is(input,select,textarea) { min-height: 44px; padding: 8px 10px; }
+.recovery-contact .pickup-location p { margin-block: 5px; }
+.recovery-contact #location-status:empty { display: none; }
+/* Centered footer, dark carbon panels and dusty orange woven trim. */
+body.has-recovery-wallpaper > footer.wrap { display: grid; grid-template-columns: minmax(0,1fr); justify-items: center; gap: 20px; border-top: 0; padding-top: 32px; background-color: #151515; background-image: repeating-linear-gradient(0deg,#0002 0 1px,transparent 1px 4px),repeating-linear-gradient(135deg,#151515 0 7px,#272727 7px 14px,#9e480f 14px 16px,#c65d17 16px 19px,#1b1b1b 19px 26px); background-size: auto; }
+body.has-recovery-wallpaper footer .brand--footer { grid-column: 1; justify-self: center; width: clamp(270px,30vw,350px); max-width: 100%; margin: 0; }
+body.has-recovery-wallpaper footer .footer-links,body.has-recovery-wallpaper footer .footer-contact-details { position: relative; isolation: isolate; overflow: hidden; width: 100%; max-width: 1000px; margin: 0; padding: 20px 24px; border: 1px solid #70604c; border-radius: 20px; background: repeating-linear-gradient(135deg,#ffffff04 0 2px,#0003 2px 4px),#101214; box-shadow: 0 4px 16px #0005; }
+body.has-recovery-wallpaper footer .footer-links { justify-content: center; align-items: center; gap: 16px 28px; }
+body.has-recovery-wallpaper footer .footer-contact-details { max-width: 1000px; padding: 24px clamp(18px,5vw,64px); gap: 12px; }
+body.has-recovery-wallpaper footer :is(.footer-links,.footer-contact-details)::before { content: ''; position: absolute; inset: 0; border: 3px solid transparent; border-radius: inherit; pointer-events: none; background: repeating-linear-gradient(135deg,#e88533aa 0 4px,#302b2866 4px 8px) border-box; mask: linear-gradient(#fff 0 0) padding-box,linear-gradient(#fff 0 0); mask-composite: exclude; }
+body.has-recovery-wallpaper footer :is(.footer-links,.footer-contact-details)::after { content: ''; position: absolute; inset: 0 auto 0 -45%; width: 35%; background: linear-gradient(100deg,transparent,#ffffff13,#0005,transparent); pointer-events: none; z-index: -1; animation: footer-carbon-shimmer 3s linear infinite paused; }
+body.has-recovery-wallpaper footer[data-footer-visible="true"] :is(.footer-links,.footer-contact-details)::after { animation-play-state: running; }
+@keyframes footer-carbon-shimmer { to { transform: translateX(450%); } }
+@media(prefers-reduced-motion:reduce) { body.has-recovery-wallpaper footer :is(.footer-links,.footer-contact-details)::after { animation: none; } }
+@media(max-width:600px) {
+  body.has-site-video .recovery-contact .recovery-contact-layout { width: calc(100% - 28px); }
+  body.has-site-video .recovery-contact .pickup-intro { padding: 14px 12px 6px; }
+  body.has-site-video .recovery-contact .pickup-form { padding: 8px 12px 14px; gap: 9px; }
+  body.has-recovery-wallpaper footer .brand--footer { width: 285px; }
+  body.has-recovery-wallpaper footer .footer-links { padding: 18px 12px; gap: 12px 18px; }
+  body.has-recovery-wallpaper footer .footer-contact-details { padding: 20px 16px; }
+}
+
+body.has-recovery-wallpaper > footer.wrap { background-image: linear-gradient(27deg,#151515 5px,transparent 5px),linear-gradient(207deg,#151515 5px,transparent 5px),linear-gradient(27deg,#9a4b1e 5px,transparent 5px),linear-gradient(207deg,#713a1c 5px,transparent 5px),linear-gradient(90deg,#1b1b1b 10px,transparent 10px),linear-gradient(#292929 25%,#1b1b1b 25%,#1b1b1b 50%,transparent 50%,transparent 75%,#704324 75%); background-position: 0 5px,10px 0,0 10px,10px 5px,0 0,0 0; background-size: 20px 20px; }
