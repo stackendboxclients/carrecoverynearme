@@ -274,6 +274,7 @@ if (serviceDeck) {
   document.querySelector('[data-service-next]').addEventListener('click', () => move(1, true));
 
   serviceDeck.addEventListener('click', event => {
+    if (event.target.closest('.showcase-close')) { closeDetails(); move(1); return; }
     const button = event.target.closest('.showcase-open');
     if (!button || suppressClick) { suppressClick = false; return; }
     const card = button.closest('.showcase-card');

@@ -86,3 +86,51 @@ body.has-site-video .stories-footnote { font-size: .75rem; }
   body.has-site-video .story-route { font-size: .75rem; }
   body.has-site-video .story-route small { font-size: .65rem; }
 }
+
+/* Expanded cards show the service's reading side, leaving the front unchanged. */
+body.has-site-video .story-dialog-image { display: none; }
+body.has-site-video .story-dialog-copy { padding: 28px; }
+body.has-site-video .story-dialog .story-dialog-arrival { font-size: .9rem; line-height: 1.6; }
+.service-contact-actions { display: flex; flex-wrap: wrap; gap: 12px; margin: 20px 0 10px; }
+.service-contact-actions .contact-cta { min-height: 48px; }
+body.has-site-video .pickup-channels h3 { background: #fff; color: #20262d !important; padding: 10px 14px; border-radius: 8px; width: fit-content; }
+.service-detail-page h1 { font-size: clamp(2rem,4vw,3.25rem); line-height: 1.08; }
+.service-detail-page h2 { font-size: clamp(1.35rem,2.4vw,1.8rem); line-height: 1.2; margin-top: 28px; }
+body.has-site-video .showcase-grid[data-deck] .showcase-card[data-expanded] :is(.showcase-photo,.showcase-card-content) { visibility: hidden; }
+body.has-site-video .showcase-grid[data-deck] .showcase-detail {
+  inset: 0; overflow: auto; padding: 24px; border-radius: 12px;
+  background: #fff; color: #20262d; text-align: left; box-shadow: 0 8px 28px #0004;
+}
+body.has-site-video .showcase-detail h4 { margin: 0 44px 12px 0; font: 700 1.3rem/1.2 var(--display); }
+body.has-site-video .showcase-detail p { font-size: .95rem; line-height: 1.6; margin: 10px 0; }
+body.has-site-video .showcase-detail .service-contact-actions a { border-radius: 8px; }
+body.has-site-video .showcase-detail .service-read-more { background: #fff !important; color: var(--accent) !important; padding: 8px 0; border: 0 !important; }
+body.has-site-video .showcase-detail .showcase-close {
+  position: absolute; right: 12px; top: 12px; width: 36px; height: 36px;
+  display: grid; place-items: center; padding: 0; background: #20262d !important; color: #fff; border-radius: 50%;
+}
+.showcase-close svg { rotate: 45deg; }
+@media(max-width:600px) { body.has-site-video .story-dialog-copy { padding: 22px 18px; } }
+
+/* The service showcase uses the supplied matte honeycomb artwork. */
+body.has-site-video .wallpaper-content #services {
+  background: #111 url('/assets/service-honeycomb-wide.webp') center / cover no-repeat;
+  padding-block: 140px;
+}
+body.has-site-video #services :is(.showcase-intro,.showcase-position,.showcase-position span,.showcase-all,.showcase-card-content h3,.showcase-card-content p) {
+  background: none !important; border: 0; border-radius: 0; box-shadow: none;
+  color: #fff !important; font-weight: 700; padding: 0;
+}
+body.has-site-video #services .showcase-intro { padding: 0; }
+body.has-site-video #services .showcase-intro :is(h2,span,b,svg) { color: #fff !important; }
+body.has-site-video #services .showcase-intro h2 { font-size: clamp(2rem,4.2vw,3.75rem); }
+body.has-site-video #services .showcase-grid[data-deck] h3 { font-size: clamp(1.2rem,2.6vw,1.85rem); }
+body.has-site-video #services .showcase-grid[data-deck] .showcase-card-content p { font-size: clamp(1rem,1.7vw,1.2rem); line-height: 1.5; }
+body.has-site-video #services :is(.showcase-position,.showcase-all) { font-size: 1rem; }
+body.has-site-video #services .showcase-all { margin-top: 22px; }
+body.has-site-video #services .showcase-grid[data-deck] .showcase-card { transition: transform 950ms cubic-bezier(.22,.7,.22,1); }
+body.has-site-video #services .showcase-controls button { background: #20262d !important; color: #fff !important; border-color: #78828c !important; }
+@media(max-width:600px) {
+  body.has-site-video .wallpaper-content #services { background-image: url('/assets/service-honeycomb-mobile.webp'); }
+  body.has-site-video #services .showcase-position { max-width: 90%; }
+}

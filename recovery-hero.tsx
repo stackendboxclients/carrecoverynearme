@@ -12,10 +12,7 @@ function RouteScene() {
   const prefix = useId();
   return (
     <figure className="route-scene">
-      <figcaption className="scene-caption">
-        <span><MapPin size={15} /> Dubai, UAE</span>
-        <span>Illustrative routes</span>
-      </figcaption>
+
       <svg className="scene-map" viewBox="0 0 1448 1086" role="img" aria-label="Four illustrative road-aligned recovery journeys: the road outside Expo Centre Dubai at Expo City Dubai to Dubai Creek Harbour; Jumeirah to Al Barsha; Jebel Ali to Deira; and outside Dubai International Airport to Sheikh Mohammed bin Zayed Road, E311.">
         <defs>
           <clipPath id={prefix + "-vehicle"} clipPathUnits="userSpaceOnUse">

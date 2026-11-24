@@ -41,7 +41,7 @@ if (section) {
     image.src = card.querySelector('img').src;
     image.alt = card.querySelector('strong').textContent;
     dialog.querySelector('#story-dialog-title').textContent = image.alt;
-    dialog.querySelector('#story-dialog-description').textContent = card.querySelector('.story-description').textContent;
+    dialog.querySelector('#story-dialog-description').textContent = card.dataset.detail;
     dialog.querySelector('.story-dialog-route').replaceChildren(card.querySelector('.story-route').cloneNode(true));
     dialog.showModal();
     popupTimer = setTimeout(closePopup, 5000);
@@ -50,7 +50,7 @@ if (section) {
     if (suppressClick) { suppressClick = false; return; }
     openPopup(index);
   }));
-  dialog.addEventListener('click', closePopup);
+  dialog.addEventListener('click', event => { if (!event.target.closest('a')) closePopup(); });
   dialog.addEventListener('cancel', event => { event.preventDefault(); closePopup(); });
   rail.addEventListener('pointerdown', event => { stop(); pointer = { id: event.pointerId, x: event.clientX, y: event.clientY }; suppressClick = false; });
   window.addEventListener('pointerup', event => {

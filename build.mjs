@@ -6,6 +6,7 @@ import { buildRecoveryHero } from './recovery-hero-build.mjs';
 import { recoveryKinetic } from './recovery-kinetic.mjs';
 import { recoveryFeedback } from './recovery-feedback.mjs';
 import { recoveryStories } from './recovery-stories.mjs';
+import { serviceDetails, arrivalNote } from './service-details.mjs';
 
 const business = JSON.parse(await readFile('business.json', 'utf8'));
 const services = [
@@ -227,7 +228,7 @@ const showcaseCards = showcaseServices.map(([slug, title], index) => `<article c
   <img class="showcase-photo" src="/assets/service-cutouts-v2/${slug}.webp" alt="" width="1400" height="700" loading="lazy" decoding="async">
   <div class="showcase-card-content"><h3>${title}</h3><p>${showcaseDescriptions[slug]}</p></div>
   <button class="showcase-open" type="button" aria-label="Explore ${title}" aria-expanded="false" aria-controls="service-detail-${slug}"></button>
-  <div class="showcase-detail" id="service-detail-${slug}" hidden><a href="/services/${slug}/">View service ${enquiryIcon('arrow')}</a><span>Tap the card again to return</span></div>
+  <div class="showcase-detail" id="service-detail-${slug}" hidden><button type="button" class="showcase-close" aria-label="Close service details">${enquiryIcon('plus')}</button><h4>${title}</h4><p>${serviceDetails[slug]}</p><p>${arrivalNote}</p><div class="service-contact-actions">${directContact}</div><a class="service-read-more" href="/services/${slug}/">Read full service details ${enquiryIcon('arrow')}</a></div>
 </article>`);
 
 const serviceShowcase = `<section class="recovery-showcase" id="services" aria-labelledby="showcase-heading">
@@ -258,7 +259,7 @@ const serviceShowcase = `<section class="recovery-showcase" id="services" aria-l
 
 const home = `<!-- recovery-hero -->
 <div class="wallpaper-content">
-${recoveryStories(showcaseServices, showcaseDescriptions, enquiryIcon)}
+${recoveryStories(showcaseServices, showcaseDescriptions, enquiryIcon, serviceDetails, arrivalNote, directContact)}
 <!-- recovery-map -->
 ${booking('h2')}
 ${serviceShowcase}
@@ -274,7 +275,7 @@ const guides = [
 const pages = [
   ['/', name, 'Car towing, breakdown recovery, and roadside assistance in Dubai.', home],
   ['/services/', 'Recovery services', 'Explore vehicle recovery and roadside assistance in Dubai.', `<section class="section wrap"><h1>Recovery services</h1><div class="service-grid">${cards}</div></section>`],
-  ...services.map(([slug, title, description], index) => [`/services/${slug}/`, title, description, `<section class="section wrap narrow"><a class="back-link" href="/services/">← All services</a><h1>${title}</h1><p>${description}</p><h2>Before you request a pickup</h2><p>${serviceAdvice[index]}</p><a class="button" href="/book/?service=${slug}">Request ${title.toLowerCase()} ↗</a></section>`]),
+  ...services.map(([slug, title, description], index) => [`/services/${slug}/`, title, description, `<section class="section wrap narrow service-detail-page"><a class="back-link" href="/services/">← All services</a><h1>${title}</h1><p>${description}</p><h2>Careful recovery, planned around your vehicle</h2><p>${serviceDetails[slug]}</p><h2>Pickup and arrival</h2><p>${arrivalNote}</p><h2>What to share with the team</h2><p>${serviceAdvice[index]}</p><div class="service-contact-actions" aria-label="Contact the recovery team">${directContact}</div></section>`]),
   ['/book/', 'Request recovery', 'Share pickup and vehicle details with the recovery team.', booking('h1')],
   ['/about/', 'About', 'How Dubai Car Recovery Near Me handles vehicle recovery enquiries.', `<section class="section wrap narrow"><h1>About Dubai Car Recovery Near Me</h1><p>Tell us what happened, where your vehicle is, and where it needs to go. The recovery team uses those details to confirm what help is available and what it will cost.</p><a class="button" href="/services/">Explore services ↗</a></section>`],
   ['/contact/', 'Contact', 'Contact Dubai Car Recovery Near Me.', `<section class="section wrap narrow"><h1>Contact</h1>${contactReady ? `<div class="actions">${phone}${whatsapp}</div>` : '<p>Business contact details will be added before launch.</p>'}</section>`],
@@ -291,6 +292,7 @@ await mkdir('dist/assets');
 await cp('site-background-dubai-road.mp4', 'dist/assets/site-background-dubai-road.mp4');
 await cp('site-background-dubai-road-poster.webp', 'dist/assets/site-background-dubai-road-poster.webp');
 await cp('recovery-orange-metal-wallpaper.webp', 'dist/assets/recovery-orange-metal-wallpaper.webp');
+for (const file of ['service-honeycomb-wide.webp', 'service-honeycomb-mobile.webp']) await cp(file, `dist/assets/${file}`);
 for (const file of ['hero-dubai-gwagon-night.webp', 'hero-dubai-gwagon-night-mobile.webp']) {
   await cp(file, `dist/assets/${file}`);
 }
