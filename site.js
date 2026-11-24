@@ -234,9 +234,10 @@ const serviceDeck = document.querySelector('.showcase-grid');
 if (serviceDeck) {
   const cards = [...serviceDeck.querySelectorAll('.showcase-card')];
   const counter = document.querySelector('[data-service-position]');
-  let current = 0, timer = 0, visible = false, pointer = null, suppressClick = false, paused = false;
+  let current = 0, timer = 0, detailTimer = 0, visible = false, pointer = null, suppressClick = false, paused = false;
   const wrap = n => (n + cards.length) % cards.length;
   function closeDetails() {
+    clearTimeout(detailTimer);
     cards.forEach(card => { card.removeAttribute('data-expanded'); card.querySelector('.showcase-detail').hidden = true; card.querySelector('button').setAttribute('aria-expanded', 'false'); });
   }
   function paint() {
@@ -262,7 +263,7 @@ if (serviceDeck) {
   }
   function schedule(delay = 2000) {
     clearTimeout(timer);
-    if (visible && !document.hidden && !reducedMotion.matches && !pointer && !paused && !serviceDeck.matches(':focus-within') && !serviceDeck.querySelector('[data-expanded]')) timer = setTimeout(() => move(1), delay);
+    if (visible && !document.hidden && !reducedMotion.matches && !pointer && !paused && !serviceDeck.querySelector('[data-expanded]')) timer = setTimeout(() => move(1), delay);
   }
   function move(direction, manual = false) {
     const outgoing = cards[current];
@@ -273,8 +274,6 @@ if (serviceDeck) {
   serviceDeck.dataset.deck = 'true'; paint();
   document.querySelector('[data-service-prev]').addEventListener('click', () => move(-1, true));
   document.querySelector('[data-service-next]').addEventListener('click', () => move(1, true));
-  serviceDeck.addEventListener('focusin', () => clearTimeout(timer));
-  serviceDeck.addEventListener('focusout', () => schedule(5000));
 
   serviceDeck.addEventListener('click', event => {
     const button = event.target.closest('.showcase-open');
@@ -282,7 +281,7 @@ if (serviceDeck) {
     const card = button.closest('.showcase-card');
     const expanded = button.getAttribute('aria-expanded') !== 'true';
     closeDetails();
-    if (expanded) { card.dataset.expanded = 'true'; button.setAttribute('aria-expanded','true'); card.querySelector('.showcase-detail').hidden = false; }
+    if (expanded) { card.dataset.expanded = 'true'; button.setAttribute('aria-expanded','true'); card.querySelector('.showcase-detail').hidden = false; detailTimer = setTimeout(() => move(1), 5000); } else { move(1); return; }
     schedule(5000);
   });
   serviceDeck.addEventListener('keydown', event => {
