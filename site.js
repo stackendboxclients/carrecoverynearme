@@ -173,7 +173,6 @@ if (backgroundVideo) {
   const heroBoundary = document.querySelector('.recovery-hero');
   const boundary = heroBoundary || document.querySelector('body > header');
   let videoFrame = 0;
-  let previousTop = -1;
   let backgroundStarted = false;
   let backgroundQueued = false;
   let backgroundCovered = true;
@@ -185,11 +184,9 @@ if (backgroundVideo) {
     const top = Math.max(0, Math.min(innerHeight, boundary?.getBoundingClientRect().bottom ?? 0));
     backgroundCovered = top >= innerHeight;
     if (!backgroundStarted && (!heroBoundary || window.scrollY > 0)) queueBackground();
-    if (top !== previousTop) {
-      document.documentElement.style.setProperty('--video-start', `${top}px`);
-      previousTop = top;
-      syncBackground();
-    }
+    // Opaque hero/map surfaces cover the fixed video without a scroll-driven mask.
+    // Keep this check for playback only, so scrolling cannot expose a white seam.
+    syncBackground();
   };
   const scheduleBoundary = () => {
     if (!videoFrame) videoFrame = requestAnimationFrame(updateBoundary);
