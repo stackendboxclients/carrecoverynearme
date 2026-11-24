@@ -6,7 +6,7 @@ const journeys = [
   { id: "jumeirah-barsha", color: "#1263b7", pickup: "Jumeirah", destination: "Al Barsha", start: [686, 340], finish: [590, 716], pickupLabel: [360, 280], dropLabel: [520, 745], labelWidth: 310, vehicle: "/assets/truck-blue-porsche.webp", path: "M686 340 L716 354 L748 366 Q742 384 721 404 L680 450 L620 510 L565 570 Q548 593 520 610 L485 641 Q474 653 468 670 L505 684 L550 704 L590 716" },
   { id: "jebel-ali-deira", color: "#654294", pickup: "Jebel Ali", destination: "Deira", start: [210, 895], finish: [1025, 110], pickupLabel: [40, 938], dropLabel: [750, 145], labelWidth: 310, vehicle: "/assets/truck-black-lamborghini.webp", path: "M210 895 L250 840 L300 780 L360 752 Q390 740 410 700 L460 637 L520 590 Q550 560 565 523 L620 454 L680 397 L735 366 L770 318 L806 252 L843 183 Q851 160 870 146 L895 126 Q907 115 915 100 L950 110 L985 115 L1025 110" },
   { id: "airport-e311", color: "#ba1839", pickup: "DXB airport (outside)", destination: "Sheikh Mohammed Rd (E311)", start: [1280, 325], finish: [1180, 780], pickupLabel: [1070, 170], dropLabel: [1060, 820], labelWidth: 370, vehicle: "/assets/truck-black-ferrari.webp", path: "M1280 325 L1320 340 L1375 360 Q1390 370 1400 379 L1388 430 L1370 480 L1354 540 L1330 608 L1303 684 Q1292 725 1268 750 L1220 772 L1180 780" },
-  { id: "deira-business-bay-box", color: "#08766e", pickup: "Deira (roadside)", destination: "Business Bay (roadside)", start: [1005, 125], finish: [850, 630], pickupLabel: [500, 35], dropLabel: [890, 670], labelWidth: 350, vehicle: "/assets/map-orange-box-recovery.webp", path: "M1005 125 L985 115 L950 110 L915 100 Q907 115 895 126 L870 146 Q851 160 843 183 L806 252 L770 318 L735 366 Q742 384 721 404 L680 450 L655 482 Q692 507 735 526 L769 551 Q786 568 781 596 L780 615 Q783 635 810 634 L850 630" },
+  { id: "difc-expo-jebel-box", color: "#08766e", pickup: "DIFC", destination: "Expo / Jebel Ali road", start: [855, 325], finish: [440, 880], pickupLabel: [1090, 315], dropLabel: [400, 1000], labelWidth: 350, vehicle: "/assets/map-orange-white-box-hypercar.webp", path: "M855 325 L810 335 L780 345 Q755 350 735 366 Q742 384 721 404 L680 450 L655 482 Q692 507 735 526 L769 551 Q786 568 781 596 L780 615 L776 638 Q722 651 690 686 L640 735 L585 789 L542 830 L520 865 L440 880" },
 ];
 
 function RouteScene() {
@@ -14,11 +14,14 @@ function RouteScene() {
   return (
     <figure className="route-scene">
 
-      <svg className="scene-map" viewBox="0 0 1448 1086" role="img" aria-label="Five illustrative road-aligned recovery journeys: the road outside Expo Centre Dubai at Expo City Dubai to Dubai Creek Harbour; Jumeirah to Al Barsha; Jebel Ali to Deira; outside Dubai International Airport to Sheikh Mohammed bin Zayed Road, E311; and full glass-box vehicle transport from near Deira to a road near Business Bay.">
+      <svg className="scene-map" viewBox="0 0 1448 1086" role="img" aria-label="Five illustrative road-aligned recovery journeys: the road outside Expo Centre Dubai at Expo City Dubai to Dubai Creek Harbour; Jumeirah to Al Barsha; Jebel Ali to Deira; outside Dubai International Airport to Sheikh Mohammed bin Zayed Road, E311; and full glass-box vehicle transport from DIFC to the road between Expo Centre Dubai and Jebel Ali.">
         <defs>
           <clipPath id={prefix + "-vehicle"} clipPathUnits="userSpaceOnUse">
             <path d="M40 251L50 226 56 184 88 172 163 157 225 135 283 128 385 129 447 142 503 178 525 193 590 202 592 184 614 174 657 163 705 162 735 176 757 203 773 228 791 235 796 246 813 260 824 278 831 301 829 321 817 337 805 359 786 368 769 361 759 344 727 351 681 354 524 381 506 408 486 420 458 422 429 411 414 388 376 394 221 408 166 427 143 412 134 390 123 385 130 370 143 366 142 309 118 305 82 298 48 290 40 276Z" />
           </clipPath>
+          <mask id={prefix + "-box-alpha"} maskUnits="userSpaceOnUse" x="-145" y="-95" width="290" height="109" style={{ maskType: "alpha" }}>
+            <image href="/assets/map-orange-box-recovery.webp" x="-145" y="-95" width="290" height="109" />
+          </mask>
         </defs>
         <image href="/assets/dubai-recovery-map.webp" width="1448" height="1086" />
         {journeys.map(journey => <g key={journey.id} className="map-road" style={{ "--route-color": journey.color } as CSSProperties}>
@@ -40,7 +43,7 @@ function RouteScene() {
                 <image href="/flatbed.webp" width="900" height="506" clipPath={"url(#" + prefix + "-vehicle)"} />
                 <g className="route-wheel" data-center="463 376"><Wheel x={463} y={376} radius={23} /></g>
                 <g className="route-wheel" data-center="790 335"><Wheel x={790} y={335} radius={15} /></g>
-              </svg> : <image href={journey.vehicle ?? ""} x={index === 4 ? -145 : -125} y={index === 4 ? -95 : -98} width={index === 4 ? 290 : 250} height={index === 4 ? 109 : 112} className="map-vehicle" />}
+              </svg> : <image href={journey.vehicle ?? ""} mask={index === 4 ? "url(#" + prefix + "-box-alpha)" : undefined} x={index === 4 ? -145 : -125} y={index === 4 ? -95 : -98} width={index === 4 ? 290 : 250} height={index === 4 ? 109 : 112} className="map-vehicle" />}
               </g>
             </g>
             <g className="map-stop-label" transform={`translate(${journey.pickupLabel[0]} ${journey.pickupLabel[1]})`}>
@@ -107,5 +110,5 @@ export function RecoveryHero({ bookingHref, callHref, whatsappHref }: { bookingH
 }
 
 export function RecoveryMap() {
-  return <section className="recovery-map" aria-label="Illustrative pickup and drop-off routes"><div className="hero-map-surround"><RouteScene /></div></section>;
+  return <section className="recovery-map" aria-label="Illustrative pickup and drop-off routes"><span className="map-metal-seam map-metal-seam--top" aria-hidden="true" /><div className="hero-map-surround"><RouteScene /></div><span className="map-metal-seam map-metal-seam--bottom" aria-hidden="true" /></section>;
 }

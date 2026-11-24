@@ -368,3 +368,17 @@ body.has-site-video footer .footer-contact-details :is(a,span) { color: #fff; -w
 .footer-contact-details .footer-contact-row { display: grid; grid-template-columns: 100px minmax(0,1fr); gap: 12px; text-decoration: none; }
 .footer-contact-row span:last-child { text-decoration: underline; text-underline-offset: 3px; overflow-wrap: anywhere; }
 @media(max-width:600px) { .footer-contact-details p,.footer-contact-details .footer-contact-row { grid-template-columns: 90px minmax(0,1fr); gap: 8px; } }
+
+/* Metallic surround belongs only to the map, keeping its artwork unchanged. */
+body.has-site-video .wallpaper-content .recovery-map {
+  background-color: #b9bec2;
+  background-image: repeating-linear-gradient(112deg,#ffffff08 0 1px,#15191c12 1px 3px,transparent 3px 7px),linear-gradient(105deg,#58280d 0%,#df6819 7%,#ffb368 12%,#a8460c 16%,#c1c7cb 21%,#eef0f1 37%,#949da4 54%,#dce0e3 72%,#a7470e 83%,#ffb775 89%,#db6112 95%,#68300d 100%);
+  isolation: isolate;
+}
+.recovery-map .map-metal-seam { position: absolute; inset-inline: 0; height: 6px; overflow: hidden; pointer-events: none; z-index: 5; background: linear-gradient(#ffe8a1,#e58924 30%,#ffc96c 50%,#c45e12 78%,#ffd580); box-shadow: 0 0 6px #ffbd5680; }
+.map-metal-seam--top { top: 0; }
+.map-metal-seam--bottom { bottom: 0; }
+.map-metal-seam::after { content: ''; position: absolute; inset-block: 0; left: 0; width: 35%; background: linear-gradient(90deg,transparent,#fffbe7,transparent); animation: recovery-gold-glint 1s linear infinite paused; }
+.recovery-map[data-seams-visible="true"] .map-metal-seam::after { animation-play-state: running; }
+.recovery-stories::before,.recovery-stories::after { content: none; }
+@media(prefers-reduced-motion:reduce) { .map-metal-seam::after { animation: none; display: none; } }

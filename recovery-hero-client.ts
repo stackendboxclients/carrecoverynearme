@@ -1,3 +1,11 @@
+// Pause the map border shimmer when its section is offscreen.
+const mapSurround = document.querySelector<HTMLElement>(".recovery-map");
+if (mapSurround && "IntersectionObserver" in window) {
+  new IntersectionObserver(entries => {
+    mapSurround.dataset.seamsVisible = String(entries.some(entry => entry.isIntersecting));
+  }).observe(mapSurround);
+}
+
 
 const routeSamples = 96;
 const hero = document.querySelector<HTMLElement>(".recovery-hero");

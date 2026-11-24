@@ -325,6 +325,7 @@ for (const width of [640, 1280]) {
 await cp('stackendbox-mark.webp', 'dist/assets/stackendbox-mark.webp');
 await cp('header-dubai-skyline.webp', 'dist/assets/header-dubai-skyline.webp');
 await cp('dubai-recovery-map.webp', 'dist/assets/dubai-recovery-map.webp');
+await cp('map-orange-white-box-hypercar.webp', 'dist/assets/map-orange-white-box-hypercar.webp');
 await cp('map-orange-box-recovery.webp', 'dist/assets/map-orange-box-recovery.webp');
 for (const file of ['truck-blue-porsche.webp', 'truck-black-lamborghini.webp', 'truck-black-ferrari.webp']) {
   await cp(file, `dist/assets/${file}`);
