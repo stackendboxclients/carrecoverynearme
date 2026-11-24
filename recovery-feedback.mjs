@@ -2,7 +2,7 @@ export function recoveryFeedback() {
   return `<section class="recovery-feedback" id="customer-feedback" aria-labelledby="feedback-title">
     <div class="wrap feedback-layout">
       <div class="feedback-intro"><h2 id="feedback-title">Customer <em>feedback</em></h2><p data-review-average hidden></p></div>
-      <p class="review-status" data-review-load role="status">Loading customer reviews...</p>
+      <p class="review-status" data-review-load role="status" hidden></p>
       <div class="feedback-deck" hidden><ul class="feedback-track" tabindex="0" aria-label="Customer reviews. Use the left and right arrow keys to browse."></ul><div class="review-controls"><button type="button" data-review-prev aria-label="Previous review">&#8592;</button><button type="button" data-review-next aria-label="Next review">&#8594;</button></div></div>
       <div class="review-form-panel">
         <h3>Share your experience</h3><p>Your name, rating and review will be published on this website immediately.</p>

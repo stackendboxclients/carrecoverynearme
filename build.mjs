@@ -118,13 +118,8 @@ const recoveryQuestions = [
   ['Can I enter my location without sharing GPS?', 'Yes. Enter a map link, nearby landmark, road exit, or parking level. If the address is hard to find, add the entrance or other access details.'],
 ];
 
-const faq = `<section class="recovery-faq" id="faq" aria-labelledby="recovery-faq-heading">
+const faq = `<section class="recovery-faq" id="faq" aria-label="Frequently asked questions">
   <div class="wrap recovery-faq-layout">
-    <div class="recovery-faq-intro">
-      <h2 id="recovery-faq-heading">Frequently asked <em>questions</em></h2>
-      <p>What to know before you arrange towing or vehicle recovery in Dubai.</p>
-      <a class="button recovery-faq-cta" href="#request-recovery">Open pickup form ${enquiryIcon('arrow')}</a>
-    </div>
     <div class="recovery-faq-list">
       ${recoveryQuestions.map(([question, answer], index) => `<details class="recovery-faq-item" name="recovery-faq"${index === 0 ? ' open' : ''}>
         <summary><span>${question}</span><span class="recovery-faq-indicator" aria-hidden="true">${enquiryIcon('plus')}</span></summary>
@@ -267,8 +262,22 @@ ${serviceShowcase}
 ${recoveryKinetic(enquiryIcon, services)}
 ${recoveryFeedback(business)}
 ${faq}
-<section class="closing-recovery" id="closing-recovery" aria-label="Recovery truck and luxury car">
-  <img class="closing-recovery-image" src="/assets/closing-recovery-truck.webp" alt="Overhead view of a luxury sports car secured on a recovery truck" width="1024" height="1536" loading="lazy" decoding="async">
+<section class="closing-recovery" id="closing-recovery" aria-labelledby="closing-recovery-heading">
+  <div class="closing-recovery-heading"><h2 id="closing-recovery-heading">Why choose us?</h2><p>Six reasons to choose Dubai Car Recovery.</p></div>
+  <div class="recovery-care-diagram">
+    <svg class="recovery-care-lines" viewBox="0 0 1000 700" preserveAspectRatio="none" aria-hidden="true"><defs><marker id="care-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M1 1L7 4L1 7" fill="none" stroke="white" stroke-width="1.6"/></marker></defs><g fill="none" stroke="white" stroke-width="1.6" marker-end="url(#care-arrow)"><path d="M255 105L315 105L411 160"/><path d="M255 330L320 330L400 275"/><path d="M255 575L315 575L390 530"/><path d="M745 110L690 110L595 215"/><path d="M745 345L690 345L610 375"/><path d="M745 575L690 575L595 590"/></g></svg>
+    <div class="recovery-care-notes recovery-care-notes-left">
+      <div class="recovery-care-note"><strong>Secure wheel belts</strong><span>Straps hold your car in place.</span></div>
+      <div class="recovery-care-note"><strong>Careful loading</strong><span>Clearance checked as we load.</span></div>
+      <div class="recovery-care-note"><strong>Suitable recovery trucks</strong><span>Transport planned for your vehicle.</span></div>
+    </div>
+    <img class="closing-recovery-image" src="/assets/closing-recovery-truck.webp" alt="Overhead view of a luxury sports car secured on a recovery truck" width="1024" height="1536" loading="lazy" decoding="async">
+    <div class="recovery-care-notes recovery-care-notes-right">
+      <div class="recovery-care-note"><strong>Steady transport</strong><span>Careful driving helps limit jolts.</span></div>
+      <div class="recovery-care-note"><strong>Vehicle protection</strong><span>Attentive handling from pickup to drop-off.</span></div>
+      <div class="recovery-care-note"><strong>Clear pickup timing</strong><span>Arrival estimates confirmed with you.</span></div>
+    </div>
+  </div>
 </section>
 </div>`;
 const guides = [
@@ -295,9 +304,9 @@ await mkdir('dist', { recursive: true });
 await mkdir('dist/assets');
 
 
-for (const file of ['recovery-continuous-metal.webp','recovery-continuous-metal-mobile.webp']) await cp(file, `dist/assets/${file}`);
+await cp('recovery-sharp-metal.webp', 'dist/assets/recovery-sharp-metal.webp');
 await cp('service-editorial', 'dist/assets/service-editorial', { recursive: true });
-await cp('stories-black-tread.webp', 'dist/assets/stories-black-tread.webp');
+await cp('enhanced-black-honeycomb.webp', 'dist/assets/enhanced-black-honeycomb.webp');
 await cp('closing-recovery-truck.webp', 'dist/assets/closing-recovery-truck.webp');
 for (const file of ['service-honeycomb-slim-wide.webp', 'service-honeycomb-slim-mobile.webp']) await cp(file, `dist/assets/${file}`);
 for (const file of ['hero-dubai-gwagon-night.webp', 'hero-dubai-gwagon-night-mobile.webp']) {

@@ -26,8 +26,8 @@ if (section) {
       const result=await response.json();
       if(!Array.isArray(result.reviews)) throw new Error();
       result.reviews.forEach(review=>card(review));
-      status.textContent=seen.size ? '' : 'Be the first to share your experience.';
-      status.hidden=seen.size>0;
+      status.textContent='';
+      status.hidden=true;
       if(typeof result.average==='number') { average.hidden=false; average.textContent=`Average customer rating ${result.average.toFixed(1)} / 5${result.limitedSummary ? ' from recent reviews' : ''}`; }
       schedule();
     } catch { status.hidden=false; status.textContent='Reviews could not be loaded. Please try again shortly.'; }
