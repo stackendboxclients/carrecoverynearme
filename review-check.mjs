@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import {createHandler,validateReview} from './api/reviews.mjs';
+import {reviewSummaries} from './review-summaries.mjs';
 const records=new Map();
 const storage={async list({prefix}){return{blobs:[...records.keys()].filter(k=>k.startsWith(prefix)).map(pathname=>({pathname})),hasMore:false};},async put(path,body){if(records.has(path)){const e=new Error('already exists');e.name='BlobAlreadyExistsError';throw e;}records.set(path,body);},async get(path){return {stream:new Blob([records.get(path)]).stream()};},async del(path){records.delete(path);}};
 const handler=createHandler(storage);
@@ -11,7 +12,14 @@ assert.equal((await call('POST',{}, {origin:'https://evil.example'})).code,403);
 assert.equal((await call('POST',{author:'Test',text:'A sufficiently long review.',rating:5,consent:true,website:'bot'})).code,400);
 let result=await call('POST',{author:'Test customer',text:'<script>alert(1)</script> Long negative review text.',rating:1});assert.equal(result.code,201);assert.equal(result.payload.review.rating,1);
 assert.equal((await call('POST',{author:'Test customer',text:'Another sufficiently long review.',rating:5,consent:true})).code,429);
-result=await call('GET');assert.equal(result.code,200);assert.equal(result.payload.average,1);assert.equal(result.payload.reviews.length,1);
+result=await call('GET');assert.equal(result.code,200);assert.equal(result.payload.average,(1+reviewSummaries.reduce((sum,r)=>sum+(r.rating||0),0))/(1+reviewSummaries.filter(r=>r.rating!==null).length));assert.equal(result.payload.reviews.length,1+reviewSummaries.length);assert.equal(result.payload.reviews[0].author,'Test customer');
+assert.equal(reviewSummaries.length,48);assert.equal(new Set(reviewSummaries.map(r=>r.id)).size,48);assert.equal(reviewSummaries.filter(r=>r.rating===5).length,5);
+for(const review of reviewSummaries) {assert.ok(review.summarized);assert.ok(review.text.length>=15);assert.ok(review.author.length>=1);assert.ok(review.rating===null || review.rating===5);}
+assert.ok(result.payload.reviews.some(r=>r.id===reviewSummaries[0].id));
+const originalId=result.payload.reviews[0].id;
+const added=await call('POST',{author:'Another customer',text:'A newly submitted customer review.',rating:5},{'x-forwarded-for':'192.0.2.2'});assert.equal(added.code,201);
+result=await call('GET');assert.equal(result.payload.reviews.length,reviewSummaries.length+2);assert.ok(result.payload.reviews.some(r=>r.id===added.payload.review.id));assert.ok(result.payload.reviews.some(r=>r.id===originalId));
+assert.equal(result.payload.average,(6+reviewSummaries.reduce((sum,r)=>sum+(r.rating||0),0))/(2+reviewSummaries.filter(r=>r.rating!==null).length));
 assert.equal((await call('DELETE')).code,405);
 const failed=createHandler({async list(){throw new Error('failure');}});let code;await failed({method:'GET'},{setHeader(){},status(n){code=n;return this;},json(){}});assert.equal(code,503);
 console.log('Review validation, origin protection, immediate persistence, negative ratings, cooldown, average and storage error checks passed.');

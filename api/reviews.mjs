@@ -1,5 +1,6 @@
 import { createHash, randomUUID } from 'node:crypto';
 import { get, list, put, del } from '@vercel/blob';
+import { reviewSummaries } from '../review-summaries.mjs';
 
 const origins = new Set(['https://www.dubaicarrecoverynearme.com', 'https://dubaicarrecoverynearme.com']);
 const prefix = process.env.VERCEL_ENV === 'preview' ? 'preview-customer-reviews-v1/' : 'customer-reviews-v1/';
@@ -27,6 +28,7 @@ export function createHandler(storage = { get, list, put, del }) {
         } while (cursor);
         blobs.sort((a,b)=>a.pathname.localeCompare(b.pathname));
         const ratings = blobs.map(b=>Number(b.pathname.match(/-r([1-5])-/)?.[1])).filter(Boolean);
+        ratings.push(...reviewSummaries.filter(review=>Number.isInteger(review.rating)).map(review=>review.rating));
         const reviews = [];
         // Bound parallel reads to avoid exhausting the function or storage connection pool.
         for (let i=0;i<Math.min(blobs.length,50);i+=8) {
@@ -39,7 +41,7 @@ export function createHandler(storage = { get, list, put, del }) {
           }));
           reviews.push(...batch);
         }
-        return respond(200,{reviews,average:ratings.length ? ratings.reduce((a,b)=>a+b,0)/ratings.length : null,hasOlder:blobs.length>50,limitedSummary:blobs.length>=10000});
+        return respond(200,{reviews:[...reviews,...reviewSummaries],average:ratings.length ? ratings.reduce((a,b)=>a+b,0)/ratings.length : null,hasOlder:blobs.length>50,limitedSummary:blobs.length>=10000});
       }
       if (!origins.has(req.headers.origin)) return respond(403,{error:'Submit your review from our website.'});
       if (!String(req.headers['content-type']||'').includes('application/json')) return respond(415,{error:'Send JSON.'});

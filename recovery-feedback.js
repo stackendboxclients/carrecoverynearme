@@ -34,9 +34,15 @@ if (section) {
     const figure=document.createElement('figure'); figure.className='feedback-surface';
     const meta=document.createElement('figcaption'); meta.className='feedback-card-meta';
     const author=document.createElement('span'); author.className='feedback-author'; author.textContent=review.author;
-    const stars=document.createElement('span'); stars.className='feedback-rating'; stars.append(starRow(review.rating),document.createTextNode(` ${review.rating}/5`));
+    const stars=document.createElement('span'); stars.className='feedback-rating';
+    if(Number.isInteger(review.rating) && review.rating>=1 && review.rating<=5) stars.append(starRow(review.rating),document.createTextNode(` ${review.rating}/5`));
     const quote=document.createElement('blockquote'), text=document.createElement('p'); text.textContent=review.text;
-    quote.append(text); meta.append(author,stars); figure.append(meta,quote); item.append(figure);
+    quote.append(text); meta.append(author,stars); figure.append(meta);
+    if(review.summarized) {
+      const note=document.createElement('p'); note.className='feedback-summary-note';
+      note.textContent='Customer feedback summary'; figure.append(note);
+    }
+    figure.append(quote); item.append(figure);
     if(prepend) track.prepend(item); else track.append(item);
     section.querySelector('.review-controls').hidden=track.children.length<2;
   }
