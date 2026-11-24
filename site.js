@@ -228,12 +228,13 @@ if (backgroundVideo) {
   syncBackground();
 }
 
-// The 14 existing services become an automatically cycling, swipeable card stack.
+// Cutout vehicles move around a shallow horizontal orbit, with one service in focus.
 const serviceDeck = document.querySelector('.showcase-grid');
 if (serviceDeck) {
   const cards = [...serviceDeck.querySelectorAll('.showcase-card')];
   const counter = document.querySelector('[data-service-position]');
-  let current = 0, timer = 0, visible = false, pointer = null, suppressClick = false;
+  const pauseButton = document.querySelector('[data-service-pause]');
+  let current = 0, timer = 0, visible = false, pointer = null, suppressClick = false, paused = false;
   const wrap = n => (n + cards.length) % cards.length;
   function closeDetails() {
     cards.forEach(card => { card.removeAttribute('data-expanded'); card.querySelector('.showcase-detail').hidden = true; card.querySelector('button').setAttribute('aria-expanded', 'false'); });
@@ -241,14 +242,16 @@ if (serviceDeck) {
   function paint() {
     cards.forEach((card, index) => {
       let offset = wrap(index - current);
-      if (offset === cards.length - 1) offset = -1;
-      const show = offset >= -1 && offset <= 2;
-      card.style.setProperty('--deck-x', `${offset === 0 ? 0 : offset * 22}px`);
-      card.style.setProperty('--deck-y', `${offset === 0 ? 0 : 18 + Math.abs(offset) * 7}px`);
-      card.style.setProperty('--deck-angle', `${offset * 10}deg`);
-      card.style.setProperty('--deck-scale', String(offset === 0 ? 1 : .96 - Math.abs(offset) * .025));
-      card.style.zIndex = String(offset === 0 ? 5 : offset === -1 ? 2 : 4 - offset);
-      card.style.opacity = show ? String(offset === 0 ? 1 : .38) : '0';
+      if (offset > cards.length / 2) offset -= cards.length;
+      const depth = Math.abs(offset);
+      const show = depth <= 2;
+      card.style.setProperty('--deck-x', `${offset * 64}%`);
+      card.style.setProperty('--deck-y', `${depth * 18}px`);
+      card.style.setProperty('--deck-z', `${-depth * 180}px`);
+      card.style.setProperty('--deck-angle', `${offset * -18}deg`);
+      card.style.setProperty('--deck-scale', String(depth === 0 ? 1 : depth === 1 ? .72 : .5));
+      card.style.zIndex = String(5 - depth);
+      card.style.opacity = show ? String(depth === 0 ? 1 : depth === 1 ? .66 : .25) : '0';
       card.style.visibility = show ? 'visible' : 'hidden';
       card.inert = offset !== 0;
       card.dataset.active = String(offset === 0);
@@ -256,19 +259,28 @@ if (serviceDeck) {
     serviceDeck.dataset.current = String(current);
     counter.textContent = `${String(current + 1).padStart(2,'0')} / ${cards.length}`;
   }
-  function schedule(delay = 2000) {
+  function schedule(delay = 3200) {
     clearTimeout(timer);
-    if (visible && !document.hidden && !reducedMotion.matches && !pointer) timer = setTimeout(() => move(1), delay);
+    if (visible && !document.hidden && !reducedMotion.matches && !pointer && !paused && !serviceDeck.matches(':focus-within') && !serviceDeck.querySelector('[data-expanded]')) timer = setTimeout(() => move(1), delay);
   }
   function move(direction, manual = false) {
-    const outgoing=cards[current];
-    const from=getComputedStyle(outgoing).transform;
+    const outgoing = cards[current];
     if(outgoing.contains(document.activeElement))serviceDeck.focus({preventScroll:true});
     closeDetails(); current = wrap(current + direction); paint();
-    if(!reducedMotion.matches) outgoing.animate([{transform:from,opacity:1,zIndex:10},{transform:`translate3d(${direction>0?'-125%':'25%'},15px,0) rotate(${direction>0?-26:26}deg) scale(.9)`,opacity:0,zIndex:10}],{duration:620,easing:'cubic-bezier(.2,.75,.2,1)'});
-    schedule(manual ? 5000 : 2000);
+    schedule(manual ? 6500 : 3200);
   }
   serviceDeck.dataset.deck = 'true'; paint();
+  document.querySelector('[data-service-prev]').addEventListener('click', () => move(-1, true));
+  document.querySelector('[data-service-next]').addEventListener('click', () => move(1, true));
+  pauseButton.addEventListener('click', () => {
+    paused = !paused;
+    pauseButton.setAttribute('aria-pressed', String(paused));
+    pauseButton.textContent = paused ? 'Play' : 'Pause';
+    schedule();
+  });
+  serviceDeck.addEventListener('focusin', () => clearTimeout(timer));
+  serviceDeck.addEventListener('focusout', () => schedule(6500));
+
   serviceDeck.addEventListener('click', event => {
     const button = event.target.closest('.showcase-open');
     if (!button || suppressClick) { suppressClick = false; return; }

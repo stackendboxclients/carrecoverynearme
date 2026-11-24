@@ -21,7 +21,7 @@ const services = [
   ['motorcycle-towing', 'Motorcycle transport', 'Arrange pickup for a motorcycle or scooter.'],
   ['truck-recovery', 'Commercial vehicle recovery', 'Discuss recovery options for a van, truck, or commercial vehicle.'],
   ['passing-assistance', 'Vehicle inspection transport', 'Arrange transport to a vehicle inspection or testing location.'],
-  ['full-down-box-recovery', 'Full down car and box recovery', 'Arrange recovery for a broken-down box truck.'],
+  ['full-down-box-recovery', 'Full down car and box recovery', 'Arrange protected car transport in an enclosed glass-box trailer.'],
   ['vehicle-recovery', 'Vehicle recovery', 'Arrange pickup and transport for a vehicle that cannot continue.'],
   ['car-recovery', 'Car recovery', 'Get your car from its breakdown location to a garage or destination.'],
   ['heavy-bus-towing', 'Heavy bus towing', 'Discuss towing for a broken-down bus or minibus.'],
@@ -72,7 +72,7 @@ const serviceAdvice = [
   'Tell the team the type of bike, whether it rolls, and where it needs to go.',
   'Provide the loaded weight, height, length, and whether cargo is still on board.',
   'Share your inspection centre, appointment time, and whether the vehicle can roll and steer.',
-  'Share the box truck dimensions, loaded weight, cargo details, and whether it can roll or steer.',
+  'Share your car dimensions, ground clearance, pickup access, and destination for enclosed transport.',
   'Share the vehicle type, condition, pickup access, and destination so the team can assess recovery options.',
   'Share your car make and model, what happened, and whether it can roll, steer, or shift into neutral.',
   'Share the bus or minibus size, weight, location, and fault so the team can check suitable towing equipment.',
@@ -218,7 +218,7 @@ const showcaseDescriptions = {
   'desert-recovery': 'Recover cars stuck in sand or off-road terrain.',
   'luxury-car-transport': 'Transport sports and luxury cars with care.',
   'motorcycle-towing': 'Arrange secure transport for your motorcycle.',
-  'full-down-box-recovery': 'Recover a broken-down delivery or box truck.',
+  'full-down-box-recovery': 'Transport a luxury car inside a protective glass-box trailer.',
   'vehicle-recovery': 'Arrange recovery for a stranded vehicle.',
   'car-recovery': 'Take your broken-down car to a garage or destination.',
   'heavy-bus-towing': 'Arrange recovery for buses and compact minibuses.',
@@ -227,7 +227,7 @@ const showcaseDescriptions = {
 };
 
 const showcaseCards = showcaseServices.map(([slug, title], index) => `<article class="showcase-card" data-service="${slug}">
-  <img class="showcase-photo" src="/assets/service-art/${slug}.webp" alt="" loading="lazy" decoding="async">
+  <img class="showcase-photo" src="/assets/service-cutouts/${slug}.webp" alt="" width="1400" height="700" loading="lazy" decoding="async">
   <div class="showcase-card-content"><span class="showcase-number" aria-hidden="true">${String(index + 1).padStart(2, '0')} / 14</span><h3>${title}</h3><p>${showcaseDescriptions[slug]}</p></div>
   <button class="showcase-open" type="button" aria-label="Explore ${title}" aria-expanded="false" aria-controls="service-detail-${slug}"></button>
   <div class="showcase-detail" id="service-detail-${slug}" hidden><a href="/services/${slug}/">View service ${enquiryIcon('arrow')}</a><span>Tap the card again to return</span></div>
@@ -254,7 +254,7 @@ const serviceShowcase = `<section class="recovery-showcase" id="services" aria-l
     <div class="showcase-intro">
       <h2 id="showcase-heading">${enquiryIcon('pin')} <span>Dubai Car Recovery <b>/ Our Services</b></span></h2>
     </div>
-    <div class="showcase-grid" tabindex="0" aria-label="14 recovery services. Swipe left or right, or use the arrow keys.">${showcaseCards.join('')}</div><p class="showcase-position"><span data-service-position>01 / 14</span><span>Swipe to explore. Tap a card for details.</span></p>
+    <div class="showcase-grid" tabindex="0" aria-label="14 recovery services. Swipe left or right, or use the arrow keys.">${showcaseCards.join('')}</div><p class="showcase-position"><span data-service-position aria-live="polite" aria-atomic="true">01 / 14</span><span>Swipe to explore. Tap a vehicle for details.</span></p><div class="showcase-controls" aria-label="Service carousel controls"><button type="button" data-service-prev aria-label="Previous service">${enquiryIcon('arrow')}</button><button type="button" data-service-pause aria-pressed="false">Pause</button><button type="button" data-service-next aria-label="Next service">${enquiryIcon('arrow')}</button></div>
     <a class="showcase-all" href="/services/">View all recovery services ${enquiryIcon('arrow')}</a>
   </div>
 </section>`;
@@ -314,8 +314,12 @@ const serviceTape = `<div class="service-tape">
   </div></div>
 </div>`;
 await cp('expressway.webp', 'dist/assets/expressway.webp');
+await mkdir('dist/assets/service-cutouts');
+for (const [slug] of showcaseServices) {
+  await cp(`service-cutouts/${slug}.webp`, `dist/assets/service-cutouts/${slug}.webp`);
+}
 await mkdir('dist/assets/service-art');
-for (const name of [...showcaseServices.map(([slug]) => slug), 'overpass', 'skyline']) {
+for (const name of ['overpass', 'skyline']) {
   const extension = 'webp';
   await cp(`service-${name}.${extension}`, `dist/assets/service-art/${name}.${extension}`);
 }
