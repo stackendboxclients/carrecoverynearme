@@ -37,7 +37,7 @@ const whatsappHref = business.whatsapp ? `https://wa.me/${business.whatsapp}` : 
 const email = typeof business.email === 'string' && /^[^\s@<>"]+@[^\s@<>"]+\.[^\s@<>"]+$/.test(business.email) ? business.email : '';
 const emailHref = email ? 'mailto:' + email : '';
 const emailNav = emailHref ? `<a href="${emailHref}">Email</a>` : '';
-const footerContacts = `<address class="footer-contact-details"><p><span>Contact</span><a href="${callHref}">${business.phone}</a></p><p><span>WhatsApp</span><a href="${whatsappHref}">${business.phone}</a></p>${email ? `<p><span>Email</span><a href="${emailHref}">${email}</a></p>` : ''}<p><span>Service area</span><span>Dubai, UAE</span></p></address>`;
+const footerContacts = `<address class="footer-contact-details"><p class="footer-contact-line"><a class="footer-contact-row" href="${callHref}"><span>Contact</span><span>${business.phone}</span></a></p><p class="footer-contact-line"><a class="footer-contact-row" href="${whatsappHref}"><span>WhatsApp</span><span>${business.phone}</span></a></p>${email ? `<p class="footer-contact-line"><a class="footer-contact-row" href="${emailHref}"><span>Email</span><span>${email}</span></a></p>` : ''}<p><span>Service area</span><span>Dubai, UAE</span></p></address>`;
 const phone = callHref ? `<a class="button outline" href="${callHref}">Call now</a>` : '';
 const whatsapp = business.whatsapp ? `<a class="button outline" href="https://wa.me/${business.whatsapp}">WhatsApp</a>` : '';
 const brandWidths = [240, 384, 480, 640, 960];

@@ -364,3 +364,7 @@ body.has-recovery-wallpaper footer .footer-contact-details { grid-column: 1 / -1
 body.has-site-video footer .footer-contact-details :is(a,span) { color: #fff; -webkit-text-stroke: 0; }
 .footer-contact-details a { overflow-wrap: anywhere; text-underline-offset: 3px; }
 @media(max-width:600px) { body.has-recovery-wallpaper footer .footer-contact-details { width: 100%; padding: 14px 16px; font-size: .88rem; }.footer-contact-details p { grid-template-columns: 78px minmax(0,1fr); gap: 8px; } }
+.footer-contact-details p.footer-contact-line { display: block; }
+.footer-contact-details .footer-contact-row { display: grid; grid-template-columns: 100px minmax(0,1fr); gap: 12px; text-decoration: none; }
+.footer-contact-row span:last-child { text-decoration: underline; text-underline-offset: 3px; overflow-wrap: anywhere; }
+@media(max-width:600px) { .footer-contact-details p,.footer-contact-details .footer-contact-row { grid-template-columns: 90px minmax(0,1fr); gap: 8px; } }
