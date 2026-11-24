@@ -9,6 +9,7 @@ if (section) {
   function card(review,prepend=false) {
     if (seen.has(review.id)) return;
     seen.add(review.id);
+    track.closest('.feedback-deck').hidden=false;
     const item=document.createElement('li'); item.className='feedback-card';
     const figure=document.createElement('figure'); figure.className='feedback-surface';
     const meta=document.createElement('figcaption'); meta.className='feedback-card-meta';

@@ -259,3 +259,6 @@ body.has-recovery-wallpaper .pickup-intro p:last-child { font-size: .96rem; line
 @media(max-width:899px) { .review-controls { display: none; } }
 
 body.has-recovery-wallpaper.is-home { padding-bottom: 0; }
+
+.feedback-deck[hidden] { display: none !important; }
+.review-form-panel form { padding: 0; border: 0; box-shadow: none; }
