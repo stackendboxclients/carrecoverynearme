@@ -353,7 +353,7 @@ body.has-site-video #recovery-hero-root .recovery-hero { background: #fff !impor
 @keyframes recovery-gold-glint { from { transform: translateX(-100%); } to { transform: translateX(390%); } }
 @media(prefers-reduced-motion:reduce) { .recovery-stories::before { animation: none; display: none; } }
 .recovery-stories::before { animation-play-state: paused; }
-.recovery-stories[data-in-view="true"]::before { animation-play-state: running; }
+.recovery-stories[data-divider-visible="true"]::before { animation-play-state: running; }
 .recovery-care-diagram .closing-recovery-image {
   -webkit-mask-image: url('/assets/closing-recovery-truck.webp'); mask-image: url('/assets/closing-recovery-truck.webp');
   -webkit-mask-size: 100% 100%; mask-size: 100% 100%;
