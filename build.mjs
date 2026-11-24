@@ -5,6 +5,7 @@ import { build, transform } from 'esbuild';
 import { buildRecoveryHero } from './recovery-hero-build.mjs';
 import { recoveryKinetic } from './recovery-kinetic.mjs';
 import { recoveryFeedback } from './recovery-feedback.mjs';
+import { recoveryStories } from './recovery-stories.mjs';
 
 const business = JSON.parse(await readFile('business.json', 'utf8'));
 const services = [
@@ -250,12 +251,14 @@ const serviceShowcase = `<section class="recovery-showcase" id="services" aria-l
     <div class="showcase-intro">
       <h2 id="showcase-heading">${enquiryIcon('pin')} <span>Dubai Car Recovery <b>/ Our Services</b></span></h2>
     </div>
-    <div class="showcase-grid" tabindex="0" aria-label="${showcaseServices.length} recovery services. Swipe left or right, or use the arrow keys.">${showcaseCards.join('')}</div><p class="showcase-position"><span data-service-position aria-live="polite" aria-atomic="true">01 / ${showcaseServices.length}</span><span>Swipe to explore. Tap a vehicle for details.</span></p><div class="showcase-controls" aria-label="Service carousel controls"><button type="button" data-service-prev aria-label="Previous service">${enquiryIcon('arrow')}</button><button type="button" data-service-pause aria-pressed="false">Pause</button><button type="button" data-service-next aria-label="Next service">${enquiryIcon('arrow')}</button></div>
+    <div class="showcase-grid" tabindex="0" aria-label="${showcaseServices.length} recovery services. Swipe left or right, or use the arrow keys.">${showcaseCards.join('')}</div><p class="showcase-position"><span data-service-position aria-live="polite" aria-atomic="true">01 / ${showcaseServices.length}</span><span>Swipe to explore. Tap a vehicle for details.</span></p><div class="showcase-controls" aria-label="Service carousel controls"><button type="button" data-service-prev aria-label="Previous service">${enquiryIcon('arrow')}</button><button type="button" data-service-next aria-label="Next service">${enquiryIcon('arrow')}</button></div>
     <a class="showcase-all" href="/services/">View all recovery services ${enquiryIcon('arrow')}</a>
   </div>
 </section>`;
 
 const home = `<!-- recovery-hero -->
+${recoveryStories(showcaseServices, showcaseDescriptions, enquiryIcon)}
+<!-- recovery-map -->
 ${booking('h2')}
 ${serviceShowcase}
 ${recoveryKinetic(enquiryIcon, services)}
@@ -301,7 +304,7 @@ for (const file of ['truck-blue-porsche.webp', 'truck-black-lamborghini.webp', '
 for (const file of [...brandWidths.map(width => `dcr-brand-${width}.webp`), 'dcr-master.svg', 'dcr-lockup-on-dark.svg', 'dcr-lockup-on-light.svg', 'dcr-lockup-monochrome.svg', 'dcr-symbol.svg', 'dcr-icon.svg']) {
   await cp(file, `dist/assets/${file}`);
 }
-const { markup: recoveryHero, motionSrc: heroMotionSrc } = await buildRecoveryHero({ callHref, whatsappHref });
+const { markup: recoveryHero, mapMarkup: recoveryMap, motionSrc: heroMotionSrc } = await buildRecoveryHero({ callHref, whatsappHref });
 const serviceTapeItems = services.map(([, title]) => `<li>${title}</li>`).join('');
 const serviceTape = `<div class="service-tape">
   <div class="service-tape-window"><div class="service-tape-track">
@@ -310,6 +313,8 @@ const serviceTape = `<div class="service-tape">
   </div></div>
 </div>`;
 await cp('expressway.webp', 'dist/assets/expressway.webp');
+await mkdir('dist/assets/recovery-scenes');
+for (const [slug] of showcaseServices) await cp(`recovery-scenes/${slug}.webp`, `dist/assets/recovery-scenes/${slug}.webp`);
 await mkdir('dist/assets/service-cutouts-v2');
 for (const [slug] of showcaseServices) {
   await cp(`service-cutouts-v2/${slug}.webp`, `dist/assets/service-cutouts-v2/${slug}.webp`);
@@ -326,7 +331,7 @@ for (const file of ['advantage-loading-540.webp', 'advantage-loading-960.webp', 
 const assetUrls = {};
 const homepageStyles = [];
 const kineticScript = await build({ entryPoints: ['recovery-kinetic.js'], bundle: true, minify: true, write: false, legalComments: 'inline' });
-for (const [name, extension] of [['design', 'css'], ['recovery-hero', 'css'], ['site', 'js'], ['recovery-kinetic', 'css'], ['recovery-kinetic', 'js'], ['recovery-feedback', 'css'], ['recovery-feedback', 'js']]) {
+for (const [name, extension] of [['design', 'css'], ['recovery-hero', 'css'], ['site', 'js'], ['recovery-kinetic', 'css'], ['recovery-kinetic', 'js'], ['recovery-feedback', 'css'], ['recovery-feedback', 'js'], ['recovery-stories', 'css'], ['recovery-stories', 'js']]) {
   let contents = name === 'recovery-kinetic' && extension === 'js'
     ? kineticScript.outputFiles[0].contents
     : await readFile(`${name}.${extension}`);
@@ -348,12 +353,12 @@ const homeCSS = homepageStyles.join('\n');
 const homepageAssets = `<link rel="preload" href="/assets/hero-space-grotesk.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/hero-instrument-sans.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="modulepreload" href="${heroMotionSrc}" fetchpriority="low">
-<meta name="hero-motion" content="${heroMotionSrc}"><meta name="kinetic-motion" content="${assetUrls['recovery-kinetic.js']}"><meta name="feedback-motion" content="${assetUrls['recovery-feedback.js']}"><style>${homeCSS}</style>`;
+<meta name="stories-motion" content="${assetUrls['recovery-stories.js']}"><meta name="hero-motion" content="${heroMotionSrc}"><meta name="kinetic-motion" content="${assetUrls['recovery-kinetic.js']}"><meta name="feedback-motion" content="${assetUrls['recovery-feedback.js']}"><style>${homeCSS}</style>`;
 for (const [path, title, description, content] of pages) {
   const directory = `dist${path}`;
   await mkdir(directory, { recursive: true });
   const canonical = business.domain + path;
-  await writeFile(directory + 'index.html', `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>${path === '/' ? title : title + ' | ' + name}</title><meta name="description" content="${description}"><meta name="robots" content="${indexable ? 'index,follow' : 'noindex,nofollow'}"><link rel="canonical" href="${canonical}"><link rel="icon" href="/assets/dcr-icon.svg" type="image/svg+xml" sizes="any"><script src="${assetUrls['site.js']}" defer></script>${path === '/' ? homepageAssets : `<link rel="stylesheet" href="${assetUrls['design.css']}">`}</head><body class="has-site-video"><div class="site-video-layer" aria-hidden="true"><video class="site-background-video" autoplay muted loop playsinline preload="none" poster="/assets/site-background-dubai-road-poster.webp" tabindex="-1"><source data-src="/assets/site-background-dubai-road.mp4" type="video/mp4"></video></div><a class="skip" href="#main">Skip to content</a><header><div class="wrap header-inner">${brand('header')}<nav class="desktop-nav" aria-label="Main">${mainNav}</nav><details class="mobile-menu"><summary>${enquiryIcon('menu')}<span>Menu</span></summary><nav aria-label="Main">${mainNav}</nav></details></div></header><main id="main">${path === '/' ? content.replace('<!-- recovery-hero -->', serviceTape + recoveryHero) : content}</main><footer class="wrap">${brand('footer')}<div><a href="/services/">Services</a><a href="/contact/">Contact</a><a href="/blogs/">Guides</a><a href="/privacy/">Privacy</a></div><a class="developer-credit" href="https://www.stackendbox.com/"><img src="/assets/stackendbox-mark.webp" width="30" height="33" alt="" loading="lazy"><span>Developed by StackEndBox</span></a></footer><aside class="mobile-actions" aria-label="Recovery actions">${directContact}</aside></body></html>`);
+  await writeFile(directory + 'index.html', `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>${path === '/' ? title : title + ' | ' + name}</title><meta name="description" content="${description}"><meta name="robots" content="${indexable ? 'index,follow' : 'noindex,nofollow'}"><link rel="canonical" href="${canonical}"><link rel="icon" href="/assets/dcr-icon.svg" type="image/svg+xml" sizes="any"><script src="${assetUrls['site.js']}" defer></script>${path === '/' ? homepageAssets : `<link rel="stylesheet" href="${assetUrls['design.css']}">`}</head><body class="has-site-video"><div class="site-video-layer" aria-hidden="true"><video class="site-background-video" autoplay muted loop playsinline preload="none" poster="/assets/site-background-dubai-road-poster.webp" tabindex="-1"><source data-src="/assets/site-background-dubai-road.mp4" type="video/mp4"></video></div><a class="skip" href="#main">Skip to content</a><header><div class="wrap header-inner">${brand('header')}<nav class="desktop-nav" aria-label="Main">${mainNav}</nav><details class="mobile-menu"><summary>${enquiryIcon('menu')}<span>Menu</span></summary><nav aria-label="Main">${mainNav}</nav></details></div></header><main id="main">${path === '/' ? content.replace('<!-- recovery-hero -->', serviceTape + recoveryHero).replace('<!-- recovery-map -->', recoveryMap) : content}</main><footer class="wrap">${brand('footer')}<div><a href="/services/">Services</a><a href="/contact/">Contact</a><a href="/blogs/">Guides</a><a href="/privacy/">Privacy</a></div><a class="developer-credit" href="https://www.stackendbox.com/"><img src="/assets/stackendbox-mark.webp" width="30" height="33" alt="" loading="lazy"><span>Developed by StackEndBox</span></a></footer><aside class="mobile-actions" aria-label="Recovery actions">${directContact}</aside></body></html>`);
 }
 await writeFile('dist/robots.txt', indexable ? `User-agent: *\nAllow: /\nSitemap: ${business.domain}/sitemap.xml\n` : 'User-agent: *\nAllow: /\n');
 await writeFile('dist/sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${pages.map(([path]) => `<url><loc>${business.domain}${path}</loc></url>`).join('')}</urlset>`);

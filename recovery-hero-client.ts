@@ -32,8 +32,8 @@ function startTruckEntrance(hero: HTMLElement) {
 
 function startHeroMotion(hero: HTMLElement) {
   const canvas = hero.querySelector<HTMLCanvasElement>(".highway-background canvas");
-  const scene = hero.querySelector<HTMLElement>(".route-scene");
-  const journeys = Array.from(hero.querySelectorAll<SVGGElement>(".map-journey")).flatMap((group, index) => {
+  const scene = document.querySelector<HTMLElement>(".recovery-map .route-scene");
+  const journeys = Array.from(document.querySelectorAll<SVGGElement>(".recovery-map .map-journey")).flatMap((group, index) => {
     const trace = scene?.querySelector<SVGPathElement>(`.route-trace[data-route="${group.dataset.journey}"]`);
     const route = trace;
     const truck = group.querySelector<SVGGElement>(".route-truck");

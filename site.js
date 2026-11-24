@@ -38,6 +38,7 @@ if ('IntersectionObserver' in window) {
 }
 
 const deferredSections = new Map([
+  ['.recovery-stories', document.querySelector('meta[name="stories-motion"]')?.content],
   ['.recovery-hero', document.querySelector('meta[name="hero-motion"]')?.content],
   ['.recovery-kinetic', document.querySelector('meta[name="kinetic-motion"]')?.content],
   ['.feedback-deck', document.querySelector('meta[name="feedback-motion"]')?.content],
@@ -233,7 +234,6 @@ const serviceDeck = document.querySelector('.showcase-grid');
 if (serviceDeck) {
   const cards = [...serviceDeck.querySelectorAll('.showcase-card')];
   const counter = document.querySelector('[data-service-position]');
-  const pauseButton = document.querySelector('[data-service-pause]');
   let current = 0, timer = 0, visible = false, pointer = null, suppressClick = false, paused = false;
   const wrap = n => (n + cards.length) % cards.length;
   function closeDetails() {
@@ -260,7 +260,7 @@ if (serviceDeck) {
     serviceDeck.dataset.current = String(current);
     counter.textContent = `${String(current + 1).padStart(2,'0')} / ${cards.length}`;
   }
-  function schedule(delay = 3200) {
+  function schedule(delay = 2000) {
     clearTimeout(timer);
     if (visible && !document.hidden && !reducedMotion.matches && !pointer && !paused && !serviceDeck.matches(':focus-within') && !serviceDeck.querySelector('[data-expanded]')) timer = setTimeout(() => move(1), delay);
   }
@@ -268,19 +268,13 @@ if (serviceDeck) {
     const outgoing = cards[current];
     if(outgoing.contains(document.activeElement))serviceDeck.focus({preventScroll:true});
     closeDetails(); current = wrap(current + direction); paint();
-    schedule(manual ? 6500 : 3200);
+    schedule(manual ? 5000 : 2000);
   }
   serviceDeck.dataset.deck = 'true'; paint();
   document.querySelector('[data-service-prev]').addEventListener('click', () => move(-1, true));
   document.querySelector('[data-service-next]').addEventListener('click', () => move(1, true));
-  pauseButton.addEventListener('click', () => {
-    paused = !paused;
-    pauseButton.setAttribute('aria-pressed', String(paused));
-    pauseButton.textContent = paused ? 'Play' : 'Pause';
-    schedule();
-  });
   serviceDeck.addEventListener('focusin', () => clearTimeout(timer));
-  serviceDeck.addEventListener('focusout', () => schedule(6500));
+  serviceDeck.addEventListener('focusout', () => schedule(5000));
 
   serviceDeck.addEventListener('click', event => {
     const button = event.target.closest('.showcase-open');
@@ -294,6 +288,7 @@ if (serviceDeck) {
   serviceDeck.addEventListener('keydown', event => {
     if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') { event.preventDefault(); move(event.key === 'ArrowRight' ? 1 : -1, true); }
     if (event.key === 'Escape') { closeDetails(); schedule(5000); }
+    if (event.key === ' ' && event.target === serviceDeck) { event.preventDefault(); paused = !paused; schedule(); }
   });
   serviceDeck.addEventListener('pointerdown', event => {
     if (event.button !== 0 || event.target.closest('.showcase-detail a')) return;

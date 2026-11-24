@@ -17,7 +17,7 @@ export async function buildRecoveryHero({ callHref, whatsappHref }) {
     build({
       ...settings,
       stdin: {
-        contents: 'export { RecoveryHero } from "./recovery-hero";',
+        contents: 'export { RecoveryHero, RecoveryMap } from "./recovery-hero";',
         resolveDir: process.cwd(),
       },
       outfile: serverPath,
@@ -34,12 +34,13 @@ export async function buildRecoveryHero({ callHref, whatsappHref }) {
   const require = createRequire(import.meta.url);
   const { createElement } = require('react');
   const { renderToString } = require('react-dom/server');
-  const { RecoveryHero } = require('./' + serverPath);
+  const { RecoveryHero, RecoveryMap } = require('./' + serverPath);
   const markup = renderToString(createElement(RecoveryHero, {
     bookingHref: '#request-recovery',
     callHref,
     whatsappHref,
   }));
+  const mapMarkup = renderToString(createElement(RecoveryMap));
   await unlink(serverPath);
 
   for (const font of ['instrument-sans', 'space-grotesk']) {
@@ -48,5 +49,5 @@ export async function buildRecoveryHero({ callHref, whatsappHref }) {
       'dist/assets/hero-' + font + '.woff2',
     );
   }
-  return { markup: '<div id="recovery-hero-root">' + markup + '</div>', motionSrc };
+  return { markup: '<div id="recovery-hero-root">' + markup + '</div>', mapMarkup, motionSrc };
 }

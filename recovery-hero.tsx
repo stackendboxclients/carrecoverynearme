@@ -81,7 +81,7 @@ export function RecoveryHero({ bookingHref, callHref, whatsappHref }: { bookingH
           <p className="hero-arrival"><span>Within Dubai arrival time 15 minutes</span></p>
           </div>
           <figure className="hero-ad-visual">
-            <div className="hero-drive"><img className="hero-ad-truck" src="/assets/hero-bugatti-recovery-1280.webp" srcSet="/assets/hero-bugatti-recovery-640.webp 640w, /assets/hero-bugatti-recovery-1280.webp 1280w" sizes="(max-width: 700px) 100vw, 55vw" width="1536" height="1024" alt="Unbranded black and red Bugatti secured on a charcoal flatbed recovery truck with orange trim" fetchPriority="high" decoding="async" /><svg className="hero-wheel-overlay" viewBox="0 0 1280 853" aria-hidden="true" preserveAspectRatio="xMidYMid meet">
+            <div className="hero-drive"><img className="hero-ad-truck" src="/assets/hero-bugatti-recovery-1280.webp" srcSet="/assets/hero-bugatti-recovery-640.webp 640w, /assets/hero-bugatti-recovery-1280.webp 1280w" sizes="(max-width: 700px) 100vw, 55vw" width="1536" height="1024" alt="Unbranded black and red luxury sports car secured on a charcoal flatbed recovery truck with orange trim" fetchPriority="high" decoding="async" /><svg className="hero-wheel-overlay" viewBox="0 0 1280 853" aria-hidden="true" preserveAspectRatio="xMidYMid meet">
               {[[143, 614, 15, 38], [540, 687, 29, 53]].map(([x, y, rx, ry], i) => (
                 <g key={i} transform={`translate(${x} ${y}) scale(${rx} ${ry})`}>
                   <defs><clipPath id={'hero-rim-' + i} clipPathUnits="userSpaceOnUse"><circle r="1" /></clipPath></defs>
@@ -103,8 +103,11 @@ export function RecoveryHero({ bookingHref, callHref, whatsappHref }: { bookingH
           </div>
           </div>
         </div>
-        <div className="hero-map-surround"><RouteScene /></div>
       </div>
     </section>
   );
+}
+
+export function RecoveryMap() {
+  return <section className="recovery-map" aria-label="Illustrative pickup and drop-off routes"><div className="hero-map-surround"><RouteScene /></div></section>;
 }
