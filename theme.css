@@ -328,3 +328,4 @@ body.has-recovery-wallpaper footer > div { background: #171b1f; padding: 10px 14
 .recovery-hero .hero-actions .hero-location-status { grid-column: 1 / -1; width: 100%; margin: 8px 0 0; padding: 8px 10px; font: 650 .82rem/1.45 var(--display); color: #fff !important; background: #101417; border-radius: 7px; text-shadow: none !important; }
 .hero-location-status[hidden] { display: none !important; }
 [data-location-whatsapp][aria-busy="true"] { opacity: .75; cursor: progress; }
+body.has-site-video footer > div a { -webkit-text-stroke: 0 !important; }
