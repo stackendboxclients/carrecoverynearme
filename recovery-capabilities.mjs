@@ -47,7 +47,6 @@ export function capabilityDisplay(capabilities, tag) {
     <div class="cap-reflection" aria-hidden="true"></div>
     <div class="cap-header">
       ${tag}
-      <div class="cap-count" role="img" aria-label="${capabilities.length} recovery services"><span aria-hidden="true">${String(capabilities.length).padStart(2, '0')}</span></div>
     </div>
     <div class="cap-body">
       <div class="cap-selector" role="radiogroup" aria-label="Recovery services">

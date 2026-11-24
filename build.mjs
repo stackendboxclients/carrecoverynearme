@@ -225,7 +225,7 @@ const showcaseDescriptions = {
 
 const showcaseCards = showcaseServices.map(([slug, title], index) => `<article class="showcase-card" data-service="${slug}">
   <img class="showcase-photo" src="/assets/service-cutouts-v2/${slug}.webp" alt="" width="1400" height="700" loading="lazy" decoding="async">
-  <div class="showcase-card-content"><span class="showcase-number" aria-hidden="true">${String(index + 1).padStart(2, '0')} / ${showcaseServices.length}</span><h3>${title}</h3><p>${showcaseDescriptions[slug]}</p></div>
+  <div class="showcase-card-content"><h3>${title}</h3><p>${showcaseDescriptions[slug]}</p></div>
   <button class="showcase-open" type="button" aria-label="Explore ${title}" aria-expanded="false" aria-controls="service-detail-${slug}"></button>
   <div class="showcase-detail" id="service-detail-${slug}" hidden><a href="/services/${slug}/">View service ${enquiryIcon('arrow')}</a><span>Tap the card again to return</span></div>
 </article>`);
@@ -251,7 +251,7 @@ const serviceShowcase = `<section class="recovery-showcase" id="services" aria-l
     <div class="showcase-intro">
       <h2 id="showcase-heading">${enquiryIcon('pin')} <span>Dubai Car Recovery <b>/ Our Services</b></span></h2>
     </div>
-    <div class="showcase-grid" tabindex="0" aria-label="${showcaseServices.length} recovery services. Swipe left or right, or use the arrow keys.">${showcaseCards.join('')}</div><p class="showcase-position"><span data-service-position aria-live="polite" aria-atomic="true">01 / ${showcaseServices.length}</span><span>Swipe to explore. Tap a vehicle for details.</span></p><div class="showcase-controls" aria-label="Service carousel controls"><button type="button" data-service-prev aria-label="Previous service">${enquiryIcon('arrow')}</button><button type="button" data-service-next aria-label="Next service">${enquiryIcon('arrow')}</button></div>
+    <div class="showcase-grid" tabindex="0" aria-label="${showcaseServices.length} recovery services. Swipe left or right, or use the arrow keys.">${showcaseCards.join('')}</div><p class="showcase-position"><span>Swipe to explore. Tap a vehicle for details.</span></p><div class="showcase-controls" aria-label="Service carousel controls"><button type="button" data-service-prev aria-label="Previous service">${enquiryIcon('arrow')}</button><button type="button" data-service-next aria-label="Next service">${enquiryIcon('arrow')}</button></div>
     <a class="showcase-all" href="/services/">View all recovery services ${enquiryIcon('arrow')}</a>
   </div>
 </section>`;

@@ -233,7 +233,6 @@ if (backgroundVideo && document.body.classList.contains('is-home')) {
 const serviceDeck = document.querySelector('.showcase-grid');
 if (serviceDeck) {
   const cards = [...serviceDeck.querySelectorAll('.showcase-card')];
-  const counter = document.querySelector('[data-service-position]');
   let current = 0, timer = 0, detailTimer = 0, visible = false, pointer = null, suppressClick = false, paused = false;
   const wrap = n => (n + cards.length) % cards.length;
   function closeDetails() {
@@ -259,7 +258,6 @@ if (serviceDeck) {
       card.dataset.active = String(offset === 0);
     });
     serviceDeck.dataset.current = String(current);
-    counter.textContent = `${String(current + 1).padStart(2,'0')} / ${cards.length}`;
   }
   function schedule(delay = 2000) {
     clearTimeout(timer);

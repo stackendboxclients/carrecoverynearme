@@ -80,7 +80,7 @@ export function recoveryKinetic(icon, services) {
     </div>
     <div class="adv-stage" data-selected="contact" role="group" aria-label="Recovery advantages">
       ${panels.map(({ key, label, title, description, visual }, index) => {
-        const tag = `<div class="adv-tag"><span>0${index + 1}</span>${key === 'services' ? ' /' : ''} ${label}</div>`;
+        const tag = `<div class="adv-tag">${label}</div>`;
         return `
         <article class="adv-panel" id="adv-panel-${key}" data-panel="${key}">
           ${visual ? tag : ''}

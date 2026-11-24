@@ -19,7 +19,6 @@ if (section) {
       if (i === selected || i === (selected + 1) % cards.length) card.querySelector('img').loading = 'eager';
     });
     section.style.setProperty('--story-background', `url("${cards[selected].querySelector('img').getAttribute('src')}")`);
-    section.querySelector('[data-story-position]').textContent = `${String(selected + 1).padStart(2,'0')} / ${cards.length}`;
   }
   function move(direction, manual = false) {
     paint(selected + direction);
