@@ -93,7 +93,7 @@ body.has-site-video .story-dialog-copy { padding: 28px; }
 body.has-site-video .story-dialog .story-dialog-arrival { font-size: .9rem; line-height: 1.6; }
 .service-contact-actions { display: flex; flex-wrap: wrap; gap: 12px; margin: 20px 0 10px; }
 .service-contact-actions .contact-cta { min-height: 48px; }
-body.has-site-video .pickup-channels h3 { background: #fff; color: #20262d !important; padding: 10px 14px; border-radius: 8px; width: fit-content; }
+body.has-site-video .pickup-channels h3 { background: #fff !important; color: #20262d !important; padding: 10px 14px; border-radius: 8px; width: fit-content; }
 .service-detail-page h1 { font-size: clamp(2rem,4vw,3.25rem); line-height: 1.08; }
 .service-detail-page h2 { font-size: clamp(1.35rem,2.4vw,1.8rem); line-height: 1.2; margin-top: 28px; }
 body.has-site-video .showcase-grid[data-deck] .showcase-card[data-expanded] :is(.showcase-photo,.showcase-card-content) { visibility: hidden; }
@@ -114,7 +114,7 @@ body.has-site-video .showcase-detail .showcase-close {
 
 /* The service showcase uses the supplied matte honeycomb artwork. */
 body.has-site-video .wallpaper-content #services {
-  background: #111 url('/assets/service-honeycomb-wide.webp') center / cover no-repeat;
+  background: #111 url('/assets/service-honeycomb-silver-wide.webp') center / cover no-repeat;
   padding-block: 140px;
 }
 body.has-site-video #services :is(.showcase-intro,.showcase-position,.showcase-position span,.showcase-all,.showcase-card-content h3,.showcase-card-content p) {
@@ -128,9 +128,10 @@ body.has-site-video #services .showcase-grid[data-deck] h3 { font-size: clamp(1.
 body.has-site-video #services .showcase-grid[data-deck] .showcase-card-content p { font-size: clamp(1rem,1.7vw,1.2rem); line-height: 1.5; }
 body.has-site-video #services :is(.showcase-position,.showcase-all) { font-size: 1rem; }
 body.has-site-video #services .showcase-all { margin-top: 22px; }
+body.has-site-video #services :is(.showcase-intro h2,.showcase-intro span,.showcase-intro b,.showcase-card-content h3,.showcase-card-content p,.showcase-position,.showcase-position span,.showcase-all) { text-shadow: 0 2px 5px #000, 0 1px 2px #000 !important; }
 body.has-site-video #services .showcase-grid[data-deck] .showcase-card { transition: transform 950ms cubic-bezier(.22,.7,.22,1); }
 body.has-site-video #services .showcase-controls button { background: #20262d !important; color: #fff !important; border-color: #78828c !important; }
 @media(max-width:600px) {
-  body.has-site-video .wallpaper-content #services { background-image: url('/assets/service-honeycomb-mobile.webp'); }
+  body.has-site-video .wallpaper-content #services { background-image: url('/assets/service-honeycomb-silver-mobile.webp'); }
   body.has-site-video #services .showcase-position { max-width: 90%; }
 }
