@@ -8,7 +8,7 @@ const clean = value => typeof value === 'string' ? value.trim().replace(/[\u0000
 export function validateReview(body) {
   if (!body || typeof body !== 'object' || body.website) throw new Error('Please check your review.');
   const author = clean(body.author), text = clean(body.text), rating = Number(body.rating);
-  if (author.length < 2 || author.length > 60 || text.length < 15 || text.length > 1200 || !Number.isInteger(rating) || rating < 1 || rating > 5 || body.consent !== true) throw new Error('Enter a name, a rating from 1 to 5, and a review of 15 to 1,200 characters.');
+  if (author.length < 2 || author.length > 60 || text.length < 15 || text.length > 1200 || !Number.isInteger(rating) || rating < 1 || rating > 5) throw new Error('Enter a name, a rating from 1 to 5, and a review of 15 to 1,200 characters.');
   return { author, text, rating };
 }
 export function createHandler(storage = { get, list, put, del }) {
@@ -34,7 +34,7 @@ export function createHandler(storage = { get, list, put, del }) {
             const result = await storage.get(blob.pathname,{access:'private',useCache:false});
             if (!result?.stream) throw new Error('Review read failed');
             const value = await new Response(result.stream).json();
-            const valid = validateReview({...value,consent:true});
+            const valid = validateReview(value);
             return {...valid,id:value.id,createdAt:value.createdAt};
           }));
           reviews.push(...batch);

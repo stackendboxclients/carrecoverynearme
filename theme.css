@@ -247,8 +247,6 @@ body.has-recovery-wallpaper .pickup-intro p:last-child { font-size: .96rem; line
 .review-form-panel form { gap: 14px; }
 .review-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 .review-form-panel :is(input,select,textarea) { width: 100%; min-width: 0; border: 1px solid #727a82; border-radius: 6px; padding: 10px; font: inherit; color: #20262d; background: #fff; }
-.review-form-panel .review-consent { display: flex; align-items: start; font-size: .82rem; }
-.review-consent input { width: 18px; height: 18px; flex: none; margin-top: 2px; }
 .review-honeypot { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
 .review-form-panel button { width: fit-content; }
 .review-form-panel button:disabled { opacity: .6; }
@@ -382,3 +380,24 @@ body.has-site-video .wallpaper-content .recovery-map {
 .recovery-map[data-seams-visible="true"] .map-metal-seam::after { animation-play-state: running; }
 .recovery-stories::before,.recovery-stories::after { content: none; }
 @media(prefers-reduced-motion:reduce) { .map-metal-seam::after { animation: none; display: none; } }
+
+/* One feedback panel with an orange review gallery and an attached submission form. */
+body.has-site-video #customer-feedback { padding-block: 24px; }
+body.has-site-video #customer-feedback .feedback-layout { display: flex; flex-direction: column; gap: 18px; padding: clamp(16px,3vw,32px); border-radius: 18px; background: #fff; color: #20262d; box-shadow: 0 8px 26px #0002; }
+body.has-site-video #customer-feedback .feedback-intro { margin: 0; padding: 0; background: transparent; border: 0; border-radius: 0; box-shadow: none; }
+body.has-site-video #customer-feedback [data-review-average] { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 14px; margin-top: 12px; color: #946000 !important; font-weight: 850; font-size: clamp(1rem,1.5vw,1.25rem); background: transparent; text-shadow: none !important; -webkit-text-stroke: 0; }
+body.has-site-video #customer-feedback [data-review-average][hidden] { display: none; }
+body.has-site-video #customer-feedback .review-average-label { color: #946000 !important; text-shadow: none !important; }
+body.has-site-video #customer-feedback .feedback-deck { background: #f47700; border: 0; border-radius: 12px; box-shadow: none; padding: clamp(12px,2vw,22px); }
+body.has-site-video #customer-feedback .feedback-surface { background: #fff; border: 1px solid #20262d; color: #20262d; padding: clamp(14px,2vw,22px); border-radius: 10px; box-shadow: 0 4px 12px #0002; }
+#customer-feedback .feedback-card::before,#customer-feedback .feedback-card::after { content: none; }
+#customer-feedback .feedback-track { padding-bottom: 4px; scrollbar-color: #20262d #ffb16a; }
+body.has-site-video #customer-feedback .review-form-panel { width: 100%; max-width: none; margin: 0; padding: 0; background: transparent; border: 0; border-radius: 0; box-shadow: none; }
+body.has-site-video #customer-feedback .review-form-panel h3 { background: transparent; color: #20262d !important; padding: 0; text-shadow: none !important; }
+body.has-site-video #customer-feedback .feedback-rating { color: #946000; font-weight: 800; }
+.review-gold-stars { display: inline-flex; gap: 3px; white-space: nowrap; vertical-align: middle; }
+.review-gold-star { display: inline-block; font-size: 1.2em; line-height: 1.3; color: transparent; background: linear-gradient(90deg,#a16a00 var(--star-fill),#b9bdc1 var(--star-fill)); background-clip: text; -webkit-background-clip: text; animation: review-star-shimmer 3.5s ease-in-out infinite; animation-delay: var(--star-delay); animation-play-state: paused; }
+#customer-feedback[data-feedback-visible="true"] .review-gold-star { animation-play-state: running; }
+@keyframes review-star-shimmer { 0%,28%,100% { filter: brightness(1); } 12% { filter: brightness(1.45); text-shadow: 0 0 5px #e9b32a66; } }
+@media(prefers-reduced-motion:reduce) { .review-gold-star { animation: none; } }
+@media(max-width:600px) { body.has-site-video #customer-feedback .feedback-layout { width: calc(100% - 28px); gap: 16px; } #customer-feedback .feedback-card { flex-basis: 100%; } }

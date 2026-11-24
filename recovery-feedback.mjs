@@ -10,7 +10,6 @@ export function recoveryFeedback() {
           <div class="review-fields"><label>Your name<input name="author" autocomplete="name" required minlength="2" maxlength="60"></label><label>Rating<select name="rating" required><option value="">Choose a rating</option><option value="5">5 - Excellent</option><option value="4">4 - Good</option><option value="3">3 - Average</option><option value="2">2 - Poor</option><option value="1">1 - Very poor</option></select></label></div>
           <label>Your review<textarea name="text" required minlength="15" maxlength="1200" rows="3" placeholder="Tell us about the service you received"></textarea></label>
           <label class="review-honeypot" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label>
-          <label class="review-consent"><input type="checkbox" name="consent" required> I used this service and agree to publish my name, rating and review.</label>
           <noscript><p>Enable JavaScript to submit a review.</p></noscript><button type="submit" class="button" disabled>Submit review</button><p data-review-submit role="status"></p>
         </form>
       </div>
