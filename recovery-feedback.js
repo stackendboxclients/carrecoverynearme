@@ -38,6 +38,7 @@ if (section) {
     const quote=document.createElement('blockquote'), text=document.createElement('p'); text.textContent=review.text;
     quote.append(text); meta.append(author,stars); figure.append(meta,quote); item.append(figure);
     if(prepend) track.prepend(item); else track.append(item);
+    section.querySelector('.review-controls').hidden=track.children.length<2;
   }
   async function load() {
     try {

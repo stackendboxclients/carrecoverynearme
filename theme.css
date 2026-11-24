@@ -5,7 +5,7 @@ body.has-recovery-wallpaper .wallpaper-content {
   --warm: #f2f3f4; --orange-ink: var(--accent); --orange: var(--accent);
   --orange-hover: var(--accent-hover); --control-border: #78828c;
 }
-body.has-site-video .wallpaper-content :is(h1,h2,h3,p,span,a,button,label,summary,dt,dd,strong,em,b,small) {
+body.has-site-video .wallpaper-content :is(h1,h2,h3,p,span,a,button,label,summary,dt,dd,strong,em,b,small):not(.review-gold-star) {
   -webkit-text-stroke: 0 !important; text-shadow: none !important; animation: none !important;
 }
 body.has-site-video .wallpaper-content :is(h1,h2,h3),
@@ -401,3 +401,5 @@ body.has-site-video #customer-feedback .feedback-rating { color: #946000; font-w
 @keyframes review-star-shimmer { 0%,28%,100% { filter: brightness(1); } 12% { filter: brightness(1.45); text-shadow: 0 0 5px #e9b32a66; } }
 @media(prefers-reduced-motion:reduce) { .review-gold-star { animation: none; } }
 @media(max-width:600px) { body.has-site-video #customer-feedback .feedback-layout { width: calc(100% - 28px); gap: 16px; } #customer-feedback .feedback-card { flex-basis: 100%; } }
+
+#customer-feedback .review-controls[hidden] { display: none; }
