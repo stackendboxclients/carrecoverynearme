@@ -25,7 +25,7 @@ export function recoveryStories(services, descriptions, icon, details, arrival, 
         ${services.map(([slug, title], index) => {
           const [pickup, dropoff] = storyRoutes[slug];
           return `<button type="button" class="story-card" data-story="${slug}" data-index="${index}" data-detail="${escape(details[slug])}" aria-label="Explore ${escape(title)}" aria-haspopup="dialog">
-            <img src="/assets/recovery-scenes/${slug}.webp" alt="" width="1024" height="1280" loading="lazy" decoding="async">
+            <img src="/assets/recovery-scenes/${slug}-640.webp" srcset="/assets/recovery-scenes/${slug}-360.webp 360w, /assets/recovery-scenes/${slug}-640.webp 640w, /assets/recovery-scenes/${slug}.webp 1120w" sizes="(max-width:600px) 82vw, (max-width:899px) 65vw, 390px" alt="" width="1024" height="1280" loading="lazy" decoding="async">
             <span class="story-copy"><strong>${escape(title)}</strong><span class="story-description">${escape(descriptions[slug])}</span><span class="story-route"><span><small>Pickup</small>${escape(pickup)}</span><span aria-hidden="true">→</span><span><small>Drop-off</small>${escape(dropoff)}</span></span><span class="story-expand-hint">Tap to explore ${icon('plus')}</span></span>
           </button>`;
         }).join('')}

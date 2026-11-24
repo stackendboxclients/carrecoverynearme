@@ -295,7 +295,7 @@ await mkdir('dist', { recursive: true });
 await mkdir('dist/assets');
 
 
-await cp('recovery-continuous-metal.webp', 'dist/assets/recovery-continuous-metal.webp');
+for (const file of ['recovery-continuous-metal.webp','recovery-continuous-metal-mobile.webp']) await cp(file, `dist/assets/${file}`);
 await cp('service-editorial', 'dist/assets/service-editorial', { recursive: true });
 await cp('stories-black-tread.webp', 'dist/assets/stories-black-tread.webp');
 await cp('closing-recovery-truck.webp', 'dist/assets/closing-recovery-truck.webp');
@@ -326,7 +326,7 @@ const serviceTape = `<div class="service-tape">
 </div>`;
 await cp('expressway.webp', 'dist/assets/expressway.webp');
 await mkdir('dist/assets/recovery-scenes');
-for (const [slug] of showcaseServices) await cp(`recovery-scenes/${slug}.webp`, `dist/assets/recovery-scenes/${slug}.webp`);
+for (const [slug] of showcaseServices) for (const suffix of ['', '-360', '-640']) await cp(`recovery-scenes/${slug}${suffix}.webp`, `dist/assets/recovery-scenes/${slug}${suffix}.webp`);
 await mkdir('dist/assets/service-cutouts-v2');
 for (const [slug] of showcaseServices) {
   await cp(`service-cutouts-v2/${slug}.webp`, `dist/assets/service-cutouts-v2/${slug}.webp`);

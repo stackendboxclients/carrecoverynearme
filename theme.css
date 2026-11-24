@@ -262,3 +262,5 @@ body.has-recovery-wallpaper.is-home { padding-bottom: 0; }
 
 .feedback-deck[hidden] { display: none !important; }
 .review-form-panel form { padding: 0; border: 0; box-shadow: none; }
+
+@media(max-width:600px) { body.has-recovery-wallpaper { --recovery-wallpaper: url('/assets/recovery-continuous-metal-mobile.webp'); } }
