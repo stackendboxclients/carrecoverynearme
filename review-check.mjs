@@ -1,0 +1,17 @@
+import assert from 'node:assert/strict';
+import {createHandler,validateReview} from './api/reviews.mjs';
+const records=new Map();
+const storage={async list({prefix}){return{blobs:[...records.keys()].filter(k=>k.startsWith(prefix)).map(pathname=>({pathname})),hasMore:false};},async put(path,body){if(records.has(path)){const e=new Error('already exists');e.name='BlobAlreadyExistsError';throw e;}records.set(path,body);},async get(path){return {stream:new Blob([records.get(path)]).stream()};},async del(path){records.delete(path);}};
+const handler=createHandler(storage);
+const call=async(method,body,headers={})=>{let code,payload;const res={setHeader(){},status(n){code=n;return this;},json(value){payload=value;}};await handler({method,body,headers:{origin:'https://www.dubaicarrecoverynearme.com','content-type':'application/json','x-forwarded-for':'192.0.2.1',...headers}},res);return{code,payload};};
+assert.throws(()=>validateReview({author:'A',rating:5,text:'short',consent:true}));
+assert.throws(()=>validateReview({author:'Name',rating:6,text:'A sufficiently long review.',consent:true}));
+assert.throws(()=>validateReview({author:'Name',rating:5,text:'A sufficiently long review.',consent:false}));
+assert.equal((await call('POST',{}, {origin:'https://evil.example'})).code,403);
+assert.equal((await call('POST',{author:'Test',text:'A sufficiently long review.',rating:5,consent:true,website:'bot'})).code,400);
+let result=await call('POST',{author:'Test customer',text:'<script>alert(1)</script> Long negative review text.',rating:1,consent:true});assert.equal(result.code,201);assert.equal(result.payload.review.rating,1);
+assert.equal((await call('POST',{author:'Test customer',text:'Another sufficiently long review.',rating:5,consent:true})).code,429);
+result=await call('GET');assert.equal(result.code,200);assert.equal(result.payload.average,1);assert.equal(result.payload.reviews.length,1);
+assert.equal((await call('DELETE')).code,405);
+const failed=createHandler({async list(){throw new Error('failure');}});let code;await failed({method:'GET'},{setHeader(){},status(n){code=n;return this;},json(){}});assert.equal(code,503);
+console.log('Review validation, origin protection, immediate persistence, negative ratings, cooldown, average and storage error checks passed.');

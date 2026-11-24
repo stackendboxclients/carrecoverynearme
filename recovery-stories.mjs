@@ -33,7 +33,7 @@ export function recoveryStories(services, descriptions, icon, details, arrival, 
       <button class="stories-arrow stories-prev" type="button" aria-label="Previous recovery image">${icon('arrow')}</button>
       <button class="stories-arrow stories-next" type="button" aria-label="Next recovery image">${icon('arrow')}</button>
     </div>
-    <p class="stories-footnote"><span>Illustrative routes · Swipe to browse · Tap to expand</span></p>
+
     <dialog class="story-dialog" aria-labelledby="story-dialog-title" aria-describedby="story-dialog-description">
       <div class="story-dialog-content"><img class="story-dialog-image" alt=""><button class="story-dialog-close" type="button" aria-label="Close recovery image">×</button><div class="story-dialog-copy"><p>Illustrative recovery route</p><h3 id="story-dialog-title"></h3><p id="story-dialog-description"></p><p class="story-dialog-arrival">${escape(arrival)}</p><div class="story-dialog-route"></div><div class="service-contact-actions">${contact}</div><p class="story-dialog-hint">Tap again to close. Automatically closes after 5 seconds.</p></div></div>
     </dialog>

@@ -23,7 +23,7 @@ const services = [
   ['motorcycle-towing', 'Motorcycle transport', 'Arrange pickup for a motorcycle or scooter.'],
   ['truck-recovery', 'Commercial vehicle recovery', 'Discuss recovery options for a van, truck, or commercial vehicle.'],
   ['passing-assistance', 'Vehicle inspection transport', 'Arrange transport to a vehicle inspection or testing location.'],
-  ['full-down-box-recovery', 'Full down car and box recovery', 'Arrange protected car transport in an enclosed glass-box trailer.'],
+  ['full-down-box-recovery', 'Full DOWN AND BOX CAR RECOVERY', 'Arrange protected car transport in an enclosed glass-box trailer.'],
   ['vehicle-recovery', 'Vehicle recovery', 'Arrange pickup and transport for a vehicle that cannot continue.'],
   ['car-recovery', 'Car recovery', 'Get your car from its breakdown location to a garage or destination.'],
   ['emergency-car-recovery-towing', 'Emergency car recovery and towing', 'Request urgent recovery and towing for a stranded car.'],
@@ -79,7 +79,15 @@ const serviceAdvice = [
   'Share your exact pickup point, car condition, and destination so the team can confirm urgent recovery arrangements.',
   'Share the parking level, ceiling height, ramp access, and whether your car can roll and steer so suitable recovery equipment can be arranged.',
 ];
-const cards = services.map(([slug, title, description], index) => `<article class="service-card"><span class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${serviceIcons[index] ?? serviceIcons[11]}</svg></span><h3>${title}</h3><p>${description}</p><a href="/services/${slug}/">Explore service <span aria-hidden="true">↗</span></a></article>`).join('');
+const editorialImage = slug => {
+  if (slug === 'full-down-box-recovery') return '/assets/service-editorial/enclosed.webp';
+  if (['battery-assistance','fuel-delivery','roadside-assistance'].includes(slug)) return '/assets/service-editorial/roadside.webp';
+  if (['car-towing','flatbed-towing','car-recovery','passing-assistance'].includes(slug)) return '/assets/service-editorial/safe-loading.webp';
+  const fallback = {'tyre-assistance':'emergency-recovery','truck-recovery':'vehicle-recovery'};
+  return `/assets/recovery-scenes/${fallback[slug] || slug}.webp`;
+};
+const servicePhoto = (slug, title, eager = false) => `<figure class="service-editorial-photo"><img src="${editorialImage(slug)}" alt="Illustration of ${title.toLowerCase()} in Dubai" width="1536" height="1024" loading="${eager ? 'eager' : 'lazy'}" decoding="async"><figcaption>Illustrative service photography</figcaption></figure>`;
+const cards = services.map(([slug, title, description], index) => `<article class="service-card">${servicePhoto(slug,title)}<span class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${serviceIcons[index] ?? serviceIcons[11]}</svg></span><h3>${title}</h3><p>${description}</p><a href="/services/${slug}/">Explore service <span aria-hidden="true">↗</span></a></article>`).join('');
 const enquiryIcons = {
   menu: '<path d="M4 6h16M4 12h16M4 18h16"/>',
   person: '<circle cx="12" cy="8" r="3"/><path d="M5 20v-2a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v2"/>',
@@ -183,14 +191,7 @@ const booking = (heading) => `<section class="recovery-contact" id="request-reco
     </div>
     </form>
   </div>
-  <aside class="pickup-channels" aria-labelledby="pickup-channels-heading">
-    <h3 id="pickup-channels-heading">Contact the recovery team</h3>
-    <div class="pickup-channel-list">
-      ${pickupChannel('phone', 'Call the team', business.phone && 'tel:' + business.phone)}
-      ${pickupChannel('whatsapp', 'Chat on WhatsApp', business.whatsapp && 'https://wa.me/' + business.whatsapp)}
-    </div>
-    ${business.phone && business.whatsapp ? '' : '<p>Direct contact options will be available once the business numbers are added.</p>'}
-  </aside>
+
 </div>
 </section>`;
 const showcaseServices = [
@@ -202,7 +203,7 @@ const showcaseServices = [
   ['desert-recovery', 'Desert and off-road car recovery'],
   ['luxury-car-transport', 'Luxury & Sports car recovery/towing'],
   ['motorcycle-towing', 'Motorcycle transport'],
-  ['full-down-box-recovery', 'Full down car and box recovery'],
+  ['full-down-box-recovery', 'Full DOWN AND BOX CAR RECOVERY'],
   ['vehicle-recovery', 'Vehicle recovery'],
   ['car-recovery', 'Car recovery'],
   ['emergency-car-recovery-towing', 'Emergency car recovery and towing'],
@@ -252,8 +253,8 @@ const serviceShowcase = `<section class="recovery-showcase" id="services" aria-l
     <div class="showcase-intro">
       <h2 id="showcase-heading">${enquiryIcon('pin')} <span>Dubai Car Recovery <b>/ Our Services</b></span></h2>
     </div>
-    <div class="showcase-grid" tabindex="0" aria-label="${showcaseServices.length} recovery services. Swipe left or right, or use the arrow keys.">${showcaseCards.join('')}</div><p class="showcase-position"><span>Swipe to explore. Tap a vehicle for details.</span></p><div class="showcase-controls" aria-label="Service carousel controls"><button type="button" data-service-prev aria-label="Previous service">${enquiryIcon('arrow')}</button><button type="button" data-service-next aria-label="Next service">${enquiryIcon('arrow')}</button></div>
-    <a class="showcase-all" href="/services/">View all recovery services ${enquiryIcon('arrow')}</a>
+    <div class="showcase-grid" tabindex="0" aria-label="${showcaseServices.length} recovery services. Swipe left or right, or use the arrow keys.">${showcaseCards.join('')}</div><div class="showcase-controls" aria-label="Service carousel controls"><button type="button" data-service-prev aria-label="Previous service">${enquiryIcon('arrow')}</button><button type="button" data-service-next aria-label="Next service">${enquiryIcon('arrow')}</button></div>
+
   </div>
 </section>`;
 
@@ -278,23 +279,24 @@ const guides = [
 const pages = [
   ['/', name, 'Car towing, breakdown recovery, and roadside assistance in Dubai.', home],
   ['/services/', 'Recovery services', 'Explore vehicle recovery and roadside assistance in Dubai.', `<section class="section wrap"><h1>Recovery services</h1><div class="service-grid">${cards}</div></section>`],
-  ...services.map(([slug, title, description], index) => [`/services/${slug}/`, title, description, `<section class="section wrap narrow service-detail-page"><a class="back-link" href="/services/">← All services</a><h1>${title}</h1><p>${description}</p><h2>Careful recovery, planned around your vehicle</h2><p>${serviceDetails[slug]}</p><h2>Pickup and arrival</h2><p>${arrivalNote}</p><h2>What to share with the team</h2><p>${serviceAdvice[index]}</p><div class="service-contact-actions" aria-label="Contact the recovery team">${directContact}</div></section>`]),
+  ...services.map(([slug, title, description], index) => [`/services/${slug}/`, title, description, `<section class="section wrap narrow service-detail-page"><a class="back-link" href="/services/">← All services</a><h1>${title}</h1><p>${description}</p>${servicePhoto(slug,title,true)}<h2>Careful recovery, planned around your vehicle</h2><p>${serviceDetails[slug]}</p><h2>Respectful support, clear communication</h2><p>Tell us what matters for your vehicle. We plan suitable loading access, discuss the transport method, and confirm the destination before dispatch. Ask for wheel restraints, clearance checks and a careful handover appropriate to your car.</p><h2>Pickup and arrival</h2><p>${arrivalNote}</p><h2>What to share with the team</h2><p>${serviceAdvice[index]}</p><div class="service-contact-actions" aria-label="Contact the recovery team">${directContact}</div></section>`]),
   ['/book/', 'Request recovery', 'Share pickup and vehicle details with the recovery team.', booking('h1')],
   ['/about/', 'About', 'How Dubai Car Recovery Near Me handles vehicle recovery enquiries.', `<section class="section wrap narrow"><h1>About Dubai Car Recovery Near Me</h1><p>Tell us what happened, where your vehicle is, and where it needs to go. The recovery team uses those details to confirm what help is available and what it will cost.</p><a class="button" href="/services/">Explore services ↗</a></section>`],
   ['/contact/', 'Contact', 'Contact Dubai Car Recovery Near Me.', `<section class="section wrap narrow"><h1>Contact</h1>${contactReady ? `<div class="actions">${phone}${whatsapp}</div>` : '<p>Business contact details will be added before launch.</p>'}</section>`],
-  ['/privacy/', 'Privacy', 'How this website handles enquiry details.', '<section class="section wrap narrow"><h1>Privacy</h1><p>Pickup and contact details entered in the form stay in your browser until you choose to open WhatsApp. If you allow location access, the site uses your position to fill the pickup field. WhatsApp handles the message when you choose to send it.</p></section>'],
+  ['/privacy/', 'Privacy', 'How this website handles enquiry details.', '<section class="section wrap narrow"><h1>Privacy</h1><p>Pickup and contact details entered in the form stay in your browser until you choose to open WhatsApp. If you allow location access, the site uses your position to fill the pickup field. WhatsApp handles the message when you choose to send it.</p><h2>Public reviews</h2><p>When you submit a review, your display name, rating, review text and submission date are stored using Vercel and published on this website. Do not include phone numbers, addresses or other private information in your review. A short-lived hashed network identifier is used to limit repeated submissions. Contact the recovery team if you need a review corrected or removed.</p></section>'],
   ['/terms/', 'Terms', 'How recovery enquiries are handled.', '<section class="section wrap narrow"><h1>Terms</h1><p>Submitting an enquiry starts a conversation. The recovery team confirms the pickup plan, price, and availability directly.</p></section>'],
   ['/disclaimer/', 'Disclaimer', 'About service availability and site photography.', '<section class="section wrap narrow"><h1>Disclaimer</h1><p>Service descriptions are general guidance. Ask the team to confirm availability for your vehicle and pickup location. The website photography is illustrative.</p></section>'],
-  ['/blogs/', 'Recovery guides', 'Pickup guidance for drivers and riders in Dubai.', `<section class="section wrap"><h1>Recovery guides</h1><div class="service-grid">${guides.map(([slug,title]) => `<article class="service-card"><h2>${title}</h2><a href="/blogs/${slug}/">Read guide ↗</a></article>`).join('')}</div></section>`],
-  ...guides.map(([slug,title,copy]) => [`/blogs/${slug}/`,title,copy,`<section class="section wrap narrow"><a class="back-link" href="/blogs/">← Recovery guides</a><h1>${title}</h1><p>${copy}</p><a class="button" href="/book/">Plan a pickup ↗</a></section>`]),
+  ['/blogs/', 'Recovery guides', 'Pickup guidance for drivers and riders in Dubai.', `<section class="section wrap"><h1>Recovery guides</h1><div class="service-grid">${guides.map(([slug,title]) => `<article class="service-card">${servicePhoto(['emergency-recovery','flatbed-towing','motorcycle-towing'][guides.findIndex(g => g[0] === slug)],title)}<h2>${title}</h2><a href="/blogs/${slug}/">Read guide ↗</a></article>`).join('')}</div></section>`],
+  ...guides.map(([slug,title,copy]) => [`/blogs/${slug}/`,title,copy,`<section class="section wrap narrow"><a class="back-link" href="/blogs/">← Recovery guides</a><h1>${title}</h1><p>${copy}</p>${servicePhoto(['emergency-recovery','flatbed-towing','motorcycle-towing'][guides.findIndex(g => g[0] === slug)],title,true)}<h2>Prepare for a careful pickup</h2><p>Stay in a safe place and share a clear pickup point. Describe ground clearance, locked wheels, parking height and any damage so the team can assess suitable equipment before travelling.</p><h2>Agree on timing and the destination</h2><p>Ask for the current arrival estimate, confirm the price and share the exact drop-off address. Traffic, access restrictions and vehicle condition can affect timing. The team can discuss these details before dispatch.</p><h2>Protect your vehicle during transport</h2><p>Point out existing damage and any special loading requirements. Ask the driver to explain the loading plan and wheel restraints. Remove valuables when safe, and arrange who will receive the vehicle at its destination.</p><h2>Talk directly to the recovery team</h2><div class="service-contact-actions">${directContact}</div></section>`]),
 ];
 
 await rm('dist', { recursive: true, force: true });
 await mkdir('dist', { recursive: true });
 await mkdir('dist/assets');
-await cp('site-background-dubai-road.mp4', 'dist/assets/site-background-dubai-road.mp4');
-await cp('site-background-dubai-road-poster.webp', 'dist/assets/site-background-dubai-road-poster.webp');
-await cp('recovery-orange-metal-wallpaper.webp', 'dist/assets/recovery-orange-metal-wallpaper.webp');
+
+
+await cp('recovery-continuous-metal.webp', 'dist/assets/recovery-continuous-metal.webp');
+await cp('service-editorial', 'dist/assets/service-editorial', { recursive: true });
 await cp('stories-black-tread.webp', 'dist/assets/stories-black-tread.webp');
 await cp('closing-recovery-truck.webp', 'dist/assets/closing-recovery-truck.webp');
 for (const file of ['service-honeycomb-slim-wide.webp', 'service-honeycomb-slim-mobile.webp']) await cp(file, `dist/assets/${file}`);
@@ -368,7 +370,7 @@ for (const [path, title, description, content] of pages) {
   const directory = `dist${path}`;
   await mkdir(directory, { recursive: true });
   const canonical = business.domain + path;
-  await writeFile(directory + 'index.html', `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>${path === '/' ? title : title + ' | ' + name}</title><meta name="description" content="${description}"><meta name="robots" content="${indexable ? 'index,follow' : 'noindex,nofollow'}"><link rel="canonical" href="${canonical}"><link rel="icon" href="/assets/dcr-icon.svg" type="image/svg+xml" sizes="any"><script src="${assetUrls['site.js']}" defer></script>${path === '/' ? homepageAssets : `<link rel="stylesheet" href="${assetUrls['design.css']}"><link rel="stylesheet" href="${assetUrls['theme.css']}">`}</head><body class="has-site-video has-recovery-wallpaper${path === '/' ? ' is-home' : ''}"><div class="site-video-layer" aria-hidden="true"><video class="site-background-video" autoplay muted loop playsinline preload="none" poster="/assets/site-background-dubai-road-poster.webp" tabindex="-1"><source data-src="/assets/site-background-dubai-road.mp4" type="video/mp4"></video></div><a class="skip" href="#main">Skip to content</a><header><div class="wrap header-inner">${brand('header')}<nav class="desktop-nav" aria-label="Main">${mainNav}</nav><details class="mobile-menu"><summary>${enquiryIcon('menu')}<span>Menu</span></summary><nav aria-label="Main">${mainNav}</nav></details></div></header><main id="main"${path === '/' ? '' : ' class="wallpaper-content"'}>${path === '/' ? content.replace('<!-- recovery-hero -->', serviceTape + recoveryHero).replace('<!-- recovery-map -->', recoveryMap) : content}</main><footer class="wrap">${brand('footer')}<div><a href="/services/">Services</a><a href="/contact/">Contact</a><a href="/blogs/">Guides</a><a href="/privacy/">Privacy</a></div><a class="developer-credit" href="https://www.stackendbox.com/"><img src="/assets/stackendbox-mark.webp" width="30" height="33" alt="" loading="lazy"><span>Developed by StackEndBox</span></a></footer><aside class="mobile-actions" aria-label="Recovery actions">${directContact}</aside></body></html>`);
+  await writeFile(directory + 'index.html', `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>${path === '/' ? title : title + ' | ' + name}</title><meta name="description" content="${description}"><meta name="robots" content="${indexable ? 'index,follow' : 'noindex,nofollow'}"><link rel="canonical" href="${canonical}"><link rel="icon" href="/assets/dcr-icon.svg" type="image/svg+xml" sizes="any"><script src="${assetUrls['site.js']}" defer></script>${path === '/' ? homepageAssets : `<link rel="stylesheet" href="${assetUrls['design.css']}"><link rel="stylesheet" href="${assetUrls['theme.css']}">`}</head><body class="has-site-video has-recovery-wallpaper${path === '/' ? ' is-home' : ''}"><a class="skip" href="#main">Skip to content</a><header><div class="wrap header-inner">${brand('header')}<nav class="desktop-nav" aria-label="Main">${mainNav}</nav><details class="mobile-menu"><summary>${enquiryIcon('menu')}<span>Menu</span></summary><nav aria-label="Main">${mainNav}</nav></details></div></header><main id="main"${path === '/' ? '' : ' class="wallpaper-content"'}>${path === '/' ? content.replace('<!-- recovery-hero -->', serviceTape + recoveryHero).replace('<!-- recovery-map -->', recoveryMap) : content}</main><footer class="wrap">${brand('footer')}<div><a href="/services/">Services</a><a href="/contact/">Contact</a><a href="/blogs/">Guides</a><a href="/privacy/">Privacy</a></div><a class="developer-credit" href="https://www.stackendbox.com/"><img src="/assets/stackendbox-mark.webp" width="30" height="33" alt="" loading="lazy"><span>Developed by Stack and Box</span></a></footer><aside class="mobile-actions" aria-label="Recovery actions">${directContact}</aside></body></html>`);
 }
 await writeFile('dist/robots.txt', indexable ? `User-agent: *\nAllow: /\nSitemap: ${business.domain}/sitemap.xml\n` : 'User-agent: *\nAllow: /\n');
 await writeFile('dist/sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${pages.map(([path]) => `<url><loc>${business.domain}${path}</loc></url>`).join('')}</urlset>`);

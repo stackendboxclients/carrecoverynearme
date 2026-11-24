@@ -11,9 +11,16 @@ mobileMenu?.addEventListener('keydown', event => {
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
 const closingImage = document.querySelector('.closing-recovery-image');
 if (closingImage && 'IntersectionObserver' in window) {
-  new IntersectionObserver(entries => {
-    document.body.classList.toggle('viewing-closing-recovery', entries[0].isIntersecting);
-  }).observe(closingImage);
+  const visibleEndSurfaces = new Set();
+  const endObserver = new IntersectionObserver(entries => {
+    for (const entry of entries) {
+      if (entry.isIntersecting) visibleEndSurfaces.add(entry.target);
+      else visibleEndSurfaces.delete(entry.target);
+    }
+    document.body.classList.toggle('viewing-closing-recovery', visibleEndSurfaces.size > 0);
+  });
+  endObserver.observe(closingImage);
+  endObserver.observe(document.querySelector('footer'));
 }
 const hero = document.querySelector('.hero');
 if (hero && !reducedMotion.matches) {
@@ -174,66 +181,6 @@ if (form) {
   form.querySelector('.pickup-submit').disabled = false;
 }
 
-
-const backgroundVideo = document.querySelector('.site-background-video');
-if (backgroundVideo && document.body.classList.contains('is-home')) {
-  const heroBoundary = document.querySelector('.recovery-hero');
-  const boundary = heroBoundary || document.querySelector('body > header');
-  let videoFrame = 0;
-  let backgroundStarted = false;
-  let backgroundQueued = false;
-  let backgroundCovered = true;
-  backgroundVideo.muted = true;
-  backgroundVideo.defaultMuted = true;
-  backgroundVideo.volume = 0;
-  const updateBoundary = () => {
-    videoFrame = 0;
-    const top = Math.max(0, Math.min(innerHeight, boundary?.getBoundingClientRect().bottom ?? 0));
-    backgroundCovered = top >= innerHeight;
-    if (!backgroundStarted && (!heroBoundary || window.scrollY > 0)) queueBackground();
-    // Opaque hero/map surfaces cover the fixed video without a scroll-driven mask.
-    // Keep this check for playback only, so scrolling cannot expose a white seam.
-    syncBackground();
-  };
-  const scheduleBoundary = () => {
-    if (!videoFrame) videoFrame = requestAnimationFrame(updateBoundary);
-  };
-  const syncBackground = () => {
-    if (!backgroundStarted) return;
-    if (document.hidden || backgroundCovered) backgroundVideo.pause();
-    else if (backgroundVideo.paused) backgroundVideo.play().catch(() => {
-      // The poster stays visible if the browser blocks autoplay.
-    });
-  };
-  const startBackground = () => {
-    if (backgroundStarted) return;
-    const source = backgroundVideo.querySelector('source[data-src]');
-    if (!source) return;
-    backgroundStarted = true;
-    backgroundVideo.preload = 'auto';
-    source.src = source.dataset.src;
-    source.removeAttribute('data-src');
-    backgroundVideo.load();
-    syncBackground();
-  };
-  // Let the hero load first. Start warming the video when visitors begin scrolling.
-  const queueBackground = () => {
-    if (backgroundQueued || (heroBoundary && window.scrollY === 0) || document.readyState !== 'complete') return;
-    backgroundQueued = true;
-    if ('requestIdleCallback' in window) requestIdleCallback(startBackground, { timeout: 2000 });
-    else setTimeout(startBackground, 0);
-  };
-  if (document.readyState === 'complete') queueBackground();
-  else window.addEventListener('load', queueBackground, { once: true });
-  backgroundVideo.addEventListener('error', () => { backgroundVideo.hidden = true; });
-  document.addEventListener('visibilitychange', syncBackground);
-  document.addEventListener('pointerdown', syncBackground, { once: true, passive: true });
-  window.addEventListener('scroll', scheduleBoundary, { passive: true });
-  window.addEventListener('resize', scheduleBoundary);
-  if (boundary) new ResizeObserver(scheduleBoundary).observe(boundary);
-  updateBoundary();
-  syncBackground();
-}
 
 // Only the active service is visible; the next vehicle moves into the foreground.
 const serviceDeck = document.querySelector('.showcase-grid');

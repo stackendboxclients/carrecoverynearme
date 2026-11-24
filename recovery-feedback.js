@@ -1,122 +1,70 @@
-const deck = document.querySelector('.feedback-deck');
-const track = deck?.querySelector('.feedback-track');
-const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
-const fineHover = matchMedia('(hover: hover) and (pointer: fine)');
-
-if (track) {
-  const advanceDelay = 4500;
-  const cards = [...track.children];
-  let timer;
-  let visible = false;
-  let direction = 1;
-  let pointerActive = false;
-
-  function shift(direction) {
-    const current = track.scrollLeft;
-    const start = cards[0].getBoundingClientRect().left;
-    const max = track.scrollWidth - track.clientWidth;
-    const stops = cards.map(card => Math.min(max, card.getBoundingClientRect().left - start));
-    const next = direction > 0 ? stops.find(stop => stop > current + 2) : stops.findLast(stop => stop < current - 2);
-    if (next === undefined) return false;
-    track.scrollTo({ left: next, behavior: reducedMotion.matches ? 'instant' : 'smooth' });
-    return true;
+const section = document.querySelector('#customer-feedback');
+if (section) {
+  const track=section.querySelector('.feedback-track'), form=section.querySelector('form');
+  const status=section.querySelector('[data-review-load]'), submitted=section.querySelector('[data-review-submit]');
+  const average=section.querySelector('[data-review-average]'), button=form.querySelector('button[type="submit"]');
+  const reduced=matchMedia('(prefers-reduced-motion: reduce)');
+  let visible=false, timer=0, pauseUntil=0, direction=1;
+  const seen=new Set();
+  function card(review,prepend=false) {
+    if (seen.has(review.id)) return;
+    seen.add(review.id);
+    const item=document.createElement('li'); item.className='feedback-card';
+    const figure=document.createElement('figure'); figure.className='feedback-surface';
+    const meta=document.createElement('figcaption'); meta.className='feedback-card-meta';
+    const author=document.createElement('span'); author.className='feedback-author'; author.textContent=review.author;
+    const stars=document.createElement('span'); stars.className='feedback-rating'; stars.textContent=`${'★'.repeat(review.rating)}${'☆'.repeat(5-review.rating)} ${review.rating}/5`;
+    const quote=document.createElement('blockquote'), text=document.createElement('p'); text.textContent=review.text;
+    quote.append(text); meta.append(author,stars); figure.append(meta,quote); item.append(figure);
+    if(prepend) track.prepend(item); else track.append(item);
   }
-
+  async function load() {
+    try {
+      const response=await fetch('/api/reviews',{cache:'no-store',signal:AbortSignal.timeout(15000)});
+      if (!response.ok) throw new Error();
+      const result=await response.json();
+      if(!Array.isArray(result.reviews)) throw new Error();
+      result.reviews.forEach(review=>card(review));
+      status.textContent=seen.size ? '' : 'Be the first to share your experience.';
+      status.hidden=seen.size>0;
+      if(typeof result.average==='number') { average.hidden=false; average.textContent=`Average customer rating ${result.average.toFixed(1)} / 5${result.limitedSummary ? ' from recent reviews' : ''}`; }
+      schedule();
+    } catch { status.hidden=false; status.textContent='Reviews could not be loaded. Please try again shortly.'; }
+  }
+  function shift(by) {
+    const cards=[...track.children]; if(!cards.length) return;
+    const max=track.scrollWidth-track.clientWidth;
+    const start=cards[0].getBoundingClientRect().left;
+    const stops=cards.map(c=>Math.min(max,c.getBoundingClientRect().left-start));
+    let next=by>0 ? stops.find(n=>n>track.scrollLeft+2) : stops.findLast(n=>n<track.scrollLeft-2);
+    if(next===undefined) { direction*=-1; next=by>0 ? 0 : max; }
+    track.scrollTo({left:next,behavior:reduced.matches?'instant':'smooth'});
+  }
   function schedule() {
     clearTimeout(timer);
-    if (!visible || pointerActive || reducedMotion.matches || document.hidden) return;
-    if ((fineHover.matches && deck.matches(':hover')) || deck.querySelector(':focus-visible')) return;
-    if (track.scrollWidth <= track.clientWidth) return;
-    timer = setTimeout(() => {
-      if (!shift(direction)) {
-        direction *= -1;
-        shift(direction);
-      }
-      schedule();
-    }, advanceDelay);
+    if(!visible || document.hidden || reduced.matches || track.scrollWidth<=track.clientWidth) return;
+    timer=setTimeout(()=>{shift(direction);schedule();},Math.max(4500,pauseUntil-Date.now()));
   }
-
-  function releasePointer() {
-    if (!pointerActive) return;
-    pointerActive = false;
-    schedule();
-  }
-
-  track.addEventListener('keydown', event => {
-    if (event.target !== track || !['ArrowLeft', 'ArrowRight'].includes(event.key)) return;
-    event.preventDefault();
-    shift(event.key === 'ArrowRight' ? 1 : -1);
+  for(const name of ['pointerdown','wheel','keydown']) track.addEventListener(name,()=>{pauseUntil=Date.now()+5000;schedule();},{passive:true});
+  track.addEventListener('keydown',event=>{if(['ArrowLeft','ArrowRight'].includes(event.key)){event.preventDefault();shift(event.key==='ArrowRight'?1:-1);}});
+  section.querySelector('[data-review-prev]').addEventListener('click',()=>{shift(-1);pauseUntil=Date.now()+5000;schedule();});
+  section.querySelector('[data-review-next]').addEventListener('click',()=>{shift(1);pauseUntil=Date.now()+5000;schedule();});
+  new IntersectionObserver(([entry])=>{visible=entry.isIntersecting;schedule();}).observe(track);
+  document.addEventListener('visibilitychange',schedule); reduced.addEventListener('change',schedule);
+  button.disabled=false;
+  form.addEventListener('submit',async event=>{
+    event.preventDefault(); if(!form.reportValidity()) return;
+    const data=new FormData(form);
+    button.disabled=true;submitted.textContent='Publishing your review...';
+    try {
+      const response=await fetch('/api/reviews',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({author:data.get('author'),rating:Number(data.get('rating')),text:data.get('text'),website:data.get('website'),consent:data.get('consent')==='on'}),signal:AbortSignal.timeout(20000)});
+      const result=await response.json();
+      if(!response.ok) throw new Error(result.error || 'Your review could not be saved.');
+      card(result.review,true); form.reset(); status.hidden=true;
+      submitted.textContent='Your review is now published. Thank you.';
+      track.scrollTo({left:0,behavior:'smooth'});load();
+    } catch(error) { submitted.textContent=error.name==='TimeoutError' ? 'The request timed out. Refresh to check whether your review appeared before trying again.' : error.message || 'Your review could not be saved. Please try again.'; }
+    finally { button.disabled=false; }
   });
-  deck.addEventListener('focusin', schedule);
-  deck.addEventListener('focusout', () => requestAnimationFrame(schedule));
-  deck.addEventListener('pointerdown', () => {
-    pointerActive = true;
-    schedule();
-  }, { passive: true });
-  window.addEventListener('pointerup', releasePointer);
-  window.addEventListener('pointercancel', releasePointer);
-  track.addEventListener('wheel', event => {
-    if (event.deltaX || event.shiftKey) schedule();
-  }, { passive: true });
-  deck.addEventListener('mouseenter', schedule);
-  deck.addEventListener('mouseleave', schedule);
-  document.addEventListener('visibilitychange', schedule);
-  reducedMotion.addEventListener('change', schedule);
-  new ResizeObserver(schedule).observe(track);
-  new IntersectionObserver(([entry]) => {
-    visible = entry.intersectionRatio >= .55;
-    schedule();
-  }, { threshold: .55 }).observe(track);
-  deck.dataset.enhanced = '';
-}
-
-const stats = document.querySelector('.feedback-preview-stats');
-if (stats && !reducedMotion.matches) {
-  const count = stats.querySelector('[data-feedback-count]');
-  const score = stats.querySelector('[data-feedback-score]');
-  const stars = stats.querySelector('.feedback-stars-fill');
-  const countText = count.textContent;
-  const scoreText = score.textContent;
-  const total = Number(countText.replaceAll(',', ''));
-  const rating = Number(scoreText);
-  const formatter = new Intl.NumberFormat('en');
-
-  const observer = new IntersectionObserver(([entry]) => {
-    if (!entry.isIntersecting) return;
-    observer.disconnect();
-    if (reducedMotion.matches) return;
-
-    const start = performance.now();
-    function draw(time) {
-      const progress = Math.min(1, Math.max(0, (time - start) / 1450));
-      if (progress === 1 || reducedMotion.matches) {
-        count.textContent = countText;
-        score.textContent = scoreText;
-        stars.style.width = `${rating / 5 * 100}%`;
-        return;
-      }
-
-      const eased = 1 - (1 - progress) ** 3;
-      count.textContent = formatter.format(Math.floor(total * eased));
-      score.textContent = (rating * eased).toFixed(1);
-      stars.style.width = `${rating * eased / 5 * 100}%`;
-      requestAnimationFrame(draw);
-    }
-    requestAnimationFrame(draw);
-  }, { threshold: .55 });
-  observer.observe(stats);
-}
-
-if (track && !reducedMotion.matches) {
-  const observer = new IntersectionObserver(entries => {
-    for (const entry of entries) {
-      if (entry.intersectionRatio < .6) continue;
-      observer.unobserve(entry.target);
-      if (reducedMotion.matches) continue;
-
-      const stars = entry.target.querySelector('.feedback-stars-fill');
-      if (stars) stars.animate([{ width: 0 }, { width: stars.style.width }], { duration: 620, easing: 'ease-out' });
-    }
-  }, { root: track, threshold: .6 });
-  for (const card of track.children) observer.observe(card);
+  load();
 }
