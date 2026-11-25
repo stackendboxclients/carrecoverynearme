@@ -417,11 +417,11 @@ body.has-recovery-wallpaper footer .brand--footer { grid-column: 1; justify-self
 body.has-recovery-wallpaper footer .footer-links,body.has-recovery-wallpaper footer .footer-contact-details { position: relative; isolation: isolate; overflow: hidden; width: 100%; max-width: 1000px; margin: 0; padding: 20px 24px; border: 1px solid #70604c; border-radius: 20px; background: repeating-linear-gradient(135deg,#ffffff04 0 2px,#0003 2px 4px),#101214; box-shadow: 0 4px 16px #0005; }
 body.has-recovery-wallpaper footer .footer-links { justify-content: center; align-items: center; gap: 16px 28px; }
 body.has-recovery-wallpaper footer .footer-contact-details { max-width: 1000px; padding: 24px clamp(18px,5vw,64px); gap: 12px; }
-body.has-recovery-wallpaper footer :is(.footer-links,.footer-contact-details)::before { content: ''; position: absolute; inset: 0; border: 3px solid transparent; border-radius: inherit; pointer-events: none; background: repeating-linear-gradient(135deg,#e88533aa 0 4px,#302b2866 4px 8px) border-box; mask: linear-gradient(#fff 0 0) padding-box,linear-gradient(#fff 0 0); mask-composite: exclude; }
-body.has-recovery-wallpaper footer :is(.footer-links,.footer-contact-details)::after { content: ''; position: absolute; inset: 0 auto 0 -45%; width: 35%; background: linear-gradient(100deg,transparent,#ffffff13,#0005,transparent); pointer-events: none; z-index: -1; animation: footer-carbon-shimmer 3s linear infinite paused; }
-body.has-recovery-wallpaper footer[data-footer-visible="true"] :is(.footer-links,.footer-contact-details)::after { animation-play-state: running; }
+body.has-recovery-wallpaper footer :is(.footer-links,.footer-contact-details,.developer-credit)::before { content: ''; position: absolute; inset: 0; border: 3px solid transparent; border-radius: inherit; pointer-events: none; background: repeating-linear-gradient(135deg,#e88533aa 0 4px,#302b2866 4px 8px) border-box; mask: linear-gradient(#fff 0 0) padding-box,linear-gradient(#fff 0 0); mask-composite: exclude; }
+body.has-recovery-wallpaper footer :is(.footer-links,.footer-contact-details,.developer-credit)::after { content: ''; position: absolute; inset: 0 auto 0 -45%; width: 35%; background: linear-gradient(100deg,transparent,#ffffff13,#0005,transparent); pointer-events: none; z-index: -1; animation: footer-carbon-shimmer 3s linear infinite paused; }
+body.has-recovery-wallpaper footer[data-footer-visible="true"] :is(.footer-links,.footer-contact-details,.developer-credit)::after { animation-play-state: running; }
 @keyframes footer-carbon-shimmer { to { transform: translateX(450%); } }
-@media(prefers-reduced-motion:reduce) { body.has-recovery-wallpaper footer :is(.footer-links,.footer-contact-details)::after { animation: none; } }
+@media(prefers-reduced-motion:reduce) { body.has-recovery-wallpaper footer :is(.footer-links,.footer-contact-details,.developer-credit)::after { animation: none; } }
 @media(max-width:600px) {
   body.has-site-video .recovery-contact .recovery-contact-layout { width: calc(100% - 28px); }
   body.has-site-video .recovery-contact .pickup-intro { padding: 14px 12px 6px; }
@@ -440,3 +440,6 @@ body.has-site-video #customer-feedback .feedback-summary-note { margin: 10px 0 0
 body.has-recovery-wallpaper { padding-bottom: 0; }
 body.has-recovery-wallpaper > footer.wrap { padding-bottom: calc(80px + env(safe-area-inset-bottom)); }
 .mobile-actions:not([hidden]) { position: fixed; inset: auto 0 0; z-index: 1000; visibility: visible; opacity: 1; pointer-events: auto; }
+
+/* Match the developer credit to the surrounding footer panels. */
+body.has-recovery-wallpaper footer .developer-credit { isolation: isolate; overflow: hidden; max-width: 100%; border: 1px solid #70604c; border-radius: 20px; background: repeating-linear-gradient(135deg,#ffffff04 0 2px,#0003 2px 4px),#101214; box-shadow: 0 4px 16px #0005; }
