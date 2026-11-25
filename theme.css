@@ -139,7 +139,6 @@ body.has-site-video #services .showcase-controls button { background: #20262d !i
 /* The complete truck image sits between the FAQs and the footer. */
 .closing-recovery { padding: 32px 24px 56px; text-align: center; }
 .closing-recovery-image { display: block; width: min(100%,50.6667svh,600px); height: auto; aspect-ratio: 2 / 3; max-width: 100%; max-height: min(900px,76svh); object-fit: contain; margin: 0 auto; }
-body.viewing-closing-recovery .mobile-actions { visibility: hidden; opacity: 0; pointer-events: none; }
 @media(max-width:600px) { .closing-recovery { padding: 24px 16px 40px; } .closing-recovery-image { width: min(100%,46.6667svh); max-height: 70svh; } }
 
 /* Compact showcase spacing and larger vehicles, with prominent service labels. */
@@ -436,3 +435,8 @@ body.has-recovery-wallpaper > footer.wrap,body.has-site-video .wallpaper-content
 
 body.has-site-video #customer-feedback .feedback-summary-note { margin: 10px 0 0; font-size: .75rem; font-weight: 600; color: #515860 !important; line-height: 1.4; }
 #customer-feedback .feedback-summary-note + blockquote { margin-top: 8px; padding-top: 10px; }
+
+/* The contact bar stays available through the footer on every page. */
+body.has-recovery-wallpaper { padding-bottom: 0; }
+body.has-recovery-wallpaper > footer.wrap { padding-bottom: calc(80px + env(safe-area-inset-bottom)); }
+.mobile-actions:not([hidden]) { position: fixed; inset: auto 0 0; z-index: 1000; visibility: visible; opacity: 1; pointer-events: auto; }

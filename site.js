@@ -9,19 +9,6 @@ mobileMenu?.addEventListener('keydown', event => {
 });
 
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
-const closingImage = document.querySelector('.closing-recovery-image');
-if (closingImage && 'IntersectionObserver' in window) {
-  const visibleEndSurfaces = new Set();
-  const endObserver = new IntersectionObserver(entries => {
-    for (const entry of entries) {
-      if (entry.isIntersecting) visibleEndSurfaces.add(entry.target);
-      else visibleEndSurfaces.delete(entry.target);
-    }
-    document.body.classList.toggle('viewing-closing-recovery', visibleEndSurfaces.size > 0);
-  });
-  endObserver.observe(closingImage);
-  endObserver.observe(document.querySelector('footer'));
-}
 const hero = document.querySelector('.hero');
 if (hero && !reducedMotion.matches) {
   const motion = document.createElement('button');
